@@ -64,7 +64,7 @@ namespace Matrix.Xml.Parser
         /// <param name="offset">Offset into buf to start at</param>
         /// <param name="length">Number of bytes to write</param>
         /// <exception cref="System.NotImplementedException">Token type not implemented:  + tok</exception>
-            public void Write(byte[] buf, int offset, int length)
+        public void Write(byte[] buf, int offset, int length)
         {
             // or assert, really, but this is a little nicer.
             if (length == 0)
