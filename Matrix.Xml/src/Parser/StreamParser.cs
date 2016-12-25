@@ -52,9 +52,9 @@ namespace Matrix.Xml.Parser
         /// <value>The _depth.</value>
         public long Depth => _depth;
 
-        public void Write(byte[] buf, List<object> output)
+        public void Write(byte[] buf)
         {
-            Write(buf, 0, buf.Length, output);
+            Write(buf, 0, buf.Length);
         }
 
         /// <summary>
@@ -63,20 +63,8 @@ namespace Matrix.Xml.Parser
         /// <param name="buf">The bytes to put into the parse stream</param>
         /// <param name="offset">Offset into buf to start at</param>
         /// <param name="length">Number of bytes to write</param>
-        public void Write(byte[] buf, int offset, int length)
-        {
-            Write(buf, offset, length, null);
-        }
-
-        /// <summary>
-        /// Write bytes into the parser.
-        /// </summary>
-        /// <param name="buf">The bytes to put into the parse stream</param>
-        /// <param name="offset">Offset into buf to start at</param>
-        /// <param name="length">Number of bytes to write</param>
-        /// <param name="output">The output.</param>
         /// <exception cref="System.NotImplementedException">Token type not implemented:  + tok</exception>
-            public void Write(byte[] buf, int offset, int length, List<object> output)
+            public void Write(byte[] buf, int offset, int length)
         {
             // or assert, really, but this is a little nicer.
             if (length == 0)
@@ -113,15 +101,15 @@ namespace Matrix.Xml.Parser
 
                         case Tokens.EmptyElementNoAtts:
                         case Tokens.EmptyElementWithAtts:
-                            StartTag(b, off, ct, tok, output);
-                            EndTag(b, off, ct, tok, output);
+                            StartTag(b, off, ct, tok);
+                            EndTag(b, off, ct, tok);
                             break;
                         case Tokens.StartTagNoAtts:
                         case Tokens.StartTagWithAtts:
-                            StartTag(b, off, ct, tok, output);
+                            StartTag(b, off, ct, tok);
                             break;
                         case Tokens.EndTag:
-                            EndTag(b, off, ct, tok, output);
+                            EndTag(b, off, ct, tok);
                             break;
                         case Tokens.DataChars:
                         case Tokens.DataNewline:
@@ -170,8 +158,6 @@ namespace Matrix.Xml.Parser
             }
             catch (Exception ex)
             {
-                //xmlStreamEvents.OnError()
-                output?.Add(new XmlStreamEvent(XmlStreamEventType.StreamError, ex));
                 OnStreamError?.Invoke(ex);
             }
             finally
@@ -181,8 +167,7 @@ namespace Matrix.Xml.Parser
         }
 
         private void StartTag(byte[] buf, int offset,
-            ContentToken ct, Tokens tok,
-            List<object> output)
+            ContentToken ct, Tokens tok)
         {
             _depth++;
             int colon;
@@ -210,7 +195,7 @@ namespace Matrix.Xml.Parser
                     end = ct.GetAttributeValueEnd(i);
                     //val = _utf.GetString(buf, start, end - start);
 
-                    val = NormalizeAttributeValue(buf, start, end - start, output);
+                    val = NormalizeAttributeValue(buf, start, end - start);
                     // <foo b='&amp;'/>
                     // <foo b='&amp;amp;'
                     // TODO: if val includes &amp;, it gets double-escaped
@@ -284,7 +269,6 @@ namespace Matrix.Xml.Parser
             if (_root == null)
             {
                 _root = newel;
-                output?.Add(new XmlStreamEvent(XmlStreamEventType.StreamStart, _root));
                 OnStreamStart?.Invoke(_root);
 
             }
@@ -296,14 +280,13 @@ namespace Matrix.Xml.Parser
             }
         }
 
-        private void EndTag(byte[] buf, int offset, ContentToken ct, Tokens tok, List<object> output)
+        private void EndTag(byte[] buf, int offset, ContentToken ct, Tokens tok)
         {
             _depth--;
             _nsStack.Pop();
 
             if (_current == null)
             {
-                output?.Add(new XmlStreamEvent(XmlStreamEventType.StreamEnd));
                 OnStreamEnd?.Invoke();
                 return;
             }
@@ -311,14 +294,12 @@ namespace Matrix.Xml.Parser
             var parent = _current.Parent as XmppXElement;
             if (parent == null)
             {
-                output?.Add(new XmlStreamEvent(XmlStreamEventType.StreamElement, _current));
                 OnStreamElement?.Invoke(_current);
             }
             _current = parent;
         }
 
-        private string NormalizeAttributeValue(byte[] buf, int offset, int length,
-            List<object> output)
+        private string NormalizeAttributeValue(byte[] buf, int offset, int length)
         {
             if (length == 0)
                 return string.Empty;
@@ -365,7 +346,6 @@ namespace Matrix.Xml.Parser
             }
             catch (Exception ex)
             {
-                output?.Add(new XmlStreamEvent(XmlStreamEventType.StreamError, ex));
                 OnStreamError?.Invoke(ex);
             }
             finally
