@@ -1,0 +1,10 @@
+Matrix.Core/src/bin/
+Matrix.Core/src/obj/
+Matrix.Core/test/bin/
+Matrix.Core/test/obj/
+Matrix.Xml/src/bin/
+Matrix.Xml/src/obj/
+Matrix.Xml/test/bin/
+Matrix.Xml/test/obj/
+XpNet/src/obj/
+XpNet/src/bin/
