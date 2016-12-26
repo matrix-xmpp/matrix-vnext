@@ -11,3 +11,5 @@ XpNet/src/bin/
 /Matrix.DotNetty/src/bin/Debug/netstandard1.4
 /Matrix.DotNetty/src/obj
 /Matrix.DotNetty/src
+/Matrix.Xmpp/src/obj
+/Matrix.Xmpp/src/obj
