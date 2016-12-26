@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Matrix.Xml.Attributes;
+using Matrix.Core.Attributes;
 
 //using Matrix.Xmpp.Jingle.Apps.Rtp;
 //using Matrix.Xmpp.Jingle.Candidates;

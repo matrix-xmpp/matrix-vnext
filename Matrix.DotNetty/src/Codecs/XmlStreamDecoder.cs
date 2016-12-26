@@ -10,23 +10,23 @@ namespace Matrix.DotNetty.Codecs
     {
         readonly StreamParser _parser = new StreamParser();
 
-        private List<object> _output = null;
+        private List<object> _output;
 
         public XmlStreamDecoder()
         {
             _parser.OnStreamStart +=
                 element =>
-                    _output?.Add(new Xml.Parser.XmlStreamEvent(Xml.Parser.XmlStreamEventType.StreamStart, element));
+                    _output?.Add(new XmlStreamEvent(XmlStreamEventType.StreamStart, element));
 
             _parser.OnStreamElement +=
                 element =>
-                    _output?.Add(new Xml.Parser.XmlStreamEvent(Xml.Parser.XmlStreamEventType.StreamElement, element));
+                    _output?.Add(new XmlStreamEvent(XmlStreamEventType.StreamElement, element));
 
             _parser.OnStreamEnd += () =>
-                _output?.Add(new Xml.Parser.XmlStreamEvent(Xml.Parser.XmlStreamEventType.StreamEnd));
+                _output?.Add(new XmlStreamEvent(XmlStreamEventType.StreamEnd));
 
             _parser.OnStreamError +=
-                exception => _output?.Add(new Xml.Parser.XmlStreamEvent(Xml.Parser.XmlStreamEventType.Error, exception));
+                exception => _output?.Add(new XmlStreamEvent(XmlStreamEventType.Error, exception));
         }
 
         public void Reset()

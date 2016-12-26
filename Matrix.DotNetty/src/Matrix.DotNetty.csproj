@@ -21,9 +21,15 @@
       <Version>1.0.0-alpha-20161104-2</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.Reactive">
+      <Version>3.1.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Matrix.Core\src\Matrix.Core.csproj" />
     <ProjectReference Include="..\..\Matrix.Xml\src\Matrix.Xml.csproj" />
+    <ProjectReference Include="..\..\Matrix.Xmpp\src\Matrix.Xmpp.csproj" />
+    <ProjectReference Include="..\..\XpNet\src\XpNet.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

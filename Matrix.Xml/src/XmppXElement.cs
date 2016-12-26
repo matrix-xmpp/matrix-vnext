@@ -345,7 +345,7 @@ namespace Matrix.Xml
                 return -1;
             try
             {
-                return Enum.Parse(typeof (T), tag, true);
+                return System.Enum.Parse(typeof (T), tag, true);
             }
             catch (Exception)
             {
@@ -1112,7 +1112,7 @@ namespace Matrix.Xml
                 return (T)((object) -1);
             try
             {
-                return (T) Enum.Parse(typeof(T), att, true);                
+                return (T) System.Enum.Parse(typeof(T), att, true);                
             }
             catch (Exception)
             {
