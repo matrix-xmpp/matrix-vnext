@@ -3,7 +3,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-
 namespace Matrix.Core.Crypt
 {
     /// <summary>
@@ -17,33 +16,26 @@ namespace Matrix.Core.Crypt
                 return HashAlgorithms.Unknown;
 
             return
-                    Enum.GetValues<HashAlgorithms>()
+                Enum.GetValues<HashAlgorithms>()
                     .Cast<HashAlgorithms>()
                     .FirstOrDefault(hash => hash.ToName().ToLower().Equals(name.ToLower()));
         }
 
         public static HashAlgorithm GetHashAlgorithm(HashAlgorithms hash)
         {
-            return GetHashAlgorithmByName(hash.ToName());
-        }
-
-
-
-        public static HashAlgorithm GetHashAlgorithmByName(string name)
-        {
-            switch (name)
+            switch (hash)
             {
-                case null:
+                case HashAlgorithms.Unknown:
                     return null;
-                case "sha-1":
+                case HashAlgorithms.Sha1:
                     return SHA1.Create();
-                case "sha-256":
+                case HashAlgorithms.Sha256:
                     return SHA256.Create();
-                case "sha-384":
+                case HashAlgorithms.Sha384:
                     return SHA384.Create();
-                case "sha-512":
+                case HashAlgorithms.Sha512:
                     return SHA512.Create();
-                case "md5":
+                case HashAlgorithms.Md5:
                     return MD5.Create();
             }
             return null;
