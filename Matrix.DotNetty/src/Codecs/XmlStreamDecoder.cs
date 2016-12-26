@@ -38,11 +38,8 @@ namespace Matrix.DotNetty.Codecs
         protected override void Decode(IChannelHandlerContext context, IByteBuffer message, List<object> output)
         {
             _output = output;
-          
             _parser.Write(message.ToArray());
-
             _output = null;
-
         }
     }
 }
