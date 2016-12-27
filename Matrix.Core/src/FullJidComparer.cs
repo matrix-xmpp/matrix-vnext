@@ -13,7 +13,7 @@ namespace Matrix.Core
                 if (x.ToString() == y.ToString())
                     return 0;
 
-                return String.Compare(x.ToString(), y.ToString());
+                return String.CompareOrdinal(x.ToString(), y.ToString());
             }
 
             if (x == null)

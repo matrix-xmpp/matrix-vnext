@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Shouldly;
 
 namespace Matrix.Core.Tests
 {
@@ -107,6 +108,28 @@ namespace Matrix.Core.Tests
             var c = new Jid(b.User, b.Server, b.Resource);
             Assert.IsTrue(a.CompareTo(c) == 0);
             Assert.IsTrue(b.CompareTo(c) != 0);
+        }
+
+        [TestMethod]
+        public void BareJidEqualsTest()
+        {
+            var a = new Jid("user1@server.com/Res1");
+            var b = new Jid("user1@server.com/Res2");
+            
+            a.Equals(b, new BareJidComparer()).ShouldBe(true);
+        }
+
+        [TestMethod]
+        public void FullJidEqualsTest()
+        {
+            var a = new Jid("user1@server.com/Res1");
+            var b = new Jid("user1@server.com/Res2");
+            var c = new Jid("user1@server.com/Res2");
+            var d = new Jid("UsEr1@server.com/Res2");
+
+            a.Equals(b, new FullJidComparer()).ShouldBe(false);
+            b.Equals(c, new FullJidComparer()).ShouldBe(true);
+            //c.Equals(d, new FullJidComparer()).ShouldBe(true);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Matrix.Core
                 if (x.Bare == y.Bare)
                     return 0;
 
-                return String.Compare(x.Bare, y.Bare);
+                return String.CompareOrdinal(x.Bare, y.Bare);
             }
             if (x == null)
             {
