@@ -371,7 +371,7 @@ namespace Matrix.Xml
             if (String.IsNullOrEmpty(tag))
                 return (T)((object) -1);
             
-            return Util.Enum.ParseUsingNameAttrib<T>(tag);
+            return Core.Enum.ParseUsingNameAttrib<T>(tag);
         }
         #endregion
 
@@ -1131,7 +1131,7 @@ namespace Matrix.Xml
             if ((att == null))
                 return (T)((object)-1);
 
-            return Util.Enum.ParseUsingNameAttrib<T>(att);
+            return Core.Enum.ParseUsingNameAttrib<T>(att);
         }
         #endregion
 
