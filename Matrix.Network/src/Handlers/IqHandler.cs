@@ -6,7 +6,7 @@ using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 
-namespace Matrix.DotNetty.Handlers
+namespace Matrix.Network.Handlers
 {
     public class IqFilter : XmppStanzaHandler
     {

@@ -11,12 +11,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Matrix.DotNetty.Dns
+namespace Matrix.Network.Dns
 {
 	/// <summary>
 	/// Summary description for Dns.
 	/// </summary>
-    internal sealed partial class Resolver
+    internal sealed class Resolver
 	{
 		const   int		_dnsPort            = 53;
 		const   int		_udpRetryAttempts   = 2;

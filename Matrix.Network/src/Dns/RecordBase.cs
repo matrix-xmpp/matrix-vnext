@@ -4,7 +4,7 @@
 // distributed and edited without restriction.
 // 
 
-namespace Matrix.DotNetty.Dns
+namespace Matrix.Network.Dns
 {
 	/// <summary>
 	/// A simple base class for the different ResourceRecords, ANAME, MX, SOA, NS etc.

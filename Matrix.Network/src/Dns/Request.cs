@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Matrix.DotNetty.Dns
+namespace Matrix.Network.Dns
 {
 	/// <summary>
 	/// A Request logically consists of a number of questions to ask the DNS Server. Create a request and

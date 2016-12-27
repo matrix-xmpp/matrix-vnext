@@ -6,7 +6,7 @@
 
 using System.Text;
 
-namespace Matrix.DotNetty.Dns
+namespace Matrix.Network.Dns
 {
 	/// <summary>
 	/// Logical representation of a pointer, but in fact a byte array reference and a position in it. This

@@ -1,4 +1,4 @@
-﻿namespace Matrix.DotNetty.Codecs
+﻿namespace Matrix.Network.Codecs
 {
     public enum XmlStreamEventType
     {

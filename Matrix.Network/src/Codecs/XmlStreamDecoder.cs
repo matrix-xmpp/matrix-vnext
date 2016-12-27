@@ -4,7 +4,7 @@ using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 using Matrix.Xml.Parser;
 
-namespace Matrix.DotNetty.Codecs
+namespace Matrix.Network.Codecs
 {
     public class XmlStreamDecoder : MessageToMessageDecoder<IByteBuffer>
     {

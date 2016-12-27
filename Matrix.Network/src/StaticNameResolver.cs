@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DotNetty.Transport.Bootstrapping;
 
-namespace Matrix.DotNetty
+namespace Matrix.Network
 {
     public class StaticNameResolver : INameResolver
     {

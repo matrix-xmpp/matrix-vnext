@@ -1,6 +1,6 @@
 using System;
 
-namespace Matrix.DotNetty.Dns
+namespace Matrix.Network.Dns
 {
 	/// <summary>
 	/// Summary description for SRVRecord.

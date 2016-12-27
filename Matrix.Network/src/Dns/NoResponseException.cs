@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Matrix.DotNetty.Dns
+namespace Matrix.Network.Dns
 {
 	/// <summary>
 	/// Thrown when the server does not respond

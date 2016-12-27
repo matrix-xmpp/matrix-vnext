@@ -4,7 +4,7 @@
 // distributed and edited without restriction.
 // 
 
-namespace Matrix.DotNetty.Dns
+namespace Matrix.Network.Dns
 {
 	/// <summary>
 	/// The DNS TYPE (RFC1035 3.2.2/3).  Not all are supported

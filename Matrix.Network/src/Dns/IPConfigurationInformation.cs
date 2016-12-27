@@ -3,13 +3,13 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 
-namespace Matrix.DotNetty.Dns
+namespace Matrix.Network.Dns
 {
 
     /// <summary>
 	/// Summary description for IPConfigurationInformation.
 	/// </summary>
-	public class IPConfigurationInformation
+	internal class IPConfigurationInformation
     {
         private static List<IPAddress> publicDnsServers = new List<IPAddress>
         {

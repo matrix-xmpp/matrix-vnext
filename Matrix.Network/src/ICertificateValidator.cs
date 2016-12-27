@@ -1,7 +1,7 @@
 ﻿using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Matrix.DotNetty
+namespace Matrix.Network
 {
     public interface ICertificateValidator
     {

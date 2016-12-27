@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reactive.Subjects;
 using DotNetty.Transport.Channels;
-using Matrix.DotNetty.Codecs;
+using Matrix.Network.Codecs;
 using Matrix.Xml;
 
-namespace Matrix.DotNetty.Handlers
+namespace Matrix.Network.Handlers
 {
     public class XmppStreamEventHandler : SimpleChannelInboundHandler<XmlStreamEvent>
     {

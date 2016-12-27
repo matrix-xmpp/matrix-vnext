@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 using Matrix.Xml;
 
-namespace Matrix.DotNetty.Handlers
+namespace Matrix.Network.Handlers
 {
     public class WaitForStanzaHandler : XmppStanzaHandler
     {

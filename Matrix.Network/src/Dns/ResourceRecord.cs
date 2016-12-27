@@ -4,7 +4,7 @@
 // distributed and edited without restriction.
 // 
 
-namespace Matrix.DotNetty.Dns
+namespace Matrix.Network.Dns
 {
 	/// <summary>
 	/// Represents a Resource Record as detailed in RFC1035 4.1.3

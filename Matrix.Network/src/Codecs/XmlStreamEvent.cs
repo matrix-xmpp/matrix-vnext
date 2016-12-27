@@ -1,7 +1,7 @@
 ﻿using System;
 using Matrix.Xml;
 
-namespace Matrix.DotNetty.Codecs
+namespace Matrix.Network.Codecs
 {
     public class XmlStreamEvent
     {

@@ -6,7 +6,7 @@ using DotNetty.Transport.Channels;
 
 using Matrix.Xml;
 
-namespace Matrix.DotNetty.Codecs
+namespace Matrix.Network.Codecs
 {
     public class XmppXElementEncoder : MessageToMessageEncoder<XmppXElement>
     {

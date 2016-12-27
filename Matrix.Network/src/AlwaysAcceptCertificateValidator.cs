@@ -4,7 +4,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace Matrix.DotNetty
+namespace Matrix.Network
 {
     public class AlwaysAcceptCertificateValidator : ICertificateValidator
     {
