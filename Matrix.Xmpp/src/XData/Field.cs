@@ -54,7 +54,7 @@ namespace Matrix.Xmpp.XData
             get
             {
                 var fType = GetAttribute("type");
-                foreach (var eType in Util.Enum.GetValues<FieldType>().ToEnum<FieldType>())
+                foreach (var eType in Core.Enum.GetValues<FieldType>().ToEnum<FieldType>())
                 {
                      if (fType == eType.GetName())
                         return eType;

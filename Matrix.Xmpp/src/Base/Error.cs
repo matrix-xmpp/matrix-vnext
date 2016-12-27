@@ -28,7 +28,7 @@ namespace Matrix.Xmpp.Base
 		{
 			get
 			{
-                var values = Util.Enum.GetValues<ErrorCondition>().ToEnum<ErrorCondition>();
+                var values = Core.Enum.GetValues<ErrorCondition>().ToEnum<ErrorCondition>();
                 foreach (var errorCondition in values)
                 {
                     if (HasTag(Namespaces.Stanzas, errorCondition.GetName()))

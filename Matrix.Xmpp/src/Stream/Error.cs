@@ -39,7 +39,7 @@ namespace Matrix.Xmpp.Stream
         {
             get
             {
-                foreach (var errorCondition in Util.Enum.GetValues<ErrorCondition>().ToEnum<ErrorCondition>())
+                foreach (var errorCondition in Core.Enum.GetValues<ErrorCondition>().ToEnum<ErrorCondition>())
                 {
                     if (HasTag(Namespaces.Streams, errorCondition.GetName()))
                         return errorCondition;

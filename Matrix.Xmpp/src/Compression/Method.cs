@@ -24,7 +24,7 @@ namespace Matrix.Xmpp.Compression
 
         public Methods CompressionMethod
         {
-            get { return Util.Enum.ParseUsingNameAttrib<Methods>(Value); }
+            get { return Enum.ParseUsingNameAttrib<Methods>(Value); }
             set { Value = value.GetName(); }
         }
     }

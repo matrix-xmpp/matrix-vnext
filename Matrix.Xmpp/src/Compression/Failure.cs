@@ -22,7 +22,7 @@ namespace Matrix.Xmpp.Compression
         {
             get
             {
-                var values = Util.Enum.GetValues<FailureCondition>().ToEnum<FailureCondition>();
+                var values = Core.Enum.GetValues<FailureCondition>().ToEnum<FailureCondition>();
                 foreach (var failureCondition in values)
                 {
                      if (HasTag(failureCondition.GetName()))

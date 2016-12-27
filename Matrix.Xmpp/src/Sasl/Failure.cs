@@ -35,7 +35,7 @@ namespace Matrix.Xmpp.Sasl
         {
             get
             {
-                foreach (var failureCondition in Util.Enum.GetValues<FailureCondition>().ToEnum<FailureCondition>())
+                foreach (var failureCondition in Enum.GetValues<FailureCondition>().ToEnum<FailureCondition>())
                 {
                      if (HasTag(failureCondition.GetName()))
                         return failureCondition;

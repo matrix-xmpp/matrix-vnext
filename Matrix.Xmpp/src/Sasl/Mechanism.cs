@@ -43,7 +43,7 @@ namespace Matrix.Xmpp.Sasl
 
         internal static SaslMechanism GetSaslMechanism(string mechanism)
         {
-            foreach (var saslMechanism in Util.Enum.GetValues<SaslMechanism>().ToEnum<SaslMechanism>())
+            foreach (var saslMechanism in Core.Enum.GetValues<SaslMechanism>().ToEnum<SaslMechanism>())
             {
                 if (saslMechanism.GetName() == mechanism)
                     return saslMechanism;
