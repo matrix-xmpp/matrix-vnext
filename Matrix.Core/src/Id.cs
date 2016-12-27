@@ -8,27 +8,26 @@ namespace Matrix.Core
     /// </summary>
     public class Id
     {
+        private static long     _id;
+        private static string	_prefix	    = "MX_";
+        private static IdType   _idType     = IdType.Numeric;
 
-        private static long     m_id;
-        private static string	m_Prefix	= "MX_";
-        private static IdType   m_IdType    = IdType.Numeric;
-
-        private static object idLock = new object();
+        private static readonly object IdLock = new object();
 
         public static IdType Type
         {
-            get { return m_IdType; }
-            set { m_IdType = value; }
+            get { return _idType; }
+            set { _idType = value; }
         }
 
 		public static string GetNextId()		
         {
-            lock(idLock)
+            lock(IdLock)
             { 
-                if (m_IdType == IdType.Numeric)
-                    return m_Prefix + Interlocked.Increment(ref m_id);
+                if (_idType == IdType.Numeric)
+                    return _prefix + Interlocked.Increment(ref _id);
             
-                return m_Prefix + Guid.NewGuid();
+                return _prefix + Guid.NewGuid();
             }
 		}
 
@@ -37,7 +36,7 @@ namespace Matrix.Core
 		/// </summary>
 		public static void Reset()
 		{
-			m_id = 0;
+			_id = 0;
 		}
 
 		/// <summary>
@@ -46,8 +45,8 @@ namespace Matrix.Core
 		/// </summary>
 		public static string Prefix
 		{
-			get { return m_Prefix; }
-			set { m_Prefix = value ?? ""; }
+			get { return _prefix; }
+			set { _prefix = value ?? string.Empty; }
 		}
 	}    
 }
