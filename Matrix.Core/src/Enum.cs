@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Matrix.Core
 {
@@ -8,6 +7,13 @@ namespace Matrix.Core
     {
         static readonly Dictionary<Type, Array> EnumValuesCache = new Dictionary<Type, Array>();
 
+        /// <summary>
+        /// Parses a sring to an enum member by using the NameAttribute on the Enum
+        /// member when present
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="val"></param>
+        /// <returns>The enum member</returns>
         public static T ParseUsingNameAttrib<T>(string val) where T : struct
         {
             var values = GetValues<T>().ToEnum<T>();
@@ -19,6 +25,11 @@ namespace Matrix.Core
             return (T)((object)-1);
         }
         
+        /// <summary>
+        /// Returns all values of an Enum as Array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>Array of enum values</returns>
         public static Array GetValues<T>() where T : struct
         {
             lock (EnumValuesCache)
