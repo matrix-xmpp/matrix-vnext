@@ -8,14 +8,14 @@ using Matrix.Xmpp.Base;
 
 namespace Matrix.Network.Handlers
 {
-    public class IqFilter : XmppStanzaHandler
+    public class IqHandler : XmppStanzaHandler
     {
         static readonly ConcurrentDictionary<string, Action<IChannelHandlerContext, XmppXElement>> DictFilter
             = new ConcurrentDictionary<string, Action<IChannelHandlerContext, XmppXElement>>();
 
-        public IqFilter()// : base(xmppClient)
+        public IqHandler()// : base(xmppClient)
         {
-            Subscribe<Iq>(IqHandler);
+            Subscribe<Iq>(HandleIq);
         }
 
         public async Task SendIq(Iq iq, Action<IChannelHandlerContext, XmppXElement> response)
@@ -53,7 +53,7 @@ namespace Matrix.Network.Handlers
             return await resultCompletionSource.Task;
         }
 
-        private void IqHandler(IChannelHandlerContext ctx, XmppXElement el)
+        private void HandleIq(IChannelHandlerContext ctx, XmppXElement el)
         {
             var iq = el as Iq;
             if (iq == null)

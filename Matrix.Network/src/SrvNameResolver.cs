@@ -13,8 +13,22 @@ namespace Matrix.Network
     {
         const string PrefixSrvClient = "_xmpp-client._tcp.";
         const string PrefixSrvServer = "_xmpp-server._tcp.";
+        
+        public SrvNameResolver()
+        {
+        }
+
+        public SrvNameResolver(bool isClient)
+        {
+            IsClient = isClient;
+        }
 
         public bool IsResolved(EndPoint address) => false;
+
+        /// <summary>
+        /// Decides wheter we lookup Xmpp Server or Client records
+        /// </summary>
+        public bool IsClient { get; set; } = true;
 
         public async Task<EndPoint> ResolveAsync(EndPoint address)
         {
@@ -42,7 +56,8 @@ namespace Matrix.Network
                     {
                         try
                         {
-                            var srvRecords = await Resolver.SRVLookup(PrefixSrvClient + host, server);
+                            var prefix = IsClient ? PrefixSrvClient : PrefixSrvServer;
+                            var srvRecords = await Resolver.SRVLookup(prefix + host, server);
                             if (srvRecords.Count > 0)
                             {
                                 return PickSrvRecord(srvRecords);
@@ -51,27 +66,37 @@ namespace Matrix.Network
                         }
                         catch (Exception)
                         {
+                            // ignored
                         }
                     }
                 }
             }
             catch (Exception)
             {
+                // ignored
             }
             return null;
+        }
+
+        /// <summary>
+        /// Picks all records which the lowest priority. There can be more than just one.
+        /// </summary>
+        /// <param name="records"></param>
+        /// <returns></returns>
+        private IEnumerable<SRVRecord> GetMinServers(List<SRVRecord> records)
+        {
+            var minPrio = records.Min(s => s.Priority);
+            return records
+                        .Where(s1 => s1.Priority == minPrio);
         }
 
         private SRVRecord PickSrvRecord(List<SRVRecord> records)
         {
             SRVRecord ret;
-            IEnumerable<SRVRecord> srv = records.OrderBy(s => s.Priority);
+            
+            List<SRVRecord> minServers = GetMinServers(records).ToList();
 
-            // minServer is the servers with the lowest priority,
-            // we can have multiple minServer when there is more than 1 server
-            // with the lowest priority
-            IEnumerable<SRVRecord> minServers = srv.Where(s1 => s1.Priority == srv.Min(s => s.Priority));
-
-            int minServersCount = minServers.Count();
+            int minServersCount = minServers.Count;
             if (minServersCount > 1)
             {
                 int rnd;
