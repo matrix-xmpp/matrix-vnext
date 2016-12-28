@@ -12,6 +12,7 @@ namespace Matrix
         #region << Properties >>
         public string Username { get; set; }
         public string Password { get; set; }
+        public string XmppDomain { get; set; }
 
 
         public IAuthenticate SalsHandler { get; set; } = new DefaultSaslHandler();
