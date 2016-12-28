@@ -12,39 +12,6 @@ namespace Matrix.Xml
     public class Factory
     {
         static readonly Dictionary<string, Type> FactoryTable = new Dictionary<string, Type>();
-        
-        public static void RegisterElement<T>(string localName) where T : XmppXElement
-        {
-            RegisterElement<T>("", localName);
-        }
-
-        /// <summary>
-        /// Adds new Element Types to the Hashtable
-        /// Use this function also to register your own created Elements.
-        /// If a element is already registered it gets overwritten. This behaviour is also useful if you you want to overwrite
-        /// classes and add your own derived classes to the factory.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="ns"></param>
-        /// <param name="localName"></param>
-        public static void RegisterElement<T>(string ns, string localName) where T : XmppXElement
-        {
-            RegisterElement(typeof(T), ns, localName);           
-        }
-
-        private static void RegisterElement(Type type, string ns, string localName)
-        {
-            string key = BuildKey(ns, localName);
-
-            // added thread safety on a user request
-            lock (FactoryTable)
-            {
-                if (FactoryTable.ContainsKey(key))
-                    FactoryTable[key] = type;
-                else
-                    FactoryTable.Add(key, type);
-            }
-        }
 
         /// <summary>
         /// Builds the key for looking up.
@@ -81,6 +48,41 @@ namespace Matrix.Xml
                              
             return ret;
         }
+
+        #region << register over methods >>
+        public static void RegisterElement<T>(string localName) where T : XmppXElement
+        {
+            RegisterElement<T>("", localName);
+        }
+
+        /// <summary>
+        /// Adds new Element Types to the Hashtable
+        /// Use this function also to register your own created Elements.
+        /// If a element is already registered it gets overwritten. This behaviour is also useful if you you want to overwrite
+        /// classes and add your own derived classes to the factory.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ns"></param>
+        /// <param name="localName"></param>
+        public static void RegisterElement<T>(string ns, string localName) where T : XmppXElement
+        {
+            RegisterElement(typeof(T), ns, localName);           
+        }
+
+        private static void RegisterElement(Type type, string ns, string localName)
+        {
+            string key = BuildKey(ns, localName);
+
+            // added thread safety on a user request
+            lock (FactoryTable)
+            {
+                if (FactoryTable.ContainsKey(key))
+                    FactoryTable[key] = type;
+                else
+                    FactoryTable.Add(key, type);
+            }
+        }
+        #endregion
 
         #region register over attributes   
         private static void RegisterElement(Type type)
