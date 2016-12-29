@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Net;
 using Matrix.Network.Dns;
+using Matrix.Network.Resolver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 

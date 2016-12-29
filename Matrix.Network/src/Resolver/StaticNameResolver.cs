@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DotNetty.Transport.Bootstrapping;
 
-namespace Matrix.Network
+namespace Matrix.Network.Resolver
 {
     public class StaticNameResolver : INameResolver
     {
@@ -24,10 +24,8 @@ namespace Matrix.Network
             {
                 return new IPEndPoint(Ip, Port);
             }
-            else
-            {
-                return address;
-            }
+            
+            return address;
         }
     }
 }

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
 using DotNetty.Transport.Bootstrapping;
 using Matrix.Network.Dns;
 
-namespace Matrix.Network
+namespace Matrix.Network.Resolver
 {
     public class SrvNameResolver : INameResolver
     {
@@ -57,7 +56,7 @@ namespace Matrix.Network
                         try
                         {
                             var prefix = IsClient ? PrefixSrvClient : PrefixSrvServer;
-                            var srvRecords = await Resolver.SRVLookup(prefix + host, server);
+                            var srvRecords = await Dns.Resolver.SRVLookup(prefix + host, server);
                             if (srvRecords.Count > 0)
                             {
                                 return PickSrvRecord(srvRecords);

@@ -9,6 +9,7 @@ using Matrix.Core;
 using Matrix.Network;
 using Matrix.Network.Codecs;
 using Matrix.Network.Handlers;
+using Matrix.Network.Resolver;
 using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Stream;
@@ -67,7 +68,6 @@ namespace Matrix
 
         public ICertificateValidator CertificateValidator { get; set; } = new DefaultCertificateValidator();
 
-
         public IObservable<XmppXElement> XmppXElementStream => _xmppStreamEventHandler.XmppXElementStream;
 
         public IqHandler IqHandler { get; } = new IqHandler();
@@ -86,12 +86,6 @@ namespace Matrix
         {
             await _pipeline.WriteAndFlushAsync(s);
         }
-
-        //private async Task StreamReset()
-        //{
-        //    _xmlStreamDecoder.Reset();
-        //    await SendStreamHeader();
-        //}
 
         public async Task<StreamFeatures> ResetStreamAsync()
         {
