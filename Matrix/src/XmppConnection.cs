@@ -17,21 +17,18 @@ using Matrix.Xmpp.Stream;
 namespace Matrix
 {
     public abstract class XmppConnection
-    {
-        
-        protected Bootstrap _bootstrap = new Bootstrap();
-        protected IChannelPipeline _pipeline;
-
-        readonly XmlStreamDecoder _xmlStreamDecoder = new XmlStreamDecoder();
-
-        XmppStreamEventHandler _xmppStreamEventHandler = new XmppStreamEventHandler();
-
-        INameResolver _resolver = new SrvNameResolver();
+    {        
+        protected   Bootstrap                   _bootstrap              = new Bootstrap();
+        protected   IChannelPipeline            _pipeline;
+        private     MultithreadEventLoopGroup   _group                  = new MultithreadEventLoopGroup();
+        readonly    XmlStreamDecoder            _xmlStreamDecoder       = new XmlStreamDecoder();
+        private     XmppStreamEventHandler      _xmppStreamEventHandler = new XmppStreamEventHandler();
+        private     INameResolver               _resolver               = new SrvNameResolver();        
 
         protected XmppConnection()
         {
             _bootstrap
-                .Group(new MultithreadEventLoopGroup())
+                .Group(_group)
                 .Channel<TcpSocketChannel>()
                 .Option(ChannelOption.TcpNodelay, true)
                 .Resolver(HostnameResolver)
@@ -54,8 +51,6 @@ namespace Matrix
 
                     _pipeline.AddLast(IqHandler);
                     _pipeline.AddLast(WaitForStanzaHandler);
-
-
 
                 }));
         }

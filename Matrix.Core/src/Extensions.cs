@@ -52,7 +52,7 @@ namespace Matrix.Core
                 return ret;
             }
         }
-
+           
         public static IEnumerable<TResult> CastIterator<TResult>(System.Collections.IEnumerable source)
         {
             foreach (object obj in source) yield return (TResult) obj;

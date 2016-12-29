@@ -1135,7 +1135,7 @@ namespace Matrix.Xml
         }
         #endregion
 
-        internal IPAddress GetAttributeIPAddress(string name)
+        public IPAddress GetAttributeIPAddress(string name)
         {
             IPAddress.TryParse(GetAttribute(name), out var ip);
             return ip;
@@ -1298,12 +1298,12 @@ namespace Matrix.Xml
         /// </summary>
         /// <param name="tagname">The tagname.</param>
         /// <param name="add">if set to <c>true</c> add, otherwise remove.</param>
-        internal void AddOrRemoveTag(string tagname, bool add)
+        public void AddOrRemoveTag(string tagname, bool add)
         {
             AddOrRemoveTag(tagname, add, false);
         }
 
-        internal void AddFirstOrRemoveTag(string tagname, bool add)
+        public void AddFirstOrRemoveTag(string tagname, bool add)
         {
             AddOrRemoveTag(tagname, add, true);
         }
@@ -1350,7 +1350,7 @@ namespace Matrix.Xml
         }
 
         #region << internal helper functions for handling namespaces and prefixed attributes >>
-        internal void AddNameSpaceDeclaration(string prefix, string value)
+        public void AddNameSpaceDeclaration(string prefix, string value)
         {
             SetAttributeValue(XNamespace.Xmlns + prefix, value);
         }
