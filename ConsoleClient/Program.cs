@@ -20,10 +20,16 @@ namespace ConsoleClient
                 Username = "alex",
                 Password = "***REMOVED***",
                 XmppDomain = "ag-software.net",
-               
+                Resource = "Matrix vNext"
             };
 
             xmppClient.ConnectAsync().GetAwaiter().GetResult();
+
+            var roster = xmppClient.RequestRosterAsync().GetAwaiter().GetResult();
+            Console.WriteLine(roster.ToString());
+
+            xmppClient.SendPresenceAsync().GetAwaiter().GetResult();
+            
 
             Console.WriteLine("Hello World!");
             Console.ReadLine();

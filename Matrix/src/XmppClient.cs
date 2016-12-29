@@ -14,7 +14,7 @@ namespace Matrix
 {
     public class XmppClient : XmppConnection
     {
-
+        private int _Priority;
         #region << Properties >>
 
         public string Username { get; set; }
@@ -24,6 +24,21 @@ namespace Matrix
         public string Resource { get; set; } = "MatriX";
 
         public bool UseStartTls { get; set; } = true;
+
+        public Show Show { get; set; } = Show.None;
+
+        public string Status { get; set; } = "online";
+        public int Priority
+        {
+            get { return _Priority; }
+            set
+            {
+                if (value < -127 || value > 127)
+                    throw new System.ArgumentOutOfRangeException("The value must be an integer between -128 and +127.");
+
+                _Priority = value;
+            }
+        }
 
         public IAuthenticate SalsHandler { get; set; } = new DefaultSaslHandler();
         #endregion
@@ -115,5 +130,59 @@ namespace Matrix
             SessionState = SessionState.Binded;
             return resIq as Iq;
         }
+
+        public async Task<Iq> RequestRosterAsync(string version = null)
+        {
+            var riq = new RosterIq()
+            {
+                Type = IqType.Get
+            };
+
+            if (version != null)
+                riq.Roster.Version = version;
+                        
+            var resIq = await IqHandler.SendIqAsync(riq);            
+            return resIq as Iq;
+        }
+
+        #region << SendPresence >>
+        public async Task SendPresenceAsync(Presence pres)
+        {
+            await SendAsync(pres);
+        }
+
+        public async Task SendPresenceAsync(Show show)
+        {
+            Show = show;
+            await SendPresenceAsync();
+        }
+
+        public async Task SendPresenceAsync(Show show, string status)
+        {
+            Show = show;
+            Status = status;
+
+            await SendPresenceAsync();
+        }
+
+        public async Task SendPresenceAsync(Show show, string status, int priority)
+        {
+            Show = show;
+            Status = status;
+            Priority = priority;
+
+            await SendPresenceAsync();
+        }
+
+        public async Task SendPresenceAsync()
+        {
+            await SendAsync(new Presence
+            {
+                Show = Show,
+                Status = Status,
+                Priority = Priority
+            });
+        }
+        #endregion
     }
 }
