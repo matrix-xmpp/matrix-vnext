@@ -62,8 +62,8 @@ namespace Matrix.Xmpp.Delay
         /// <value>The stamp.</value>
         public DateTime Stamp
         {
-            get { return Time.JabberDate(GetAttribute("stamp")); }
-            set { SetAttribute("stamp", Time.JabberDate(value)); }
+            get { return Core.Time.JabberDate(GetAttribute("stamp")); }
+            set { SetAttribute("stamp", Core.Time.JabberDate(value)); }
         }
     }
 }

@@ -25,8 +25,8 @@ namespace Matrix.Xmpp.AdvancedMessageProcessing
 
         public DateTime ValueAsDateTime
         {
-            get { return Time.Iso8601Date(ValueAsString); }
-            set { ValueAsString = Time.Iso8601DateString(value); }
+            get { return Core.Time.Iso8601Date(ValueAsString); }
+            set { ValueAsString = Core.Time.Iso8601DateString(value); }
         }
         
         /// <summary>

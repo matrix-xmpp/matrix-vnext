@@ -72,8 +72,8 @@ namespace Matrix.Xmpp.Delay
         /// <value>The stamp.</value>
         public DateTime Stamp
         {
-            get { return Time.Iso8601Date(GetAttribute("stamp")); }
-            set { SetAttribute("stamp", Time.Iso8601Date(value)); }
+            get { return Core.Time.Iso8601Date(GetAttribute("stamp")); }
+            set { SetAttribute("stamp", Core.Time.Iso8601Date(value)); }
         }
     }
 }

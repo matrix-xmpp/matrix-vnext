@@ -40,8 +40,8 @@ namespace Matrix.Xmpp.PubSub.Event
 
         public DateTime Expiry
         {
-            get { return Time.Iso8601Date(GetAttribute("expiry")); }    
-            set { SetAttribute("expiry", Time.Iso8601Date(value)); }
+            get { return Core.Time.Iso8601Date(GetAttribute("expiry")); }    
+            set { SetAttribute("expiry", Core.Time.Iso8601Date(value)); }
         }
 
         /// <summary>

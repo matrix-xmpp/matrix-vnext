@@ -1,0 +1,612 @@
+
+<!-- saved from url=(0062)http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      
+   <title>XML-RPC</title><meta name="generator" content="DocBook XSL Stylesheets V1.52.2"><meta name="description" content="The complete text of Elliotte Rusty Harold&#39;s book Processing XML with Java.         published by Addison-Wesley, November 2002"><script language="javascript"><!--
+/* Only sunsites are allowed to mirror this page and then
+only with explicit, prior permission. For details,
+send email to elharo@metalab.unc.edu */
+if (location.protocol.toLowerCase().indexOf("file") != 0 ) { 
+  if (0 > location.host.toLowerCase().indexOf("cafeconleche.org")
+      && 0 > location.host.toLowerCase().indexOf("ibiblio.org")) {
+    location.href="http://www.cafeconleche.org/books/xmljava/chapters/";
+  }
+} // --></script><link rel="home" href="http://www.ibiblio.org/xml/books/xmljava/chapters/index.html" title="Processing XML with Java"><link rel="up" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02.html" title="Chapter 2. XML Protocols: XML-RPC and SOAP"><link rel="previous" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s04.html" title="Customizing the Request"><link rel="next" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s06.html" title="SOAP"><link rel="preface" href="http://www.ibiblio.org/xml/books/xmljava/chapters/pr01.html" title="Preface"><link rel="preface" href="http://www.ibiblio.org/xml/books/xmljava/chapters/pr02.html" title="Acknowledgements"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch01.html" title="Chapter 1. XML for Data"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02.html" title="Chapter 2. XML Protocols: XML-RPC and SOAP"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch03.html" title="Chapter 3. Writing XML with Java"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch04.html" title="Chapter 4. Converting Flat Files to XML"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch05.html" title="Chapter 5. Reading XML"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch06.html" title="Chapter 6. SAX"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch07.html" title="Chapter 7. The XMLReader Interface"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch08.html" title="Chapter 8. SAX Filters"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch09.html" title="Chapter 9. The Document Object Model"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch10.html" title="Chapter 10. Creating XML Documents with DOM"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch11.html" title="Chapter 11. The Document Object Model Core"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch12.html" title="Chapter 12. The DOM Traversal Module"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch13.html" title="Chapter 13. Output from DOM"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch14.html" title="Chapter 14. JDOM"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch15.html" title="Chapter 15. The JDOM Model"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch16.html" title="Chapter 16. XPath"><link rel="chapter" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch17.html" title="Chapter 17. XSLT"><link rel="appendix" href="http://www.ibiblio.org/xml/books/xmljava/chapters/apa.html" title="Appendix A. XML APIs Quick Reference"><link rel="appendix" href="http://www.ibiblio.org/xml/books/xmljava/chapters/apb.html" title="Appendix B. SOAP 1.1 Schemas"><link rel="index" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ix01.html" title="Index"><link rel="subsection" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#d0e3353" title="Data Structures"><link rel="subsection" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#d0e3484" title="Faults"><link rel="subsection" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#d0e3519" title="Validating XML-RPC"><style type="text/css"></style></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tbody><tr><th colspan="3" align="center">XML-RPC</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s04.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;2.&nbsp;XML Protocols: XML-RPC and SOAP</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s06.html">Next</a></td></tr></tbody></table><hr></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="d0e3194"></a>XML-RPC</h2></div></div><p>
+    XML-RPC is an XML application designed to enable <i>remote
+    procedure calls (RPC)</i> over the
+    Internet. In Java lingo, a <i>procedure call</i> 
+    is just a method
+    invocation. In some other languages like C it might be called a
+    function call. However, it just means that some named chunk of code
+    somewhere is invoked with a list of argument values of particular
+    types. The procedure may or may not return a single value of a known
+    type; i.e. in Java terms it may or may not return void. A
+    <i>remote procedure call</i> is one in which the
+    called procedure is not necessarily running on the same host as the
+    calling procedure.
+ </p><p>
+    XML-RPC was hardly the first effort to invent a syntax for remote
+    procedure calls. There have been numerous attempts previously
+    including <i>CORBA</i> and Java’s own
+    <i>Remote Method Invocation
+    (RMI)</i>. However, prior to XML-RPC none
+    of these technologies lived up to their hype. The reason is they
+    were too complex, too binary, too opaque, and too platform dependent.
+  </p><p>
+    XML-RPC is a clear case of the triumph of
+    <a href="http://www.ai.mit.edu/docs/articles/good-news/subsection3.2.1.html" target="_top">worse 
+    is better</a>. 
+    It bit off the 90% of the problem that gave developers
+    the features they actually needed. It 
+    ignored the 10% of the problem that caused 90% of the complexity in 
+    previous RPC systems. 
+    Features it ignores completely include garbage collection, object stubs and skeletons,
+    callbacks, activation, object serialization,
+    and more. What it provides is a simple,
+    easy-to-comprehend means of sending a method name and a list of arguments
+    from
+    one system to another. And it turns out that this may be the only
+    thing that’s needed in many, many actual systems. 
+  </p><p>
+   At a very high level, the fundamental idea of XML-RPC is this:
+   An XML document that contains a method name and some arguments
+   is sent to a Web server using HTTP POST. 
+   The server invokes the method with the specified arguments.
+   Then it wraps up the return value of the method in another XML
+   document, and sends that back to the client. 
+  </p><p>
+     For example, let’s suppose you want to invoke the <tt>getQuote()</tt> method
+     in the program running at the URL
+     <tt>http://stocks.cafeconleche.org/quotes.cgi</tt>.  
+     This method takes as an
+     argument a string containing a stock symbol and returns a double
+     containing the current price of the stock. That is, in Java
+     parlance its signature looks like this:
+  </p><code class="methodsynopsis"><span class="modifier">public&nbsp;</span><span class="modifier">static&nbsp;</span><span class="type">double&nbsp;</span><span class="methodname"><b>getQuote</b></span>(<span class="methodparam"><span class="type">String&nbsp;</span><span class="parameter"><i>symbol</i></span></span>);</code><p>
+  Encoded as an XML-RPC document, 
+  the request looks quite different, but the same information is still
+  present. <a href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#quote-xml-rpc.xml" title="Example 2.6. An XML-RPC request document">Example&nbsp;2.6</a> demonstrates. 
+  </p><div class="example"><a name="quote-xml-rpc.xml"></a><p class="title"><b>Example&nbsp;2.6.&nbsp;An XML-RPC request document</b></p><pre class="programlisting">&lt;?xml version="1.0"?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;getQuote&lt;/methodName&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;&lt;string&gt;RHAT&lt;/string&gt;&lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodCall&gt;</pre></div><p>
+  The root element of an XML-RPC request document is 
+  <tt>methodCall</tt>. This has a <tt>methodName</tt> 
+  child element whose content is the ASCII name of the method to invoke. 
+  The <tt>methodCall</tt> element also has a 
+  <tt>params</tt> child element containing the arguments to pass 
+  to the method. Each argument is encoded as a <tt>param</tt> 
+  element that contains a <tt>value</tt> element. The 
+  <tt>value</tt> element contains a child element identifying 
+  the type of the <tt>param</tt>, and this child element 
+  contains the actual value passed, as an ASCII string. Here the type of 
+  the single argument is <tt>string</tt>. Other possibilities include int, 
+  <tt>boolean</tt>, <tt>double</tt>, 
+  <tt>dateTime.iso8601</tt>, and <tt>base64</tt>. <tt>i4</tt> is 
+  allowed as an alias for <tt>int</tt>, but is not a different 
+  type.
+  </p><p>
+  The XML-RPC client (which is normally <span class="emphasis"><em>not</em></span> 
+  a web browser) will post this document to 
+  the server as shown in <a href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#post-quote-xml-rpc.xml" title="Example 2.7. POSTing an XML-RPC request document">Example&nbsp;2.7</a>
+  using the MIME media type text/xml.
+  It must provide the correct content length so that
+  the server knows when the client has finished sending. 
+  </p><div class="example"><a name="post-quote-xml-rpc.xml"></a><p class="title"><b>Example&nbsp;2.7.&nbsp;POSTing an XML-RPC request document</b></p><pre class="screen">POST /quotes.cgi HTTP/1.0
+Host: stocks.cafeconleche.org
+Content-Type: text/xml
+Content-length: 167
+
+&lt;?xml version="1.0"?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;getQuote&lt;/methodName&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;&lt;string&gt;RHAT&lt;/string&gt;&lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodCall&gt;</pre></div><p>
+  The server then responds with an HTTP header 
+  and a response document as shown in
+  <a href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#rhat-quote.xml" title="Example 2.8. An XML-RPC response">Example&nbsp;2.8</a>.
+  The HTTP header is the standard sort of HTTP header
+  you’d see with any successful web request. 
+  </p><div class="example"><a name="rhat-quote.xml"></a><p class="title"><b>Example&nbsp;2.8.&nbsp;An XML-RPC response</b></p><pre class="screen">HTTP/1.0 200 OK
+Date: Mon, 16 Jul 2001 20:12:37 GMT
+Server: Apache/1.3.12 (Unix) mod_perl/1.24
+Last-Modified: Mon, 16 Jul 2001 20:12:37 GMT
+Content-Length: 140
+Connection: close
+Content-Type: text/xml
+
+&lt;?xml version="1.0"?&gt;
+&lt;methodResponse&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;&lt;double&gt;4.12&lt;/double&gt;&lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodResponse&gt;
+</pre></div><p>
+This is the basic format of all successful XML-RPC responses. A
+<tt>methodResponse</tt> root element contains a single
+<tt>params</tt> child element which contains a single
+<tt>param</tt> child element which contains a single
+<tt>value</tt> element. The <tt>value</tt> element
+contains a single value of a type indicated by its child element,
+<tt>double</tt> in this example. The only thing that can change
+is the type and content of the response data.
+  </p><p>
+  So far I’ve been talking as if the program on the server
+  that receives and processes this request is a Java class with the
+  appropriately named methods, but that isn’t necessarily so. The server
+  program could be written in Perl, Python, C, C#, C++, AppleScript, Rexx, or any of
+  dozens of
+  other languages. Whatever language the program is written in, it may
+  or may not have an actual procedure named “getQuote”. 
+  All that’s
+  required is that the server which receives this document has some way
+  of dispatching the request to an appropriate process. Sometimes the
+  server may parse the XML and send the raw data to the processor. Other
+  times, it may send the entire XML document. It might even transform
+  the XML document into another form and send that. What happens on the
+  server doesn’t really matter as long as it eventually sends back its
+  answer as an XML document in the proper format. XML very neatly and
+  almost completely decouples the implementation from the interface. In
+  this respect, at least, XML-RPC is a huge improvement over competing
+  technologies like RMI, DCOM, and CORBA, all of  which make way too
+  many assumptions about how the remote end of the connection is
+  implemented.
+  </p><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="d0e3353"></a>Data Structures</h3></div></div><p>
+    The implicit XML-RPC model of how services are implemented is a lot 
+    closer to C than to Java. This is not to say you can’t use Java to
+    write XML-RPC clients or servers — you most certainly can — 
+    just that
+    an XML-RPC procedure call is more like a C function call than a Java 
+    method call and that XML-RPC data types are more like C’s data types than
+    Java’s object types. Fortuitously, XML-RPC doesn’t have any concept of 
+    pointers (the root of all C’s evils); but it does have structs and arrays
+    for handling combinations of values and lists
+    of values. These constructs can nest. That is, a struct member can
+    be another struct or an array; and an array element can 
+    be a struct or another array.
+    This enables you to pass
+    fairly complex data structures to remote procedures. 
+  </p><div class="sect3"><div class="titlepage"><div><h4 class="title"><a name="d0e3358"></a>Arrays</h4></div></div><p>
+  An XML-RPC array is represented as an <tt>array</tt> element.
+  The <tt>array</tt> element contains a single <tt>data</tt> element
+  which contains zero or more <tt>value</tt> elements.
+  These are the same <tt>value</tt> elements used in <tt>param</tt> elements. 
+  Thus each
+  <tt>value</tt> element contains a <tt>type</tt> element such as <tt>int</tt> or 
+  <tt>string</tt> which contains the actual data.
+  For example, here’s an array that contains 
+  four stock symbols, each of which is  a string:
+  </p><div class="informalexample"><pre class="programlisting">&lt;array&gt;
+  &lt;data&gt;
+    &lt;value&gt;&lt;string&gt;RHAT&lt;/string&gt;&lt;/value&gt;
+    &lt;value&gt;&lt;string&gt;SUNW&lt;/string&gt;&lt;/value&gt;
+    &lt;value&gt;&lt;string&gt;ASKJ&lt;/string&gt;&lt;/value&gt;
+    &lt;value&gt;&lt;string&gt;COVD&lt;/string&gt;&lt;/value&gt;
+  &lt;/data&gt;
+&lt;/array&gt;
+</pre></div><p>
+  Unlike arrays in C or Java, the elements of an 
+  XML-RPC array do not have to share the
+  same type. Here’s an array that contains a string and two doubles:
+  </p><div class="informalexample"><pre class="programlisting">&lt;array&gt;
+  &lt;data&gt;
+    &lt;value&gt;&lt;string&gt;RHAT&lt;/string&gt;&lt;/value&gt;
+    &lt;value&gt;&lt;double&gt;4.12&lt;/double&gt;&lt;/value&gt;
+    &lt;value&gt;&lt;double&gt;4.25&lt;/double&gt;&lt;/value&gt;
+  &lt;/data&gt;
+&lt;/array&gt;</pre></div><p>
+  You can use an <tt>array</tt> element wherever you would use an
+  <tt>int</tt> or <tt>string</tt> or other type element. For example,
+  <a href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#array-quote-xml-rpc.xml" title="Example 2.9. An XML-RPC request
+that passes an array as an argument">Example&nbsp;2.9</a> is a request for four stock quotes:
+  </p><div class="example"><a name="array-quote-xml-rpc.xml"></a><p class="title"><b>Example&nbsp;2.9.&nbsp;An XML-RPC request
+that passes an array as an argument</b></p><pre class="screen">&lt;?xml version="1.0"?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;getQuote&lt;/methodName&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;
+        &lt;array&gt;
+          &lt;data&gt;
+            &lt;value&gt;&lt;string&gt;RHAT&lt;/string&gt;&lt;/value&gt;
+            &lt;value&gt;&lt;string&gt;SUNW&lt;/string&gt;&lt;/value&gt;
+            &lt;value&gt;&lt;string&gt;ASKJ&lt;/string&gt;&lt;/value&gt;
+            &lt;value&gt;&lt;string&gt;COVD&lt;/string&gt;&lt;/value&gt;
+          &lt;/data&gt;
+        &lt;/array&gt;
+      &lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodCall&gt;
+</pre></div><p>
+  The response might also contain an array with four prices, as shown in
+  <a href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#array-quote-xml-rpc-response.xml" title="Example 2.10. An XML-RPC response document
+that returns an array">Example&nbsp;2.10</a>:
+  </p><div class="example"><a name="array-quote-xml-rpc-response.xml"></a><p class="title"><b>Example&nbsp;2.10.&nbsp;An XML-RPC response document
+that returns an array</b></p><pre class="screen">&lt;?xml version="1.0"?&gt;
+&lt;methodResponse&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;
+        &lt;array&gt;
+          &lt;data&gt;
+            &lt;value&gt;&lt;double&gt;4.12&lt;/double&gt;&lt;/value&gt;
+            &lt;value&gt;&lt;double&gt;13.68&lt;/double&gt;&lt;/value&gt;
+            &lt;value&gt;&lt;double&gt;1.93&lt;/double&gt;&lt;/value&gt;
+            &lt;value&gt;&lt;double&gt;0.78&lt;/double&gt;&lt;/value&gt;
+          &lt;/data&gt;
+        &lt;/array&gt;
+      &lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodResponse&gt;
+</pre></div><p>
+  In some sense this indicates an overloaded method since in one example the
+  <tt>getQuote()</tt> method is taking a string 
+  and in another it’s taking an array of 
+  strings.
+  However, this may not necessarily map to an overloaded method on the server.
+  Indeed, it may not map to a method named <tt>getQuote()</tt> at all.
+  This could all just be an illusion perpetrated by the
+  server to provide an easy to understand client interface to
+  a very differently organized system. 
+  </p></div><div class="sect3"><div class="titlepage"><div><h4 class="title"><a name="d0e3436"></a>Structs</h4></div></div><p>
+  A struct is a collection of variables.
+  For those readers who went straight to Java
+  and never had the misfortune of 
+  struggling with C, a struct is a poor man’s class.
+  It has fields but no methods, and all the fields are public.
+  </p><p>
+  An XML-RPC struct is represented by a <tt>struct</tt> element.
+  Each member of the struct is represented by a <tt>member</tt> element.
+  Each <tt>member</tt> element has a <tt>name</tt> child and a <tt>value</tt> child.
+  For example, this <tt>struct</tt> lists 
+  a stock symbol and a limit price:
+  </p><div class="informalexample"><pre class="programlisting">&lt;struct&gt;
+  &lt;member&gt;
+    &lt;name&gt;symbol&lt;/name&gt;
+    &lt;value&gt;&lt;string&gt;RHAT&lt;/string&gt;&lt;/value&gt;
+  &lt;/member&gt;
+  &lt;member&gt;
+    &lt;name&gt;limit&lt;/name&gt;
+    &lt;value&gt;&lt;double&gt;2.25&lt;/double&gt;&lt;/value&gt;
+  &lt;/member&gt;
+&lt;/struct&gt;
+</pre></div><p>
+  As with arrays, you can use a <tt>struct</tt> anywhere you’d use one of the 
+  simple type elements such as <tt>int</tt> or <tt>string</tt>.
+  For example, 
+  <a href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#struct-bid-xml-rpc.xml" title="Example 2.11. An XML-RPC Request
+that passes a struct as an argument">Example&nbsp;2.11</a> is 
+  an XML-RPC request that represents a limit order.
+  In a limit order, three values are required: the stock to buy,
+  the price you’re willing to buy at, and the expiration date of the order. 
+  </p><div class="example"><a name="struct-bid-xml-rpc.xml"></a><p class="title"><b>Example&nbsp;2.11.&nbsp;An XML-RPC Request
+that passes a struct as an argument</b></p><pre class="screen">&lt;?xml version="1.0"?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;bid&lt;/methodName&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;
+        &lt;struct&gt;
+          &lt;member&gt;
+            &lt;name&gt;symbol&lt;/name&gt;
+            &lt;value&gt;&lt;string&gt;RHAT&lt;/string&gt;&lt;/value&gt;
+          &lt;/member&gt;
+          &lt;member&gt;
+            &lt;name&gt;limit&lt;/name&gt;
+            &lt;value&gt;&lt;double&gt;2.25&lt;/double&gt;&lt;/value&gt;
+          &lt;/member&gt;
+          &lt;member&gt;
+            &lt;name&gt;expires&lt;/name&gt;
+            &lt;value&gt;&lt;dateTime.iso8601&gt;20020709T20:00:00&lt;/dateTime.iso8601&gt;&lt;/value&gt;
+          &lt;/member&gt;
+        &lt;/struct&gt;
+      &lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodCall&gt;
+</pre></div><p>
+ Responses can also contain structs. You’ll see an example of this 
+ in the next section when we talk about
+ faults. 
+  </p></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="d0e3484"></a>Faults</h3></div></div><p>It’s not at all uncommon for
+  a procedure call to fail. In Java this causes an exception.
+  In XML-RPC this causes a <i>fault</i>.
+   For example, <tt>getQuote()</tt> might fail if the client 
+  passes in a nonexistent stock symbol.
+  A fault response is almost exactly like a successful response except that
+  a <tt>fault</tt> element replaces the <tt>params</tt> element. 
+  The value of the <tt>fault</tt> is always a struct
+  containing two members: <tt>faultCode</tt>, an int, and <tt>faultString</tt>, a string.
+  <a href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#xmlrpc-fault.xml" title="Example 2.12. An XML-RPC fault">Example&nbsp;2.12</a> demonstrates a fault for
+  an unknown stock symbol.</p><div class="example"><a name="xmlrpc-fault.xml"></a><p class="title"><b>Example&nbsp;2.12.&nbsp;An XML-RPC fault</b></p><pre class="screen">&lt;?xml version="1.0"?&gt;
+&lt;methodResponse&gt;
+  &lt;fault&gt;
+    &lt;value&gt;
+      &lt;struct&gt;
+        &lt;member&gt;
+          &lt;name&gt;faultCode&lt;/name&gt;
+          &lt;value&gt;&lt;int&gt;23&lt;/int&gt;&lt;/value&gt;
+        &lt;/member&gt;
+        &lt;member&gt;
+          &lt;name&gt;faultString&lt;/name&gt;
+          &lt;value&gt;&lt;string&gt;Unknown stock symbol ABCD&lt;/string&gt;&lt;/value&gt;
+        &lt;/member&gt;
+      &lt;/struct&gt;
+    &lt;/value&gt;
+  &lt;/fault&gt;
+&lt;/methodResponse&gt;</pre></div><p>
+  When the server faults, the HTTP request still succeeds.
+  The server still uses the 200 OK response code in
+  the HTTP header. 
+  Other HTTP error codes like 404 Not Found or
+  500 Internal Server Error are returned only if something goes
+  wrong with the request at the HTTP level, not in the 
+  XML-RPC invocation. 
+  </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="d0e3519"></a>Validating XML-RPC</h3></div></div><p>
+   There’s no official DTD or schema for XML-RPC. 
+   Nonetheless, it’s straightforward to write one or both.
+   Indeed such a DTD may be a more easily understandable 
+   description of what is and isn’t allowed than the prose specification.
+  </p><div class="sect3"><div class="titlepage"><div><h4 class="title"><a name="d0e3524"></a>A DTD for XML-RPC</h4></div></div><p>
+<a href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#xmlrpc.dtd" title="Example 2.13. A DTD for XML-RPC">Example&nbsp;2.13</a> is a simple DTD for XML-RPC. It states that 
+a <tt>methodCall</tt> contains one <tt>methodName</tt> 
+and one <tt>params</tt> in that order, that a <tt>methodResponse</tt> 
+contains one <tt>params</tt> or one <tt>fault</tt>, that 
+a <tt>value</tt> element can contain an <tt>i4</tt>, 
+<tt>int</tt>, <tt>string</tt>, 
+<tt>datetime.iso8601</tt>, <tt>double</tt>, 
+<tt>base64</tt>, <tt>struct</tt>, or 
+<tt>array</tt>, and so forth. 
+  </p><div class="example"><a name="xmlrpc.dtd"></a><p class="title"><b>Example&nbsp;2.13.&nbsp;A DTD for XML-RPC</b></p><pre class="programlisting">&lt;!ELEMENT methodCall (methodName, params)&gt;
+&lt;!ELEMENT methodName (#PCDATA)&gt;
+&lt;!ELEMENT params     (param*)&gt;
+&lt;!ELEMENT param      (value)&gt;
+&lt;!ELEMENT value      
+   (i4|int|string|dateTime.iso8601|double|base64|struct|array)&gt;
+   
+&lt;!ELEMENT i4               (#PCDATA)&gt;
+&lt;!ELEMENT int              (#PCDATA)&gt;
+&lt;!ELEMENT string           (#PCDATA)&gt;
+&lt;!ELEMENT dateTime.iso8601 (#PCDATA)&gt;
+&lt;!ELEMENT double           (#PCDATA)&gt;
+&lt;!ELEMENT base64           (#PCDATA)&gt;
+
+&lt;!ELEMENT array            (data)&gt;
+&lt;!ELEMENT data             (value*)&gt;
+&lt;!ELEMENT struct           (member+)&gt;
+&lt;!ELEMENT member           (name, value)&gt;
+&lt;!ELEMENT name             (#PCDATA)&gt;
+
+&lt;!ELEMENT methodResponse   (params | fault)&gt;
+&lt;!ELEMENT fault            (value)&gt;
+</pre></div><p>
+   There are also many things this DTD does not say. For example, it 
+   does not say that the <tt>value</tt> inside a 
+   <tt>fault</tt> must be a <tt>struct</tt> or that each 
+   <tt>i4</tt> element contains an integer between -2,147,483,648 
+   and 2,147,483,647. DTDs cannot make statements such as these. Schemas, 
+   however, can.  
+  </p><p>
+   This DTD is informative, not normative. There is no official DTD for
+   XML-RPC. I just made this one up after reading the XML-RPC
+   specification. You can include a document type declaration in your
+   XML-RPC documents, but it’s much more common to leave it out as is
+   the case for all the examples in this chapter. Furthermore many
+   parsers used in practice for reading XML-RPC documents
+   are not
+   validating and will not consider the contents of any DTD.
+  </p></div><div class="sect3"><div class="titlepage"><div><h4 class="title"><a name="d0e3597"></a>A Schema for XML-RPC</h4></div></div><p>
+<a href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#xmlrpc.xsd" title="Example 2.14. A Schema for XML-RPC">Example&nbsp;2.14</a> is a medium complex schema for XML-RPC. It
+says everything the DTD says and then some. All elements are strictly
+typed. In the case of string and boolean, the XML-RPC types don’t
+quite match the schema types so new, more restricted types were derived
+from the standard base types. In addition the complex types are context
+dependent. For instance, structs normally contain one or more members,
+but the struct inside a <tt>fault</tt> always contains exactly 
+two members, one
+of which has the name <tt>faultCode</tt> and the other of which 
+has the name
+<tt>faultString</tt>.
+  </p><div class="example"><a name="xmlrpc.xsd"></a><p class="title"><b>Example&nbsp;2.14.&nbsp;A Schema for XML-RPC</b></p><pre class="programlisting">&lt;?xml version="1.0"?&gt;
+&lt;xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+
+  &lt;!-- The only two possible root elements are methodResponse and
+       methodCall so these are the only two I use a top-level
+       declaration for. --&gt; 
+
+  &lt;xsd:element name="methodCall"&gt;
+    &lt;xsd:complexType&gt;
+      &lt;xsd:all&gt;
+        &lt;xsd:element name="methodName"&gt;
+          &lt;xsd:simpleType&gt;
+            &lt;xsd:restriction base="ASCIIString"&gt;
+              &lt;xsd:pattern value="([A-Za-z0-9]|/|\.|:|_)*" /&gt;
+            &lt;/xsd:restriction&gt;
+          &lt;/xsd:simpleType&gt;
+        &lt;/xsd:element&gt;
+        &lt;xsd:element name="params" minOccurs="0" maxOccurs="1"&gt;
+          &lt;xsd:complexType&gt;
+            &lt;xsd:sequence&gt;
+              &lt;xsd:element name="param"  type="ParamType" 
+                           minOccurs="0" maxOccurs="unbounded"/&gt;
+            &lt;/xsd:sequence&gt;
+          &lt;/xsd:complexType&gt;
+         &lt;/xsd:element&gt;
+      &lt;/xsd:all&gt;
+    &lt;/xsd:complexType&gt;  
+  &lt;/xsd:element&gt;
+
+  &lt;xsd:element name="methodResponse"&gt;
+    &lt;xsd:complexType&gt;
+      &lt;xsd:choice&gt;
+        &lt;xsd:element name="params"&gt;
+          &lt;xsd:complexType&gt;
+            &lt;xsd:sequence&gt;
+              &lt;xsd:element name="param" type="ParamType"/&gt;
+            &lt;/xsd:sequence&gt;
+          &lt;/xsd:complexType&gt;
+        &lt;/xsd:element&gt;
+        &lt;xsd:element name="fault"&gt;
+          &lt;!-- What can appear inside a fault is very restricted --&gt;
+          &lt;xsd:complexType&gt;
+            &lt;xsd:sequence&gt;
+              &lt;xsd:element name="value"&gt;
+                &lt;xsd:complexType&gt;
+                  &lt;xsd:sequence&gt;
+                    &lt;xsd:element name="struct"&gt; 
+                      &lt;xsd:complexType&gt; 
+                        &lt;xsd:sequence&gt; 
+                          &lt;xsd:element name="member" 
+                                       type="MemberType"&gt;
+                          &lt;/xsd:element&gt;
+                          &lt;xsd:element name="member" 
+                                       type="MemberType"&gt;
+                          &lt;/xsd:element&gt;
+                        &lt;/xsd:sequence&gt;
+                      &lt;/xsd:complexType&gt;
+                    &lt;/xsd:element&gt;
+                  &lt;/xsd:sequence&gt;
+                &lt;/xsd:complexType&gt;
+              &lt;/xsd:element&gt;
+            &lt;/xsd:sequence&gt;
+          &lt;/xsd:complexType&gt;
+         &lt;/xsd:element&gt;
+      &lt;/xsd:choice&gt;
+    &lt;/xsd:complexType&gt;  
+  &lt;/xsd:element&gt;
+
+  &lt;xsd:complexType name="ParamType"&gt;
+    &lt;xsd:sequence&gt;
+      &lt;xsd:element name="value" type="ValueType"/&gt;
+    &lt;/xsd:sequence&gt;
+  &lt;/xsd:complexType&gt;
+
+  &lt;xsd:complexType name="ValueType" mixed="true"&gt;
+    &lt;!-- I need to figure out how to say that this
+         is either a simple xsd:string type or that 
+         it contains one of these elements; but that otherwise
+         it does not have mixed content --&gt;
+    &lt;xsd:choice&gt;
+      &lt;xsd:element name="i4"            type="xsd:int"/&gt;
+      &lt;xsd:element name="int"           type="xsd:int"/&gt;
+      &lt;xsd:element name="string"        type="ASCIIString"/&gt;
+      &lt;xsd:element name="double"        type="xsd:decimal"/&gt;
+      &lt;xsd:element name="Base64"        type="xsd:base64Binary"/&gt;
+      &lt;xsd:element name="boolean"       type="NumericBoolean"/&gt;
+      &lt;xsd:element name="dateTime.iso8601" type="xsd:dateTime"/&gt;
+      &lt;xsd:element name="array"         type="ArrayType"/&gt;
+      &lt;xsd:element name="struct"        type="StructType"/&gt;
+    &lt;/xsd:choice&gt;
+  &lt;/xsd:complexType&gt;
+
+  &lt;xsd:complexType name="StructType"&gt;
+    &lt;xsd:sequence&gt;
+      &lt;xsd:element name="member" type="MemberType" 
+                   maxOccurs="unbounded"/&gt;
+    &lt;/xsd:sequence&gt;
+  &lt;/xsd:complexType&gt;
+
+  &lt;xsd:complexType name="MemberType"&gt;
+    &lt;xsd:sequence&gt;
+      &lt;xsd:element name="name"  type="xsd:string" /&gt;
+      &lt;xsd:element name="value" type="ValueType"/&gt;
+    &lt;/xsd:sequence&gt;
+  &lt;/xsd:complexType&gt;
+
+  &lt;xsd:complexType name="ArrayType"&gt;
+    &lt;xsd:sequence&gt;
+      &lt;xsd:element name="data"&gt;
+        &lt;xsd:complexType&gt;
+          &lt;xsd:sequence&gt;
+            &lt;xsd:element name="value"  type="ValueType" 
+                         minOccurs="0" maxOccurs="unbounded"/&gt;
+          &lt;/xsd:sequence&gt;
+        &lt;/xsd:complexType&gt;
+      &lt;/xsd:element&gt;
+    &lt;/xsd:sequence&gt;
+  &lt;/xsd:complexType&gt;
+
+  &lt;xsd:simpleType name="ASCIIString"&gt;
+    &lt;xsd:restriction base="xsd:string"&gt;
+      &lt;xsd:pattern value="([ -~]|\n|\r|\t)*" /&gt;
+    &lt;/xsd:restriction&gt;
+  &lt;/xsd:simpleType&gt;
+
+  &lt;xsd:simpleType name="NumericBoolean"&gt;
+    &lt;xsd:restriction base="xsd:boolean"&gt;
+      &lt;xsd:pattern value="0|1" /&gt;
+    &lt;/xsd:restriction&gt;
+  &lt;/xsd:simpleType&gt;
+
+&lt;/xsd:schema&gt;
+</pre></div><p>
+   This schema is informative, not normative. There is no official schema 
+   for XML-RPC. 
+   I just wrote this one up after reading the XML-RPC specification. 
+   You should not include <tt>xsi:noNamespaceSchemaLocation</tt> 
+   attributes in your XML-RPC documents, but 
+   you might be able to use some other extra-document means of attaching the 
+   schema.
+   For instance, the Xerces‑J parser lets you set the
+   <tt>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation</tt>
+   property to the location of the schema. However, very few XML-RPC services 
+   would be likely to support this. If you use a schema 
+   with XML-RPC, it should be used purely for validation, not for attaching 
+   default attributes to elements or anything else that might affect the 
+  document’s content.
+  </p><p>
+   This example does effectively demonstrate the relative power of DTDs
+   and schemas. The schema identifies all possible, legal
+   XML-RPC documents. Almost anything that satisfies this schema is a legal
+   XML-RPC document, and anything that does not satisfy the schema is
+   not a legal XML-RPC document.
+   <sup>[<a name="d0e3628" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#ftn.d0e3628">1</a>]</sup> 
+   The DTD only gets half that far. All
+   documents that do not satisfy the DTD are not legal XML-RPC
+   documents. However, not all documents that do satisfy the DTD are
+   legal XML-RPC documents. Things the schema says that the DTD does not
+   include:
+   </p><div class="itemizedlist"><ul type="disc"><li><p>The only two legal root elements are 
+<tt>methodCall</tt> and 
+<tt>methodResponse</tt></p></li><li><p>A <tt>params</tt> element 
+that’s a child of a <tt>methodCall</tt> 
+can have any number of <tt>param</tt> child 
+elements, but a <tt>params</tt> element
+that’s a child of a 
+<tt>methodResponse</tt> element 
+must have exactly one <tt>param</tt> child element
+(i.e. context dependent content models)
+</p></li><li><p><tt>i4</tt> and 
+<tt>int</tt> elements must contain 
+an integer between -2,147,483,648 and 2,147,483,647.</p></li><li><p>String values and method names 
+can only use ASCII characters.</p></li><li><p>The <tt>value</tt> of a <tt>fault</tt> must 
+be a <tt>struct</tt> with exactly two 
+members.  </p></li></ul></div><p>
+  There are other things the schema says that 
+  the DTD doesn’t, but this gives you the idea.
+Schemas are both more descriptive and proscriptive than DTDs.
+</p></div></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.d0e3628" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s05.html#d0e3628">1</a>] </sup>
+   The three XML-RPC requirements 
+   that can't be specified  in the W3C XML Schema Language are:
+   </p><div class="itemizedlist"><ul type="disc"><li><p>One of the two members in
+   a <tt>fault</tt> struct must have the name <tt>faultCode</tt> 
+   and an int value and the
+   other must have the name <tt>faultString</tt> and a string value.</p></li><li><p>A <tt>value</tt> element can contain either an ASCII string or 
+   a type element such as <tt>int</tt>, but not a 
+   type element and an ASCII string.
+   </p></li></ul></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tbody><tr><td width="40%" align="left"><a accesskey="p" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s04.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="http://www.ibiblio.org/xml/books/xmljava/chapters/ch02s06.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Customizing the Request&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="http://www.ibiblio.org/xml/books/xmljava/chapters/index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;SOAP</td></tr></tbody></table></div><hr xmlns:dt="http://xsltsl.org/date-time"><table xmlns:dt="http://xsltsl.org/date-time" width="100%" summary="Cafe con Leche footer"><tbody><tr><td width="34%" align="left">Copyright 2001, 2002 Elliotte Rusty Harold</td><td width="32%" align="center"><a href="mailto:elharo@metalab.unc.edu" title="[GMCP] Compose a new mail to elharo@metalab.unc.edu" onclick="window.open(&#39;https://mail.google.com/mail/u/0/?view=cm&amp;fs=1&amp;tf=1&amp;to=elharo@metalab.unc.edu&#39;,&#39;Compose new message&#39;,&#39;width=640,height=480&#39;);return false" rel="noreferrer">elharo@metalab.unc.edu</a></td><td width="34%" align="right">Last Modified 
+August 22,
+2002</td></tr><tr><td width="34%" align="left"></td><td width="32%" align="center"><a href="http://www.cafeconleche.org/">Up To Cafe con Leche</a></td><td width="34%" align="right"></td></tr></tbody></table></body></html>

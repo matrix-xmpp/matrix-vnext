@@ -112,8 +112,8 @@ namespace Matrix.Xmpp.Muc
         /// </summary>
         public DateTime Since
         {
-            get { return Time.Iso8601Date(GetAttribute("since")); }
-            set { SetAttribute("since", Time.Iso8601Date(value)); }
+            get { return Core.Time.Iso8601Date(GetAttribute("since")); }
+            set { SetAttribute("since", Core.Time.Iso8601Date(value)); }
         }
 
         /// <summary>
