@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
 
-namespace Matrix.Sasl
+namespace Matrix.Sasl.Scram
 {
     public class ScramSha1Processor : ISaslProcessor
     {

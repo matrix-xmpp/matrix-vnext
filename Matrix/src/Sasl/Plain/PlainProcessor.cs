@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
 
-namespace Matrix.Sasl
+namespace Matrix.Sasl.Plain
 {
-    public class SaslPlainProcessor : ISaslProcessor
+    public class PlainProcessor : ISaslProcessor
     {
         public async Task<XmppXElement> AuthenticateClientAsync(XmppClient xmppClient)
         {

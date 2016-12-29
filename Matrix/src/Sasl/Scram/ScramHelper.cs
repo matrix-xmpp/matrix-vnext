@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Matrix.Core.Crypt;
 
-namespace Matrix.Sasl
+namespace Matrix.Sasl.Scram
 {
     internal class ScramHelper
     {

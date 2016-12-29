@@ -3,14 +3,14 @@ using System.Security.Cryptography;
 using System.Text;
 using Matrix.Core.Crypt;
 
-namespace Matrix.Sasl
+namespace Matrix.Sasl.Digest
 {
     /// <summary>
     /// Summary description for Step2.
     /// </summary>
-    internal class DigestStep2
+    internal class Step2
     {
-        DigestStep1 _step1;
+        Step1 _step1;
         XmppClient _xmppClient;
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace Matrix.Sasl
         /// </summary>
         /// <param name="step1">The step1.</param>
         /// <param name="xmppClient">The xmppClient.</param>
-        internal DigestStep2(DigestStep1 step1, XmppClient xmppClient)
+        internal Step2(Step1 step1, XmppClient xmppClient)
         {
             _step1 = step1;
             _xmppClient = xmppClient;

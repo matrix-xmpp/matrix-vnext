@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
 
-namespace Matrix.Sasl
+namespace Matrix.Sasl.Digest
 {
     public class DigestMd5Processor : ISaslProcessor
     {
@@ -33,11 +32,11 @@ namespace Matrix.Sasl
             byte[] bytes = ch.Bytes;
             string s = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
 
-            var step1 = new DigestStep1(s);
+            var step1 = new Step1(s);
 
             if (step1.Rspauth == null)
             {
-                var s2 = new DigestStep2(step1, xmppClient);
+                var s2 = new Step2(step1, xmppClient);
 
                 string message = s2.GetMessage();
                 byte[] b = Encoding.UTF8.GetBytes(message);

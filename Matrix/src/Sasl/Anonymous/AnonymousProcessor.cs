@@ -2,7 +2,7 @@
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
 
-namespace Matrix.Sasl
+namespace Matrix.Sasl.Anonymous
 {
     public class AnonymousProcessor : ISaslProcessor
     {

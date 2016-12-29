@@ -1,9 +1,9 @@
-﻿namespace Matrix.Sasl
+﻿namespace Matrix.Sasl.Digest
 {
     /// <summary>
     /// 
     /// </summary>
-    internal class DigestStep1
+    internal class Step1
     {
         #region Xml sample
         /*
@@ -21,7 +21,7 @@
         #endregion
 
         #region << Constructors >>
-        internal DigestStep1(string message)
+        internal Step1(string message)
         {
             Parse(message);
         }
