@@ -85,7 +85,20 @@ namespace Matrix.Xml
         }
         #endregion
 
-        #region register over attributes   
+        #region register over attributes
+        /// <summary>
+        /// Looks in a complete assembly for all XmppXElements and registered them using the XmppTag attribute.
+        /// The XmppTag attribute must be present on the classes to register
+        /// </summary>
+        /// <param name="assembly"></param>
+        public static void RegisterElementsFromAssembly(Assembly assembly)
+        {
+            var types = GetTypesWithAttribueFromAssembly<XmppTagAttribute>(assembly);
+
+            foreach (var type in types)
+                RegisterElement(type.AsType());
+        }
+
         private static void RegisterElement(Type type)
         {
             type
@@ -108,19 +121,6 @@ namespace Matrix.Xml
 
             if (att != null)
                 RegisterElement<T>(att.Namespace, att.Name);
-        }
-
-        /// <summary>
-        /// Looks in a complete assembly for all XmppXElements and registered them using the XmppTag attribute.
-        /// The XmppTag attribute must be present on the classes to register
-        /// </summary>
-        /// <param name="assembly"></param>
-        public static void RegisterElementsFromAssembly(Assembly assembly)
-        {
-            var types = GetTypesWithAttribueFromAssembly<XmppTagAttribute>(assembly);
-
-            foreach (var type in types)
-                RegisterElement(type.GetType());
         }
 
         /*
