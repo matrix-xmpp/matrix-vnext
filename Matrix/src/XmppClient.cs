@@ -47,7 +47,6 @@ namespace Matrix
         public async Task<IChannel> ConnectAsync()
         {
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
-            //await SendStreamHeader();
             var feat = await SendStreamHeaderAsync();
             await HandleStreamFeaturesAsync(feat);
             return iChannel;
@@ -84,7 +83,7 @@ namespace Matrix
                 (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
                 new ClientTlsSettings(XmppDomain));
 
-            var res = await WaitForStanzaHandler.SendAsync<Proceed>(new StartTls());
+            await WaitForStanzaHandler.SendAsync<Proceed>(new StartTls());
             Pipeline.AddFirst(tlsHandler);
             var streamFeatures = await ResetStreamAsync();
             SessionState = SessionState.Secure;
