@@ -19,6 +19,9 @@ namespace Matrix.Sasl.Digest
             if (ret1 is Challenge)
             {
                 var ret2 = await HandleChallenge(ret1 as Challenge, xmppClient);
+                if (ret2 is Success)
+                    return ret2;
+                
                 if (ret2 is Challenge)
                     return await HandleChallenge(ret2 as Challenge, xmppClient);
             }
@@ -43,7 +46,7 @@ namespace Matrix.Sasl.Digest
 
                 return await xmppClient
                     .WaitForStanzaHandler
-                    .SendAsync<Failure, Challenge>(new Response {Bytes = b});
+                    .SendAsync<Failure, Challenge, Success>(new Response {Bytes = b});
             }
 
             return await xmppClient
