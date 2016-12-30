@@ -37,9 +37,9 @@ namespace Matrix
                 {
                     Pipeline = channel.Pipeline;
 
-                    //Pipeline.AddLast(new LoggingHandler());
-                    Pipeline.AddLast(new XmppLoggingHandler());
-                    Pipeline.AddLast(new DisconnectHandler());                  
+                    Pipeline.AddLast(new LoggingHandler());
+                    //Pipeline.AddLast(new XmppLoggingHandler());
+                    
 
                     Pipeline.AddLast(xmlStreamDecoder);
                     Pipeline.AddLast(new XmppXElementEncoder());
@@ -47,11 +47,19 @@ namespace Matrix
 
                     Pipeline.AddLast(new StringEncoder());
 
+                    //Pipeline.AddLast(xmppStreamEventHandler);
+
+                    
+
                     Pipeline.AddLast(xmppStreamEventHandler);
 
-                    Pipeline.AddLast(IqHandler);
-                    Pipeline.AddLast(WaitForStanzaHandler);
 
+                    Pipeline.AddLast(WaitForStanzaHandler);
+                    Pipeline.AddLast(IqHandler);
+                    
+                    Pipeline.AddLast(new DisconnectHandler());
+
+                    
                 }));
         }
 

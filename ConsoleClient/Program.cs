@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Reflection;
 using ConsoleClient;
 using Matrix;
 using Matrix.Xml;
+using Matrix.Xmpp.Base;
 
 namespace ConsoleClient
 {
@@ -20,8 +22,32 @@ namespace ConsoleClient
                 Username = "alex",
                 Password = "***REMOVED***",
                 XmppDomain = "ag-software.net",
-                Resource = "Matrix vNext"
+                Resource = "vnext"
             };
+
+            xmppClient
+                .XmppXElementStream
+                .Where(el => el is Presence)
+                .Subscribe(el =>
+                {
+                    System.Diagnostics.Debug.WriteLine(el.ToString());
+                });
+
+            xmppClient
+                .XmppXElementStream
+                .Where(el => el is Message)
+                .Subscribe(el =>
+                {
+                    System.Diagnostics.Debug.WriteLine(el.ToString());
+                });
+
+            xmppClient
+                .XmppXElementStream
+                .Where(el => el is Iq)
+                .Subscribe(el =>
+                {
+                    System.Diagnostics.Debug.WriteLine(el.ToString());
+                });
 
             xmppClient.ConnectAsync().GetAwaiter().GetResult();
 

@@ -18,6 +18,16 @@ namespace Matrix.Network.Handlers
             //reconnect.run();
         }
 
+        //public override void Read(IChannelHandlerContext context)
+        //{
+        //    //base.Read(context);
+        //}
+
+        //public override void ChannelRead(IChannelHandlerContext context, object message)
+        //{
+        //    //base.ChannelRead(context, message);
+        //}
+
         /*
          public class ReconnectionTask extends Runnable, ChannelFutureListener {
 
@@ -47,7 +57,13 @@ namespace Matrix.Network.Handlers
                 // Do something else when success if needed.
             }
         }
+        
          */
-
+        //public override void ChannelRead(IChannelHandlerContext context, object message)
+        //{
+        //    base.ChannelRead(context, message);
+        //    //context.FireChannelRead(message);
+            
+        //}
     }
 }

@@ -89,7 +89,6 @@ namespace Matrix.Network.Handlers
                         HandleTypes[key].Invoke(ctx, msg);
                 }
             }
-            ctx.FireChannelRead(msg);
         }
     }
 }

@@ -19,6 +19,11 @@ namespace Matrix.Network.Handlers
             xmppXElementSubject.OnCompleted();
         }
 
+        //public override void ChannelRead(IChannelHandlerContext ctx, object msg)
+        //{
+        //    base.ChannelRead(ctx, msg);
+        //}
+
         protected override void ChannelRead0(IChannelHandlerContext ctx, XmlStreamEvent msg)
         {
             if (msg.XmlStreamEventType == XmlStreamEventType.StreamStart)

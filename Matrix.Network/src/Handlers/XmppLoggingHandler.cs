@@ -3,14 +3,13 @@
 
 
 using System;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+
 using DotNetty.Buffers;
 using DotNetty.Common.Internal.Logging;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
-using Matrix.Core;
 
 namespace Matrix.Network.Handlers
 {
@@ -20,6 +19,7 @@ namespace Matrix.Network.Handlers
 
         protected readonly InternalLogLevel InternalLevel;
         protected readonly IInternalLogger Logger;
+
 
         /// <summary>
         ///     Creates a new instance whose logger name is the fully qualified class
@@ -101,11 +101,12 @@ namespace Matrix.Network.Handlers
 
         public override void ChannelRead(IChannelHandlerContext ctx, object msg)
         {
-            if (msg is IByteBuffer)
+            var buffer = msg as IByteBuffer;
+            if (buffer != null)
             {
                 if (Logger.IsEnabled(InternalLevel))
                 {
-                    Logger.Log(InternalLevel, FormatByteBuffer("RECV", (IByteBuffer) msg));
+                    Logger.Log(InternalLevel, FormatByteBuffer("RECV", buffer));
                 }
             }
             ctx.FireChannelRead(msg);
@@ -113,14 +114,13 @@ namespace Matrix.Network.Handlers
 
         public override Task WriteAsync(IChannelHandlerContext ctx, object msg)
         {
-            if (msg is IByteBuffer)
+            var buffer = msg as IByteBuffer;
+            if (buffer != null)
             {
-                
-                if (Logger.IsEnabled(this.InternalLevel))
+                if (Logger.IsEnabled(InternalLevel))
                 {
-                    Logger.Log(InternalLevel, FormatByteBuffer("SEND" , (IByteBuffer) msg));
+                    Logger.Log(InternalLevel, FormatByteBuffer("SEND" , buffer));
                 }
-                return ctx.WriteAsync(msg);
             }
             return ctx.WriteAsync(msg);
         }
