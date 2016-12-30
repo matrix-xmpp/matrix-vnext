@@ -1,4 +1,5 @@
-﻿using System.Net.Security;
+﻿using System;
+using System.Net.Security;
 using System.Threading.Tasks;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
@@ -14,7 +15,7 @@ namespace Matrix
 {
     public class XmppClient : XmppConnection
     {
-        private int _Priority;
+        private int priority;
         #region << Properties >>
 
         public string Username { get; set; }
@@ -30,39 +31,22 @@ namespace Matrix
         public string Status { get; set; } = "online";
         public int Priority
         {
-            get { return _Priority; }
+            get { return priority; }
             set
             {
                 if (value < -127 || value > 127)
-                    throw new System.ArgumentOutOfRangeException("The value must be an integer between -128 and +127.");
+                    throw new ArgumentOutOfRangeException("The value must be an integer between -128 and +127.");
 
-                _Priority = value;
+                priority = value;
             }
         }
 
         public IAuthenticate SalsHandler { get; set; } = new DefaultSaslHandler();
         #endregion
-
-
-
-
-        //private async Task SendStreamHeader()
-        //{
-        //    var streamHeader = new Stream
-        //    {
-        //        To = new Jid(XmppDomain),
-        //        Version = "1.0"
-        //    };
-
-        //    await SendAsync(streamHeader.StartTag());
-        //}
-
-
-
+        
         public async Task<IChannel> ConnectAsync()
         {
-            //var iChannel = await ConnectAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), Port));
-            var iChannel = await _bootstrap.ConnectAsync(XmppDomain, Port);
+            var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
             //await SendStreamHeader();
             var feat = await SendStreamHeaderAsync();
             await HandleStreamFeaturesAsync(feat);
@@ -101,7 +85,7 @@ namespace Matrix
                 new ClientTlsSettings(XmppDomain));
 
             var res = await WaitForStanzaHandler.SendAsync<Proceed>(new StartTls());
-            base._pipeline.AddFirst(tlsHandler);
+            Pipeline.AddFirst(tlsHandler);
             var streamFeatures = await ResetStreamAsync();
             SessionState = SessionState.Secure;
 

@@ -54,7 +54,6 @@ namespace Matrix.Core
             }   
         }
         
-
         /// <summary>
         /// Get a XMPP string representation of a Date        
         /// </summary>
@@ -63,8 +62,7 @@ namespace Matrix.Core
         public static string JabberDate(DateTime date)
         {
             return date.ToString("yyyyMMddTHH:mm:ss");
-        }
-        
+        }        
 
         /// <summary>
         /// The new standard used by XMPP in JEP-82 (ISO-8601)
@@ -94,13 +92,7 @@ namespace Matrix.Core
         /// <returns></returns>
         public static string Iso8601Date(DateTime date)
         {
-            return Iso8601DateString(date.ToUniversalTime());
-            //return date.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
-            //return date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");	
-            //return date.ToString("yyyy-MM-ddTHH:mm:ssZ");	
-
-
-            //("yyyy'-'MM'-'dd HH':'mm':'ss'Z'") 			
+            return Iso8601DateString(date.ToUniversalTime());            	
         }
 
         public static string Iso8601DateString(DateTime date)
@@ -108,6 +100,7 @@ namespace Matrix.Core
             return date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
         }
 
+        // TODO TimeZone comes with a later NetStandard (1.7)
         /*
         public static TimeSpan UtcOffset()
         {

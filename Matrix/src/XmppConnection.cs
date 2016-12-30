@@ -18,39 +18,38 @@ namespace Matrix
 {
     public abstract class XmppConnection
     {        
-        protected   Bootstrap                   _bootstrap              = new Bootstrap();
-        protected   IChannelPipeline            _pipeline;
-        private     MultithreadEventLoopGroup   _group                  = new MultithreadEventLoopGroup();
-        readonly    XmlStreamDecoder            _xmlStreamDecoder       = new XmlStreamDecoder();
-        private     XmppStreamEventHandler      _xmppStreamEventHandler = new XmppStreamEventHandler();
-        private     INameResolver               _resolver               = new SrvNameResolver();        
+        protected   Bootstrap                   Bootstrap              = new Bootstrap();
+        protected   IChannelPipeline            Pipeline;
+        private     MultithreadEventLoopGroup   eventLoopGroup         = new MultithreadEventLoopGroup();
+        readonly    XmlStreamDecoder            xmlStreamDecoder       = new XmlStreamDecoder();
+        private     XmppStreamEventHandler      xmppStreamEventHandler = new XmppStreamEventHandler();
+        private     INameResolver               resolver               = new SrvNameResolver();        
 
         protected XmppConnection()
         {
-            _bootstrap
-                .Group(_group)
+            Bootstrap
+                .Group(eventLoopGroup)
                 .Channel<TcpSocketChannel>()
                 .Option(ChannelOption.TcpNodelay, true)
                 .Resolver(HostnameResolver)
                 
                 .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
-                    _pipeline = channel.Pipeline;
+                    Pipeline = channel.Pipeline;
+
+                    Pipeline.AddLast(new LoggingHandler());
+                    Pipeline.AddLast(new DisconnectHandler());                  
+
+                    Pipeline.AddLast(xmlStreamDecoder);
+                    Pipeline.AddLast(new XmppXElementEncoder());
 
 
-                    _pipeline.AddLast(new LoggingHandler());
-                    _pipeline.AddLast(new DisconnectHandler());
+                    Pipeline.AddLast(new StringEncoder());
 
-                    _pipeline.AddLast(_xmlStreamDecoder);
-                    _pipeline.AddLast(new XmppXElementEncoder());
+                    Pipeline.AddLast(xmppStreamEventHandler);
 
-
-                    _pipeline.AddLast(new StringEncoder());
-
-                    _pipeline.AddLast(_xmppStreamEventHandler);
-
-                    _pipeline.AddLast(IqHandler);
-                    _pipeline.AddLast(WaitForStanzaHandler);
+                    Pipeline.AddLast(IqHandler);
+                    Pipeline.AddLast(WaitForStanzaHandler);
 
                 }));
         }
@@ -63,7 +62,7 @@ namespace Matrix
 
         public ICertificateValidator CertificateValidator { get; set; } = new DefaultCertificateValidator();
 
-        public IObservable<XmppXElement> XmppXElementStream => _xmppStreamEventHandler.XmppXElementStream;
+        public IObservable<XmppXElement> XmppXElementStream => xmppStreamEventHandler.XmppXElementStream;
 
         public IqHandler IqHandler { get; } = new IqHandler();
 
@@ -74,17 +73,17 @@ namespace Matrix
 
         public async Task SendAsync(XmppXElement el)
         {
-            await _pipeline.WriteAndFlushAsync(el.ToString(false));
+            await Pipeline.WriteAndFlushAsync(el.ToString(false));
         }
 
         internal async Task SendAsync(string s)
         {
-            await _pipeline.WriteAndFlushAsync(s);
+            await Pipeline.WriteAndFlushAsync(s);
         }
 
         public async Task<StreamFeatures> ResetStreamAsync()
         {
-            _xmlStreamDecoder.Reset();
+            xmlStreamDecoder.Reset();
             return await SendStreamHeaderAsync();
         }
 
@@ -100,55 +99,55 @@ namespace Matrix
         }
 
 
-        //public async Task<bool> CloseAsync(int timeout)
-        //{
-        //    var resultCompletionSource = new TaskCompletionSource<bool>();
+        public async Task<bool> CloseAsync(int timeout = 2000)
+        {
+            var resultCompletionSource = new TaskCompletionSource<bool>();
 
 
-        //    IDisposable anonymousSubscription = null;
-        //    //anonymousSubscription = XmppXElementStream.Subscribe(
-        //    //       v => { },
-        //    //       //In this example, the OnCompleted callback is also provided
-        //    //    async () =>
-        //    //    {
-        //    //        await pipeline.CloseAsync();
-        //    //        anonymousSubscription.Dispose();
-        //    //        resultCompletionSource.SetResult(true);
-        //    //    });
+            IDisposable anonymousSubscription = null;
+            //anonymousSubscription = XmppXElementStream.Subscribe(
+            //       v => { },
+            //       //In this example, the OnCompleted callback is also provided
+            //    async () =>
+            //    {
+            //        await pipeline.CloseAsync();
+            //        anonymousSubscription.Dispose();
+            //        resultCompletionSource.SetResult(true);
+            //    });
 
 
-        //    //EventHandler<EventArgs> streamEnd = null;
-        //    //streamEnd = async (sender, args) =>
-        //    //{
-        //    //    await pipeline.CloseAsync();
-        //    //    OnStreamEnd -= streamEnd;
-        //    //    resultCompletionSource.SetResult(true);
-        //    //};
+            //EventHandler<EventArgs> streamEnd = null;
+            //streamEnd = async (sender, args) =>
+            //{
+            //    await pipeline.CloseAsync();
+            //    OnStreamEnd -= streamEnd;
+            //    resultCompletionSource.SetResult(true);
+            //};
 
-        //    await SendAsync(new Stream().EndTag());
+            await SendAsync(new Stream().EndTag());
 
-        //    anonymousSubscription = XmppXElementStream.Subscribe(
-        //        v => { },
+            anonymousSubscription = XmppXElementStream.Subscribe(
+                v => { },
 
-        //        async () =>
-        //        {
-        //            anonymousSubscription?.Dispose();
-        //            await _pipeline.CloseAsync();
-        //            resultCompletionSource.SetResult(true);
-        //        });
+                async () =>
+                {
+                    anonymousSubscription?.Dispose();
+                    await Pipeline.CloseAsync();
+                    resultCompletionSource.SetResult(true);
+                });
 
-        //    //OnStreamEnd += streamEnd;
+            //OnStreamEnd += streamEnd;
 
-        //    if (resultCompletionSource.Task ==
-        //        await Task.WhenAny(resultCompletionSource.Task, Task.Delay(timeout)))
-        //        return await resultCompletionSource.Task;
+            if (resultCompletionSource.Task ==
+                await Task.WhenAny(resultCompletionSource.Task, Task.Delay(timeout)))
+                return await resultCompletionSource.Task;
 
-        //    await _pipeline.CloseAsync();
+            await Pipeline.CloseAsync();
 
-        //    var ret = await resultCompletionSource.Task;
-        //    anonymousSubscription.Dispose();
-        //    return ret;
-        //}
+            var ret = await resultCompletionSource.Task;
+            anonymousSubscription.Dispose();
+            return ret;
+        }
 
     }
 }
