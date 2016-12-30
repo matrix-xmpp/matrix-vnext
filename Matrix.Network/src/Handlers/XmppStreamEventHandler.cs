@@ -8,31 +8,34 @@ namespace Matrix.Network.Handlers
 {
     public class XmppStreamEventHandler : SimpleChannelInboundHandler<XmlStreamEvent>
     {
-        readonly ISubject<XmppXElement> _xmppXElementSubject = new Subject<XmppXElement>();
+        readonly ISubject<XmppXElement> xmppXElementSubject = new Subject<XmppXElement>();
         
-        public IObservable<XmppXElement> XmppXElementStream => _xmppXElementSubject;
+        public IObservable<XmppXElement> XmppXElementStream => xmppXElementSubject;
+
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            // thiget called when the socket gets closed
+            base.ChannelInactive(context);
+            xmppXElementSubject.OnCompleted();
+        }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, XmlStreamEvent msg)
         {
             if (msg.XmlStreamEventType == XmlStreamEventType.StreamStart)
             {
-                _xmppXElementSubject.OnNext(msg.XmppXElement);
+                xmppXElementSubject.OnNext(msg.XmppXElement);
             }
             else if (msg.XmlStreamEventType == XmlStreamEventType.StreamElement)
             {
-                _xmppXElementSubject.OnNext(msg.XmppXElement);
+                xmppXElementSubject.OnNext(msg.XmppXElement);
             }
             else if (msg.XmlStreamEventType == XmlStreamEventType.StreamEnd)
             {
-                _xmppXElementSubject.OnCompleted();
-            }
-            else if (msg.XmlStreamEventType == XmlStreamEventType.Error)
-            {
-                
+                //xmppXElementSubject.OnCompleted();
             }
             else if (msg.XmlStreamEventType == XmlStreamEventType.StreamError)
             {
-                
+                xmppXElementSubject.OnError(msg.Exception);
             }
 
             ctx.FireChannelRead(msg.XmppXElement);

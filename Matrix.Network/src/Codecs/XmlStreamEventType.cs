@@ -21,10 +21,5 @@
         /// Event for XML  errors
         /// </summary>
         StreamError,
-
-        /// <summary>
-        /// Event for general errors
-        /// </summary>
-        Error
     }
 }

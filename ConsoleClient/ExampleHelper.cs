@@ -9,6 +9,11 @@ namespace ConsoleClient
 {
     public static class ExampleHelper
     {
-        public static void SetConsoleLogger() => InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
+        //public static void SetConsoleLogger() => InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
+
+        public static void SetConsoleLogger()
+        {
+          InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) =>  true, false));  
+        } 
     }
 }

@@ -12,16 +12,16 @@ namespace Matrix.Xml.Parser
     /// </summary>
     public class StreamParser
     {
-        bool _isCData;
-        int _depth;
-        XmppXElement _root;
-        XmppXElement _current;
+        bool isCData;
+        int depth;
+        XmppXElement root;
+        XmppXElement current;
 
-        readonly STE _utf = STE.UTF8;
-        readonly Encoding _utf8Encoding = new UTF8Encoding();
-        readonly NamespaceStack _nsStack = new NamespaceStack();
+        readonly STE utf = STE.UTF8;
+        readonly Encoding utf8Encoding = new UTF8Encoding();
+        readonly NamespaceStack nsStack = new NamespaceStack();
 
-        ByteBuffer _bufferAggregate = new ByteBuffer();
+        ByteBuffer bufferAggregate = new ByteBuffer();
 
 
         public event Action<XmppXElement> OnStreamStart;
@@ -34,23 +34,22 @@ namespace Matrix.Xml.Parser
         /// </summary>
         public void Reset()
         {
-            _depth = 0;
-            _root = null;
-            _current = null;
-            _isCData = false;
+            depth = 0;
+            root = null;
+            current = null;
+            isCData = false;
 
-            _bufferAggregate = null;
-            _bufferAggregate = new ByteBuffer();
+            bufferAggregate = null;
+            bufferAggregate = new ByteBuffer();
 
-            //m_buf.Clear(0);
-            _nsStack.Clear();
+            nsStack.Clear();
         }
 
         /// <summary>
         /// Gets the _depth.
         /// </summary>
         /// <value>The _depth.</value>
-        public long Depth => _depth;
+        public long Depth => depth;
 
         public void Write(byte[] buf)
         {
@@ -77,9 +76,9 @@ namespace Matrix.Xml.Parser
             // end of parsing.
             var copy = new byte[length];
             Buffer.BlockCopy(buf, offset, copy, 0, length);
-            _bufferAggregate.Write(copy);
+            bufferAggregate.Write(copy);
 
-            byte[] b = _bufferAggregate.GetBuffer();
+            byte[] b = bufferAggregate.GetBuffer();
             int off = 0;
             var ct = new ContentToken();
             try
@@ -87,10 +86,10 @@ namespace Matrix.Xml.Parser
                 while (off < b.Length)
                 {
                     Tokens tok;
-                    if (_isCData)
-                        tok = _utf8Encoding.TokenizeCdataSection(b, off, b.Length, ct);
+                    if (isCData)
+                        tok = utf8Encoding.TokenizeCdataSection(b, off, b.Length, ct);
                     else
-                        tok = _utf8Encoding.TokenizeContent(b, off, b.Length, ct);
+                        tok = utf8Encoding.TokenizeContent(b, off, b.Length, ct);
 
                     switch (tok)
                     {
@@ -113,7 +112,7 @@ namespace Matrix.Xml.Parser
                             break;
                         case Tokens.DataChars:
                         case Tokens.DataNewline:
-                            AddText(_utf.GetString(b, off, ct.TokenEnd - off));
+                            AddText(utf.GetString(b, off, ct.TokenEnd - off));
                             break;
                         case Tokens.CharReference:
                         case Tokens.MagicEntityReference:
@@ -124,22 +123,22 @@ namespace Matrix.Xml.Parser
                                                             ct.RefChar2}));
                             break;
                         case Tokens.Comment:
-                            if (_current != null)
+                            if (current != null)
                             {
                                 // <!-- 4
                                 //  --> 3
-                                int start = off + 4 * _utf8Encoding.MinBytesPerChar;
+                                int start = off + 4 * utf8Encoding.MinBytesPerChar;
                                 int end = ct.TokenEnd - off -
-                                    7 * _utf8Encoding.MinBytesPerChar;
-                                string text = _utf.GetString(b, start, end);
-                                _current.Add(text);
+                                    7 * utf8Encoding.MinBytesPerChar;
+                                string text = utf.GetString(b, start, end);
+                                current.Add(text);
                             }
                             break;
                         case Tokens.CdataSectOpen:
-                            _isCData = true;
+                            isCData = true;
                             break;
                         case Tokens.CdataSectClose:
-                            _isCData = false;
+                            isCData = false;
                             break;
                         case Tokens.XmlDeclaration:
                             // thou shalt use UTF8, and XML version 1.
@@ -162,21 +161,21 @@ namespace Matrix.Xml.Parser
             }
             finally
             {
-                _bufferAggregate.RemoveFirst(off);
+                bufferAggregate.RemoveFirst(off);
             }
         }
 
         private void StartTag(byte[] buf, int offset,
             ContentToken ct, Tokens tok)
         {
-            _depth++;
+            depth++;
             int colon;
             string name;
             string prefix;
 
             var attributes = new Dictionary<string, string>();
 
-            _nsStack.Push();
+            nsStack.Push();
 
             // if i have attributes
             if ((tok == Tokens.StartTagWithAtts) ||
@@ -189,7 +188,7 @@ namespace Matrix.Xml.Parser
                 {
                     start = ct.GetAttributeNameStart(i);
                     end = ct.GetAttributeNameEnd(i);
-                    name = _utf.GetString(buf, start, end - start);
+                    name = utf.GetString(buf, start, end - start);
 
                     start = ct.GetAttributeValueStart(i);
                     end = ct.GetAttributeValueEnd(i);
@@ -204,13 +203,13 @@ namespace Matrix.Xml.Parser
                         // prefixed namespace declaration
                         colon = name.IndexOf(':');
                         prefix = name.Substring(colon + 1);
-                        _nsStack.AddNamespace(prefix, val);
+                        nsStack.AddNamespace(prefix, val);
                         attributes.Add(name, val);
                     }
                     else if (name == "xmlns")
                     {
                         // namespace declaration
-                        _nsStack.AddNamespace(string.Empty, val);
+                        nsStack.AddNamespace(string.Empty, val);
                         attributes.Add(name, val);
                     }
                     else
@@ -221,9 +220,9 @@ namespace Matrix.Xml.Parser
                 }
             }
 
-            name = _utf.GetString(buf,
-                offset + _utf8Encoding.MinBytesPerChar,
-                ct.NameEnd - offset - _utf8Encoding.MinBytesPerChar);
+            name = utf.GetString(buf,
+                offset + utf8Encoding.MinBytesPerChar,
+                ct.NameEnd - offset - utf8Encoding.MinBytesPerChar);
 
             colon = name.IndexOf(':');
             string ns;
@@ -232,11 +231,11 @@ namespace Matrix.Xml.Parser
             {
                 prefix = name.Substring(0, colon);
                 name = name.Substring(colon + 1);
-                ns = _nsStack.LookupNamespace(prefix);
+                ns = nsStack.LookupNamespace(prefix);
             }
             else
             {
-                ns = _nsStack.DefaultNamespace;
+                ns = nsStack.DefaultNamespace;
             }
 
             XmppXElement newel = Factory.GetElement(prefix, name, ns);
@@ -248,7 +247,7 @@ namespace Matrix.Xml.Parser
                 {
                     prefix = attrname.Substring(0, colon);
                     name = attrname.Substring(colon + 1);
-                    ns = _nsStack.LookupNamespace(prefix);
+                    ns = nsStack.LookupNamespace(prefix);
                     if (attrname.StartsWith("xmlns:"))
                     {
                         // Namespace Declaration
@@ -266,37 +265,37 @@ namespace Matrix.Xml.Parser
                 }
             }
 
-            if (_root == null)
+            if (root == null)
             {
-                _root = newel;
-                OnStreamStart?.Invoke(_root);
+                root = newel;
+                OnStreamStart?.Invoke(root);
 
             }
             else
             {
-                if (_current != null)
-                    _current.Add(newel);
-                _current = newel;
+                if (current != null)
+                    current.Add(newel);
+                current = newel;
             }
         }
 
         private void EndTag(byte[] buf, int offset, ContentToken ct, Tokens tok)
         {
-            _depth--;
-            _nsStack.Pop();
+            depth--;
+            nsStack.Pop();
 
-            if (_current == null)
+            if (current == null)
             {
                 OnStreamEnd?.Invoke();
                 return;
             }
 
-            var parent = _current.Parent as XmppXElement;
+            var parent = current.Parent as XmppXElement;
             if (parent == null)
             {
-                OnStreamElement?.Invoke(_current);
+                OnStreamElement?.Invoke(current);
             }
-            _current = parent;
+            current = parent;
         }
 
         private string NormalizeAttributeValue(byte[] buf, int offset, int length)
@@ -317,7 +316,7 @@ namespace Matrix.Xml.Parser
                 while (off < b.Length)
                 {
                     //tok = m_enc.tokenizeContent(b, off, b.Length, ct);
-                    Tokens tok = _utf8Encoding.TokenizeAttributeValue(b, off, b.Length, ct);
+                    Tokens tok = utf8Encoding.TokenizeAttributeValue(b, off, b.Length, ct);
 
                     switch (tok)
                     {
@@ -329,7 +328,7 @@ namespace Matrix.Xml.Parser
                         case Tokens.AttributeValueS:
                         case Tokens.DataChars:
                         case Tokens.DataNewline:
-                            val += (_utf.GetString(b, off, ct.TokenEnd - off));
+                            val += (utf.GetString(b, off, ct.TokenEnd - off));
                             break;
                         case Tokens.CharReference:
                         case Tokens.MagicEntityReference:
@@ -364,14 +363,14 @@ namespace Matrix.Xml.Parser
             if (text == "")
                 return;
 
-            if (_isCData)
+            if (isCData)
             {
                 var cdata = new XCData(text);
-                _current?.Add(cdata);
+                current?.Add(cdata);
             }
             else
             {
-                _current?.Add(text);
+                current?.Add(text);
             }
         }
     }
