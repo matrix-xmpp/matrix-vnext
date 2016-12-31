@@ -46,29 +46,11 @@ namespace Matrix.Xmpp.Shim
             Add(header);
             return header;
         }
-
-
-        /// <summary>
-        /// Add new Header
-        /// </summary>
-        /// <param name="name">header name</param>
-        /// <param name="val">header value</param>
-        /// <returns>Header.</returns>
-#if CF || MONO35
-        public Header AddHeader(HeaderNames name, string val)
-#else
+        
         public Header AddHeader(HeaderNames name, string val = null)
-#endif
         {
             return AddHeader(name.GetName(), val);
         }
-
-#if CF || MONO35
-        public Header AddHeader(string name)
-        {
-            return AddHeader(name, null);
-        }
-#endif
 
         /// <summary>
         /// Adds a new Header
@@ -76,38 +58,19 @@ namespace Matrix.Xmpp.Shim
         /// <param name="name">header name</param>
         /// <param name="val">header value</param>
         /// <returns>returns the new added header</returns>
-#if CF || MONO35       
-        public Header AddHeader(string name, string val)
-#else
         public Header AddHeader(string name, string val = null)
-#endif
         {
             var header = new Header(name, val);
             Add(header);
             return header;
         }
 
-#if CF || MONO35
-		/// <summary>
-		/// Sets the header.
-		/// </summary>
-		/// <param name="name">The header name.</param>
-		public void SetHeader(HeaderNames name)
-		{
-			SetHeader (name, null);
-		}
-#endif
-
         /// <summary>
         /// Sets the header.
         /// </summary>
         /// <param name="name">The header name.</param>
         /// <param name="val">The header value.</param>
-#if CF || MONO35
-        public void SetHeader(HeaderNames name, string val)
-#else
         public void SetHeader(HeaderNames name, string val = null)
-#endif
         {
             SetHeader(name.GetName(), val);
         }
@@ -117,11 +80,7 @@ namespace Matrix.Xmpp.Shim
         /// </summary>
         /// <param name="name">The header name.</param>
         /// <param name="val">The header value.</param>
-#if CF || MONO35
-        public void SetHeader(string name, string val)
-#else
         public void SetHeader(string name, string val = null)
-#endif
         {
             var header = GetHeader(name);
             if (header != null)
@@ -135,14 +94,7 @@ namespace Matrix.Xmpp.Shim
         /// </summary>
         /// <param name="name">The header name.</param>
         /// <returns>the Header.</returns>
-        public Header this[HeaderNames name]
-        {
-#if CF || MONO35
-            get { return HasHeader(name.GetName()) ? GetHeader(name.GetName()) : AddHeader(name.GetName(), null); }
-#else
-			get { return HasHeader(name.GetName()) ? GetHeader(name.GetName()) : AddHeader(name.GetName()); }
-#endif
-        }
+        public Header this[HeaderNames name] => HasHeader(name.GetName()) ? GetHeader(name.GetName()) : AddHeader(name.GetName());
 
         /// <summary>
         /// Gets the <see cref="Header"/> with the specified name.
@@ -151,11 +103,7 @@ namespace Matrix.Xmpp.Shim
         /// <returns>the Header.</returns>
         public Header this[string name]
         {
-#if CF || MONO35			
-			get { return HasHeader(name) ? GetHeader(name) : AddHeader(name, null); }
-#else
             get { return HasHeader(name) ? GetHeader(name) : AddHeader(name); }
-#endif
         }
 
         /// <summary>
@@ -182,10 +130,7 @@ namespace Matrix.Xmpp.Shim
         /// Gets a value indicating whether this instance has any headers.
         /// </summary>
         /// <value><c>true</c> if this instance has headers; otherwise, <c>false</c>.</value>
-        public bool HasHeaders
-        {
-            get { return Elements<Header>() != null; }
-        }
+        public bool HasHeaders => Elements<Header>() != null;
 
         /// <summary>
         /// Gets the header with the given header name.

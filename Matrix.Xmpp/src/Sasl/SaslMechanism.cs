@@ -6,17 +6,16 @@ namespace Matrix.Xmpp.Sasl
     {
         [Name(null)]
         None,
-#if WIN
+
         [Name("GSSAPI")]
         Gssapi,
         
         [Name("NTLM")]
         Ntlm,
-#endif
-#if WIN || MONO || COREFX     
+
         [Name("EXTERNAL")]
         External,
-#endif
+
         [Name("SCRAM-SHA-1")]
         ScramSha1,
         

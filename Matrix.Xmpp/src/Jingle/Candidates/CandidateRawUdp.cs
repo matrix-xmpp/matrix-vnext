@@ -71,19 +71,11 @@ namespace Matrix.Xmpp.Jingle.Candidates
             set { SetAttribute("type", value.ToString().ToLower()); }
         }
 
-#if WINRT || CF || WP7
-        public string IPAddress
-        {
-            get { return GetAttribute("ip"); }
-            set { SetAttribute("ip", value); }
-        }
-#else
         public IPAddress IPAddress
         {
             get { return GetAttributeIPAddress("ip"); }
             set { SetAttribute("ip", value.ToString()); }
         }
-#endif
 
         /// <summary>
         /// generates a new unique Sid

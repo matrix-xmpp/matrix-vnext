@@ -14,20 +14,20 @@ namespace Matrix.Sasl.Scram
         private const int LenghtSalt            = 20;
         private const int DefaultIterationCount = 4096;
 
-        private string _firstClientMessage;
-        private string _firstServerMessage;
+        private string firstClientMessage;
+        private string firstServerMessage;
 
-        private string _clientNonceB64;
-        private string _serverNonceB64;
+        private string clientNonceB64;
+        private string serverNonceB64;
 
-        private byte[] _salt;
-        private byte[] _storedKey;
-        private byte[] _serverKey;
+        private byte[] salt;
+        private byte[] storedKey;
+        private byte[] serverKey;
 
         #region << client messages >>
         public string GenerateFirstClientMessage(string user)
         {
-            _clientNonceB64 = GenerateClientNonce();
+            clientNonceB64 = GenerateClientNonce();
 
             var sb = new StringBuilder();
 
@@ -41,10 +41,10 @@ namespace Matrix.Sasl.Scram
 
             // client nonce
             sb.Append("r=");
-            sb.Append(_clientNonceB64);
+            sb.Append(clientNonceB64);
 
-            _firstClientMessage = sb.ToString();
-            return _firstClientMessage;
+            firstClientMessage = sb.ToString();
+            return firstClientMessage;
         }
 
         public string GenerateFinalClientMessage(string sMessage, string password)
@@ -52,31 +52,31 @@ namespace Matrix.Sasl.Scram
             var pairs = ParseMessage(sMessage);
 
             //string clientServerNonce = pairs["r"];
-            string serverNonce = pairs["r"].Substring(_clientNonceB64.Length);
+            string serverNonce = pairs["r"].Substring(clientNonceB64.Length);
 
-            var salt = pairs["s"];   // the user's salt - (base64 encoded)
-            var iteration = pairs["i"];  // iteation count
+            var uSalt       = pairs["s"];   // the user's salt - (base64 encoded)
+            var uIteration  = pairs["i"];  // iteation count
 
             // the bare of our first message
-            var clientFirstMessageBare = _firstClientMessage.Substring(3);
+            var clientFirstMessageBare = firstClientMessage.Substring(3);
 
             var sb = new StringBuilder();
             sb.Append("c=biws,");
             // Client/Server nonce
             sb.Append("r=");
-            sb.Append(_clientNonceB64);
+            sb.Append(clientNonceB64);
             sb.Append(serverNonce);
 
             string clientFinalMessageWithoutProof = sb.ToString();
 
             string authMessage = clientFirstMessageBare + "," + sMessage + "," + clientFinalMessageWithoutProof;
 
-            var saltedPassword = Hi(password, Convert.FromBase64String(salt), Convert.ToInt32(iteration));
+            var saltedPassword = Hi(password, Convert.FromBase64String(uSalt), Convert.ToInt32(uIteration));
 
-            var clientKey = Hash.HMAC(saltedPassword, "Client Key");
-            var storedKey = Hash.Sha1HashBytes(clientKey);
+            var clientKey       = Hash.HMAC(saltedPassword, "Client Key");
+            var storedClientKey = Hash.Sha1HashBytes(clientKey);
 
-            var clientSignature = Hash.HMAC(storedKey, authMessage);
+            var clientSignature = Hash.HMAC(storedClientKey, authMessage);
 
             var clientProof = BinaryXor(clientKey, clientSignature);
 
@@ -114,32 +114,32 @@ namespace Matrix.Sasl.Scram
             string clientNonce = pairs["r"];
             string user = pairs["n"];
 
-            _serverNonceB64 = GenerateServerNonce();
-            _salt = GenerateSalt();
+            serverNonceB64 = GenerateServerNonce();
+            salt = GenerateSalt();
 
-            var saltedPassword = Hi(pass, _salt, DefaultIterationCount);
+            var saltedPassword = Hi(pass, salt, DefaultIterationCount);
 
             var clientKey = Hash.HMAC(saltedPassword, "Client Key");
-            _storedKey = Hash.Sha1HashBytes(clientKey);
-            _serverKey = Hash.HMAC(saltedPassword, "Server Key");
+            storedKey = Hash.Sha1HashBytes(clientKey);
+            serverKey = Hash.HMAC(saltedPassword, "Server Key");
 
             var sb = new StringBuilder();
 
             sb.Append("r=");
-            sb.Append(clientNonce + _serverNonceB64);
+            sb.Append(clientNonce + serverNonceB64);
             sb.Append(",");
 
             sb.Append("s=");
-            sb.Append(Convert.ToBase64String(_salt));
+            sb.Append(Convert.ToBase64String(salt));
             sb.Append(",");
 
             sb.Append("i=");
             sb.Append(DefaultIterationCount);
 
-            _firstClientMessage = msg;
-            _firstServerMessage = sb.ToString();
+            firstClientMessage = msg;
+            firstServerMessage = sb.ToString();
 
-            return _firstServerMessage;
+            return firstServerMessage;
         }
 
         /// <summary>
@@ -157,16 +157,16 @@ namespace Matrix.Sasl.Scram
 
             byte[] bProof = Convert.FromBase64String(proof);
 
-            string authMessage = BuildClientFirstMessageBare(_firstClientMessage)
-                                 + "," + _firstServerMessage
+            string authMessage = BuildClientFirstMessageBare(firstClientMessage)
+                                 + "," + firstServerMessage
                                  + "," + BuildClientFinalMessageWithoutProof(finalClient);
 
-            var clientSignature = Hash.HMAC(_storedKey, authMessage);
-            var serverSignature = Hash.HMAC(_serverKey, authMessage);
+            var clientSignature = Hash.HMAC(storedKey, authMessage);
+            var serverSignature = Hash.HMAC(serverKey, authMessage);
 
             var clientKey = BinaryXor(clientSignature, bProof);
 
-            bool match = _storedKey.SequenceEqual((Hash.Sha1HashBytes(clientKey)));
+            bool match = storedKey.SequenceEqual(Hash.Sha1HashBytes(clientKey));
             if (match)
             {
                 // the server final message

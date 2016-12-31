@@ -10,8 +10,8 @@ namespace Matrix.Sasl.Digest
     /// </summary>
     internal class Step2
     {
-        Step1 _step1;
-        XmppClient _xmppClient;
+        readonly Step1 step1;
+        readonly XmppClient xmppClient;
 
         /// <summary>
         /// builds a step2 message reply to the given step1 message
@@ -20,14 +20,14 @@ namespace Matrix.Sasl.Digest
         /// <param name="xmppClient">The xmppClient.</param>
         internal Step2(Step1 step1, XmppClient xmppClient)
         {
-            _step1 = step1;
-            _xmppClient = xmppClient;
+            this.step1 = step1;
+            this.xmppClient = xmppClient;
 
-            _step1.Nonce = step1.Nonce;
+            this.step1.Nonce = step1.Nonce;
 
             // fixed for SASL in amessage servers (jabberd 1.x)
             if (SupportsAuth(step1.Qop))
-                _step1.Qop = "auth";
+                this.step1.Qop = "auth";
 
             GenerateCnonce();
             GenerateNc();
@@ -49,41 +49,15 @@ namespace Matrix.Sasl.Digest
         }
 
         #region << Properties and member variables >>
-        private string m_Cnonce;
-        private string m_Nc;
-        private string m_DigestUri;
-        private string m_Response;
-        private string m_Authzid;
+        internal string Cnonce { get; set; }
 
-        internal string Cnonce
-        {
-            get { return m_Cnonce; }
-            set { m_Cnonce = value; }
-        }
+        internal string Nc { get; set; }
 
-        internal string Nc
-        {
-            get { return m_Nc; }
-            set { m_Nc = value; }
-        }
+        internal string DigestUri { get; set; }
 
-        internal string DigestUri
-        {
-            get { return m_DigestUri; }
-            set { m_DigestUri = value; }
-        }
+        internal string Response { get; set; }
 
-        internal string Response
-        {
-            get { return m_Response; }
-            set { m_Response = value; }
-        }
-
-        internal string Authzid
-        {
-            get { return m_Authzid; }
-            set { m_Authzid = value; }
-        }
+        internal string Authzid { get; set; }
         #endregion
 
 
@@ -106,7 +80,7 @@ namespace Matrix.Sasl.Digest
             var buf = new byte[lenght];
             rng.GetBytes(buf);
 
-            m_Cnonce = Hash.HexToString(buf).ToLower();
+            Cnonce = Hash.HexToString(buf).ToLower();
 #if TEST
             m_Cnonce = "28f47432f9606887d9b727e65db225eb7cb4b78073d8b6f32399400e01438f1e";
 #endif
@@ -115,12 +89,12 @@ namespace Matrix.Sasl.Digest
         private void GenerateNc()
         {
             const int nc = 1;
-            m_Nc = nc.ToString().PadLeft(8, '0');
+            this.Nc = nc.ToString().PadLeft(8, '0');
         }
 
         private void GenerateDigestUri()
         {
-            m_DigestUri = "xmpp/" + _xmppClient.XmppDomain;
+            DigestUri = "xmpp/" + xmppClient.XmppDomain;
         }
 
         /*
@@ -157,11 +131,11 @@ namespace Matrix.Sasl.Digest
             string p2;
 
             var sb = new StringBuilder();
-            sb.Append(_xmppClient.Username);
+            sb.Append(xmppClient.Username);
             sb.Append(":");
-            sb.Append(_step1.Realm);
+            sb.Append(step1.Realm);
             sb.Append(":");
-            sb.Append(_xmppClient.Password);
+            sb.Append(xmppClient.Password);
 
             //H1 = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(sb.ToString()));
             H1 = Hash.Md5HashBytes(Encoding.UTF8.GetBytes(sb.ToString()));
@@ -171,22 +145,19 @@ namespace Matrix.Sasl.Digest
 
             sb.Remove(0, sb.Length);
             sb.Append(":");
-            sb.Append(_step1.Nonce);
+            sb.Append(step1.Nonce);
             sb.Append(":");
             sb.Append(Cnonce);
 
-            if (m_Authzid != null)
+            if (Authzid != null)
             {
                 sb.Append(":");
-                sb.Append(m_Authzid);
+                sb.Append(Authzid);
             }
             A1 = sb.ToString();
 
-#if (SILVERLIGHT || WINRT)
-            byte[] bA1 = Encoding.UTF8.GetBytes(A1);
-#else
             byte[] bA1 = Encoding.ASCII.GetBytes(A1);
-#endif
+
             byte[] bH1A1 = new byte[H1.Length + bA1.Length];
 
             Array.Copy(H1, 0, bH1A1, 0, H1.Length);
@@ -205,17 +176,15 @@ namespace Matrix.Sasl.Digest
 
             sb.Remove(0, sb.Length);
             sb.Append("AUTHENTICATE:");
-            sb.Append(m_DigestUri);
-            if (_step1.Qop.CompareTo("auth") != 0)
+            sb.Append(DigestUri);
+            if (step1.Qop.CompareTo("auth") != 0)
             {
                 sb.Append(":00000000000000000000000000000000");
             }
+
             A2 = sb.ToString();
-#if (SILVERLIGHT || WINRT)
-            H2 = Encoding.UTF8.GetBytes(A2);
-#else
             H2 = Encoding.ASCII.GetBytes(A2);
-#endif
+
 
             //H2 = new MD5CryptoServiceProvider().ComputeHash(H2);
             H2 = Hash.Md5HashBytes(H2);
@@ -229,13 +198,13 @@ namespace Matrix.Sasl.Digest
             sb.Remove(0, sb.Length);
             sb.Append(p1);
             sb.Append(":");
-            sb.Append(_step1.Nonce);
+            sb.Append(step1.Nonce);
             sb.Append(":");
-            sb.Append(m_Nc);
+            sb.Append(Nc);
             sb.Append(":");
-            sb.Append(m_Cnonce);
+            sb.Append(Cnonce);
             sb.Append(":");
-            sb.Append(_step1.Qop);
+            sb.Append(step1.Qop);
             sb.Append(":");
             sb.Append(p2);
 
@@ -245,20 +214,20 @@ namespace Matrix.Sasl.Digest
 #if TEST
             var H3hex = Util.Hash.HexToString(H3);
 #endif
-            m_Response = Hash.HexToString(H3).ToLower();
+            Response = Hash.HexToString(H3).ToLower();
         }
 
         private string GenerateMessage()
         {
             var sb = new StringBuilder();
             sb.Append("username=");
-            sb.Append(AddQuotes(_xmppClient.Username));
+            sb.Append(AddQuotes(xmppClient.Username));
             sb.Append(",");
             sb.Append("realm=");
-            sb.Append(AddQuotes(_step1.Realm));
+            sb.Append(AddQuotes(step1.Realm));
             sb.Append(",");
             sb.Append("nonce=");
-            sb.Append(AddQuotes(_step1.Nonce));
+            sb.Append(AddQuotes(step1.Nonce));
             sb.Append(",");
             sb.Append("cnonce=");
             sb.Append(AddQuotes(Cnonce));
@@ -267,13 +236,13 @@ namespace Matrix.Sasl.Digest
             sb.Append(Nc);
             sb.Append(",");
             sb.Append("qop=");
-            sb.Append(_step1.Qop);
+            sb.Append(step1.Qop);
             sb.Append(",");
             sb.Append("digest-uri=");
             sb.Append(AddQuotes(DigestUri));
             sb.Append(",");
             sb.Append("charset=");
-            sb.Append(_step1.Charset);
+            sb.Append(step1.Charset);
             sb.Append(",");
             sb.Append("response=");
             sb.Append(Response);

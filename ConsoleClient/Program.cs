@@ -21,12 +21,12 @@ namespace ConsoleClient
 
             var xmppClient = new XmppClient()
             {
-                //Username = "alex",
-                //Password = "***REMOVED***",
-                //XmppDomain = "ag-software.net",
-                Username = "gnauck",
+                Username = "alex",
                 Password = "***REMOVED***",
-                XmppDomain = "jabber.org",
+                XmppDomain = "ag-software.net",
+                //Username = "gnauck",
+                //Password = "***REMOVED***",
+                //XmppDomain = "jabber.org",
                 Resource = "vnext"
             };
 

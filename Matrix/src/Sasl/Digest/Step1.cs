@@ -1,4 +1,6 @@
-﻿namespace Matrix.Sasl.Digest
+﻿using System;
+
+namespace Matrix.Sasl.Digest
 {
     /// <summary>
     /// 
@@ -28,50 +30,19 @@
         #endregion
 
         #region << Properties >>
-        private string m_Realm;
-        private string m_Nonce;
-        private string m_Qop;//			= "auth";		
-        private string m_Charset = "utf-8";
-        private string m_Algorithm;
 
-        private string m_Rspauth;
+        internal string Realm { get; set; }
 
+        internal string Nonce { get; set; }
 
-        internal string Realm
-        {
-            get { return m_Realm; }
-            set { m_Realm = value; }
-        }
+        internal string Qop { get; set; }
 
-        internal string Nonce
-        {
-            get { return m_Nonce; }
-            set { m_Nonce = value; }
-        }
+        internal string Charset { get; set; } = "utf-8";
 
-        internal string Qop
-        {
-            get { return m_Qop; }
-            set { m_Qop = value; }
-        }
+        internal string Algorithm { get; set; }
 
-        internal string Charset
-        {
-            get { return m_Charset; }
-            set { m_Charset = value; }
-        }
+        internal string Rspauth { get; set; }
 
-        internal string Algorithm
-        {
-            get { return m_Algorithm; }
-            set { m_Algorithm = value; }
-        }
-
-        internal string Rspauth
-        {
-            get { return m_Rspauth; }
-            set { m_Rspauth = value; }
-        }
         #endregion
 
         /*
@@ -127,7 +98,7 @@
             // have seen servers which put spaces before the pairs
             pair = pair.Trim();
 
-            int equalPos = pair.IndexOf("=");
+            int equalPos = pair.IndexOf("=", StringComparison.Ordinal);
             if (equalPos > 0)
             {
                 string key = pair.Substring(0, equalPos);
@@ -140,22 +111,22 @@
                 switch (key)
                 {
                     case "realm":
-                        m_Realm = data;
+                        Realm = data;
                         break;
                     case "nonce":
-                        m_Nonce = data;
+                        Nonce = data;
                         break;
                     case "qop":
-                        m_Qop = data;
+                        Qop = data;
                         break;
                     case "charset":
-                        m_Charset = data;
+                        Charset = data;
                         break;
                     case "algorithm":
-                        m_Algorithm = data;
+                        Algorithm = data;
                         break;
                     case "rspauth":
-                        m_Rspauth = data;
+                        Rspauth = data;
                         break;
                 }
             }

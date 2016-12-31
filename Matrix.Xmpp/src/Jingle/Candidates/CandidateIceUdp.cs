@@ -64,19 +64,13 @@ namespace Matrix.Xmpp.Jingle.Candidates
             get { return GetAttributeInt("rel-port"); }
             set { SetAttribute("rel-port", value); }
         }
-#if WINRT || CF || WP7
-        public string RelatedIPAddress
-        {
-            get { return GetAttribute("rel-addr"); }
-            set { SetAttribute("rel-addr", value); }
-        }
-#else
+
         public IPAddress RelatedIPAddress
         {
             get { return GetAttributeIPAddress("rel-addr"); }
             set { SetAttribute("rel-addr", value.ToString()); }
         }
-#endif
+
         public Protocol Protocol
         {
             get { return GetAttributeEnum<Protocol>("protocol"); }
