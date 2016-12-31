@@ -50,6 +50,7 @@ namespace Matrix
                     Pipeline = channel.Pipeline;
 
                     Pipeline.AddLast(new LoggingHandler());
+                    Pipeline.AddLast(new KeepAliveHandler());
                     //Pipeline.AddLast(new XmppLoggingHandler());
                     
 
