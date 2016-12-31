@@ -15,7 +15,7 @@ namespace Matrix.Sasl
             if (mechanisms.SupportsMechanism(SaslMechanism.ScramSha1))
                 saslProc = new ScramSha1Processor();
 
-            if (mechanisms.SupportsMechanism(SaslMechanism.DigestMd5))
+            else if (mechanisms.SupportsMechanism(SaslMechanism.DigestMd5))
                 saslProc = new DigestMd5Processor();
 
             else if (mechanisms.SupportsMechanism(SaslMechanism.Plain))
