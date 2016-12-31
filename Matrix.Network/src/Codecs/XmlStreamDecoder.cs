@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
@@ -12,7 +11,7 @@ namespace Matrix.Network.Codecs
         readonly StreamParser parser = new StreamParser();
 
         private List<object> output;
-
+       
         public XmlStreamDecoder()
         {
             parser.OnStreamStart +=

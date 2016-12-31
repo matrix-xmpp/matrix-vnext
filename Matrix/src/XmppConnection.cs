@@ -64,7 +64,12 @@ namespace Matrix
 
                     Pipeline.AddLast(new AutoReplyToPingHandler<Iq>());
 
+
+                    Pipeline.AddLast(new StreamFooterHandler());
                     Pipeline.AddLast(xmppStreamEventHandler);
+                    
+                    
+                    
 
 
                     Pipeline.AddLast(WaitForStanzaHandler);

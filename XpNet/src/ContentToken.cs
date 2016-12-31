@@ -16,13 +16,13 @@ namespace XpNet
 	/// </summary>
 	public class ContentToken : Token
 	{
-		private const int INIT_ATT_COUNT = 8;
-		private int     _attCount           = 0;
-		private int[]   _attNameStart       = new int[INIT_ATT_COUNT];
-		private int[]   _attNameEnd         = new int[INIT_ATT_COUNT];
-		private int[]   _attValueStart      = new int[INIT_ATT_COUNT];
-		private int[]   _attValueEnd        = new int[INIT_ATT_COUNT];
-		private bool[]  _attNormalized      = new bool[INIT_ATT_COUNT];       
+		private const int InitAttCount = 8;
+		private int     attCount           = 0;
+		private int[]   attNameStart       = new int[InitAttCount];
+		private int[]   attNameEnd         = new int[InitAttCount];
+		private int[]   attValueStart      = new int[InitAttCount];
+		private int[]   attValueEnd        = new int[InitAttCount];
+		private bool[]  attNormalized      = new bool[InitAttCount];       
 		
 		/// <summary>
 		/// Returns the number of attributes specified in the start-tag or empty element tag.
@@ -30,7 +30,7 @@ namespace XpNet
 		/// <returns></returns>
 		public int GetAttributeSpecifiedCount() 
 		{
-			return _attCount;
+			return attCount;
 		}
 
 		/// <summary>
@@ -41,9 +41,9 @@ namespace XpNet
 		/// <returns></returns>
 		public int GetAttributeNameStart(int i) 
 		{
-			if (i >= _attCount)
+			if (i >= attCount)
 				throw new IndexOutOfRangeException();
-			return _attNameStart[i];
+			return attNameStart[i];
         }
 
 		/// <summary>
@@ -54,9 +54,9 @@ namespace XpNet
         /// <returns></returns>
         public int GetAttributeNameEnd(int i) 
 		{
-			if (i >= _attCount)
+			if (i >= attCount)
 				throw new IndexOutOfRangeException();
-			return _attNameEnd[i];
+			return attNameEnd[i];
         }
 		
 		/// <summary>
@@ -67,9 +67,9 @@ namespace XpNet
         /// <returns></returns>
         public int GetAttributeValueStart(int i) 
 		{
-			if (i >= _attCount)
+			if (i >= attCount)
 				throw new IndexOutOfRangeException();
-			return _attValueStart[i];
+			return attValueStart[i];
 		}
 
 
@@ -80,11 +80,10 @@ namespace XpNet
         /// <returns></returns>
         public int GetAttributeValueEnd(int i) 
 		{
-			if (i >= _attCount)
+			if (i >= attCount)
 				throw new IndexOutOfRangeException();
-			return _attValueEnd[i];
+			return attValueEnd[i];
         }
-
 	
          /// <summary>
          /// Returns true if attribute index<code>i</code> does not need to
@@ -96,9 +95,9 @@ namespace XpNet
          /// <returns></returns>
         public bool IsAttributeNormalized(int i) 
 		{
-			if (i >= _attCount)
+			if (i >= attCount)
 				throw new IndexOutOfRangeException();
-			return _attNormalized[i];
+			return attNormalized[i];
 		}
 
 		/// <summary>
@@ -106,7 +105,7 @@ namespace XpNet
 		/// </summary>
 		public void ClearAttributes() 
 		{
-			_attCount = 0;
+			attCount = 0;
 		}
   
 		/// <summary>
@@ -121,20 +120,20 @@ namespace XpNet
 			int valueStart, int valueEnd,
 			bool normalized) 
 		{
-			if (_attCount == _attNameStart.Length) 
+			if (attCount == attNameStart.Length) 
 			{
-				_attNameStart = Grow(_attNameStart);
-				_attNameEnd = Grow(_attNameEnd);
-				_attValueStart = Grow(_attValueStart);
-				_attValueEnd = Grow(_attValueEnd);
-				_attNormalized = Grow(_attNormalized);
+				attNameStart = Grow(attNameStart);
+				attNameEnd = Grow(attNameEnd);
+				attValueStart = Grow(attValueStart);
+				attValueEnd = Grow(attValueEnd);
+				attNormalized = Grow(attNormalized);
 			}
-			_attNameStart[_attCount] = nameStart;
-			_attNameEnd[_attCount] = nameEnd;
-			_attValueStart[_attCount] = valueStart;
-			_attValueEnd[_attCount] = valueEnd;
-			_attNormalized[_attCount] = normalized;
-			++_attCount;
+			attNameStart[attCount] = nameStart;
+			attNameEnd[attCount] = nameEnd;
+			attValueStart[attCount] = valueStart;
+			attValueEnd[attCount] = valueEnd;
+			attNormalized[attCount] = normalized;
+			++attCount;
 		}
 
 		/// <summary>
@@ -143,20 +142,20 @@ namespace XpNet
 		/// <param name="buf"></param>
 		public void CheckAttributeUniqueness(byte[] buf)
 		{
-			for (int i = 1; i < _attCount; i++) 
+			for (int i = 1; i < attCount; i++) 
 			{
-				int len = _attNameEnd[i] - _attNameStart[i];
+				int len = attNameEnd[i] - attNameStart[i];
 				for (int j = 0; j < i; j++) 
 				{
-					if (_attNameEnd[j] - _attNameStart[j] == len) 
+					if (attNameEnd[j] - attNameStart[j] == len) 
 					{
 						int n = len;
-						int s1 = _attNameStart[i];
-						int s2 = _attNameStart[j];
+						int s1 = attNameStart[i];
+						int s2 = attNameStart[j];
 						do 
 						{
 							if (--n < 0)
-								throw new InvalidTokenException(_attNameStart[i],
+								throw new InvalidTokenException(attNameStart[i],
 									InvalidTokenException.DuplicateAttribute);
 						} while (buf[s1++] == buf[s2++]);
 					}

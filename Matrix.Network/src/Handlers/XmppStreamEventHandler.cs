@@ -28,7 +28,6 @@ namespace Matrix.Network.Handlers
             if (msg.XmlStreamEventType == XmlStreamEventType.StreamStart)
             {
                 xmppXElementStreamSubject.OnNext(msg.XmppXElement);
-               
             }
             else if (msg.XmlStreamEventType == XmlStreamEventType.StreamElement)
             {
