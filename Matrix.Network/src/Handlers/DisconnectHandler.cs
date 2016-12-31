@@ -9,7 +9,7 @@ namespace Matrix.Network.Handlers
             base.ChannelInactive(context);
 
             var channel = context.Channel;
-
+          
             /* If shutdown is on going, ignore */
             if (channel.EventLoop.IsShuttingDown)
                 return;

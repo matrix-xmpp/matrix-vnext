@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
@@ -11,7 +12,9 @@ using Matrix.Network.Codecs;
 using Matrix.Network.Handlers;
 using Matrix.Network.Resolver;
 using Matrix.Xml;
+using Matrix.Xmpp;
 using Matrix.Xmpp.Client;
+using Matrix.Xmpp.Ping;
 using Matrix.Xmpp.Stream;
 
 namespace Matrix
@@ -20,19 +23,28 @@ namespace Matrix
     {        
         protected   Bootstrap                   Bootstrap              = new Bootstrap();
         protected   IChannelPipeline            Pipeline;
-        private     MultithreadEventLoopGroup   eventLoopGroup         = new MultithreadEventLoopGroup();
+        readonly    MultithreadEventLoopGroup   eventLoopGroup         = new MultithreadEventLoopGroup();
         readonly    XmlStreamDecoder            xmlStreamDecoder       = new XmlStreamDecoder();
-        private     XmppStreamEventHandler      xmppStreamEventHandler = new XmppStreamEventHandler();
+        readonly    XmppStreamEventHandler      xmppStreamEventHandler = new XmppStreamEventHandler();
         private     INameResolver               resolver               = new SrvNameResolver();        
 
         protected XmppConnection()
         {
+            XmlStreamEvent.Subscribe(OnXmlStreamEvent);
+
+            XmppXElementStream
+                .Where(el => el is Iq)
+                .Cast<Iq>()
+                .Where(iq => iq.Query is Ping && iq.Type == IqType.Get)
+                .Subscribe(async iq => await SendAsync(new Iq { Type = IqType.Result, Id = iq.Id, To = iq.From }) );
+                
+
             Bootstrap
                 .Group(eventLoopGroup)
                 .Channel<TcpSocketChannel>()
                 .Option(ChannelOption.TcpNodelay, true)
+                .Option(ChannelOption.SoKeepalive, true)
                 .Resolver(HostnameResolver)
-                
                 .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
                     Pipeline = channel.Pipeline;
@@ -63,6 +75,13 @@ namespace Matrix
                 }));
         }
 
+      
+
+        private void OnXmlStreamEvent(XmlStreamEvent xmlStreamEvent)
+        {
+            //throw new NotImplementedException();
+        }
+
         #region << Properties >>
         public SessionState SessionState { get; set; } = SessionState.Disconnected;
         public string XmppDomain { get; set; }
@@ -72,6 +91,8 @@ namespace Matrix
         public ICertificateValidator CertificateValidator { get; set; } = new DefaultCertificateValidator();
 
         public IObservable<XmppXElement> XmppXElementStream => xmppStreamEventHandler.XmppXElementStream;
+
+        private IObservable<XmlStreamEvent> XmlStreamEvent => xmppStreamEventHandler.XmlStreamEvent;
 
         public IqHandler IqHandler { get; } = new IqHandler();
 
@@ -114,7 +135,7 @@ namespace Matrix
 
 
             IDisposable anonymousSubscription = null;
-            //anonymousSubscription = XmppXElementStream.Subscribe(
+            //anonymousSubscription = XmppXElementStreamStream.Subscribe(
             //       v => { },
             //       //In this example, the OnCompleted callback is also provided
             //    async () =>
