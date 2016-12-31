@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Matrix.Core\src\Matrix.Core.csproj" />
+    <ProjectReference Include="..\..\Matrix.Xmpp\src\Matrix.Xmpp.csproj" />
     <ProjectReference Include="..\..\XpNet\src\XpNet.csproj" />
     <ProjectReference Include="..\src\Matrix.Xml.csproj" />
   </ItemGroup>

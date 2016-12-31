@@ -1,0 +1,30 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Matrix.Xmpp;
+using Matrix.Xmpp.Client;
+
+using Shouldly;
+
+namespace Matrix.Xml.Tests
+{
+    [TestClass]
+    public class ExtensionsTest
+    {
+        [TestMethod]
+        public void TestIsMatch()
+        {
+            var pIq = new IqQuery<PingIq>{Type = IqType.Get, Id = "foo"};
+
+            pIq.IsMatch(iq => iq.HasAttribute("id")).ShouldBeTrue();
+            pIq.IsMatch(iq => iq.HasAttribute("foo")).ShouldBeFalse();
+
+
+            pIq.IsMatch(el => el.OfType<Iq>()).ShouldBeTrue();
+
+            pIq.IsMatch(el => el.OfType<Iq>() && el.Cast<Iq>().Id == "foo").ShouldBeTrue();
+            pIq.IsMatch(el => el.OfType<Iq>() && el.Cast<Iq>().Id == "foo" && el.Cast<Iq>().Type == IqType.Get).ShouldBeTrue();
+            pIq.IsMatch(el => el.OfType<Iq>() && el.Cast<Iq>().Id == "foo" && el.Cast<Iq>().Type == IqType.Result).ShouldBeFalse();
+
+        }
+    }
+}

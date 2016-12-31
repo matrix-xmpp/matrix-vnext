@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Globalization;
 using System.Net;
-using System.Xml;
 using System.Xml.Linq;
 using Matrix.Core;
 using Matrix.Xml.Parser;
@@ -168,15 +167,13 @@ namespace Matrix.Xml
         public void RemoveTag(XNamespace xns, string tagname)
         {
             XElement tag = GetTagXElement(xns, tagname);
-            if (tag != null)
-                tag.Remove();
+            tag?.Remove();
         }
 
         public void RemoveTag(string ns, string tagname)
         {
             XElement tag = GetTagXElement(ns, tagname);
-            if (tag != null)
-                tag.Remove();
+            tag?.Remove();
         }
 
         public XElement GetTagXElement(string ns, string tagname)
@@ -203,10 +200,7 @@ namespace Matrix.Xml
         public string GetTag<T>() where T : XmppXElement
         {
             var t = Element<T>();
-            if (t != null)
-                return t.Value;
-
-            return null;
+            return t?.Value;
         }
 
         public string GetTag(string ns, string tagname)
@@ -218,10 +212,7 @@ namespace Matrix.Xml
         public string GetTag(XNamespace ns, string tagname)
         {
             XElement el = GetTagXElement(ns, tagname);
-            if (el != null)
-                return el.Value;
-
-            return null;
+            return el?.Value;
         }
 
         public string GetTag(string tagname)
@@ -832,8 +823,7 @@ namespace Matrix.Xml
         public void Replace<T>(T newel, bool addFirst) where T : XElement
         {
             XElement el = Element<T>();
-            if (el != null)
-                el.Remove();
+            el?.Remove();
 
             if (newel != null)
             {
@@ -848,10 +838,7 @@ namespace Matrix.Xml
         /// the first child element.
         /// </summary>
         /// <returns></returns>
-        public XElement FirstElement
-        {
-            get { return Elements().FirstOrDefault(); }
-        }
+        public XElement FirstElement => Elements().FirstOrDefault();
 
         /// <summary>
         /// returns the first XmppXElement
@@ -907,7 +894,7 @@ namespace Matrix.Xml
         /// <returns></returns>
         public bool HasAttribute(string attname)
         {
-            return Attribute(attname) == null ? false : true;
+            return Attribute(attname) != null;
         }
 
         /// <summary>
@@ -927,7 +914,7 @@ namespace Matrix.Xml
 
         public bool HasAttribute(XName xname)
         {
-            return Attribute(xname) == null ? false : true;            
+            return Attribute(xname) != null;            
         }
                        
        
@@ -1375,8 +1362,7 @@ namespace Matrix.Xml
             SetAttributeValue("{" + ns + "}" + name, value);
         }
 
-        private static readonly string[] XmppRootNamespacesStrings = new[]
-            {
+        private static readonly string[] XmppRootNamespacesStrings = {
                 " xmlns=\"jabber:client\"",
                 " xmlns=\"jabber:server\"",
                 " xmlns=\"jabber:component:accept\""
@@ -1392,7 +1378,7 @@ namespace Matrix.Xml
         {
             foreach (var ns in XmppRootNamespacesStrings)
             {
-                int posStart = xml.IndexOf(ns);
+                int posStart = xml.IndexOf(ns, StringComparison.Ordinal);
                 if (posStart < 0)
                     continue;
                 
