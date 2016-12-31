@@ -25,6 +25,11 @@ namespace Matrix.Xml
             return "{" + ns + "}" + localName;
         }
 
+        public static T GetElement<T>() where T : XmppXElement
+        {
+            return Activator.CreateInstance<T>();
+        }
+
         public static XmppXElement GetElement(string prefix, string localName, string ns)
         {
             Type t = null;

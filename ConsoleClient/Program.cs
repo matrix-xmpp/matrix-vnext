@@ -4,7 +4,10 @@ using System.Reflection;
 using ConsoleClient;
 using Matrix;
 using Matrix.Xml;
+using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
+using Matrix.Xmpp.Ping;
+using Matrix.Xmpp.Stream;
 
 namespace ConsoleClient
 {
@@ -15,7 +18,6 @@ namespace ConsoleClient
             Factory.RegisterElementsFromAssembly(typeof(Matrix.Xmpp.Client.Iq).GetTypeInfo().Assembly);
 
             ExampleHelper.SetConsoleLogger();
-
 
             var xmppClient = new XmppClient()
             {
