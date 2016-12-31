@@ -4,31 +4,41 @@ using System.Threading;
 namespace Matrix.Core
 {
     /// <summary>
-    /// Id
+    /// Generates unique ids for XMPP stanzas
     /// </summary>
     public class Id
     {
-        private static long     _id;
-        private static string	_prefix	    = "MX_";
-        private static IdType   _idType     = IdType.Numeric;
+        private static long     id;
+        private static string	prefix	   = "MX_";
+        private static IdType   idType     = IdType.ShortGuid;
 
         private static readonly object IdLock = new object();
 
         public static IdType Type
         {
-            get { return _idType; }
-            set { _idType = value; }
+            get { return idType; }
+            set { idType = value; }
         }
 
-		public static string GetNextId()		
-        {
-            lock(IdLock)
-            { 
-                if (_idType == IdType.Numeric)
-                    return _prefix + Interlocked.Increment(ref _id);
-            
-                return _prefix + Guid.NewGuid();
+		public static string GetNextId()
+		{
+		    var ret = String.Empty;
+            switch (idType)
+            {
+                case IdType.Numeric:
+                    ret += prefix;
+                    ret += Interlocked.Increment(ref id);
+                    break;
+                case IdType.Guid:
+                    ret += Guid.NewGuid().ToString();
+                    break;
+                case IdType.ShortGuid:
+                    ret += Convert
+                                .ToBase64String(Guid.NewGuid().ToByteArray())
+                                .Substring(0, 22);
+                    break;
             }
+		    return ret;
 		}
 
         /// <summary>
@@ -36,7 +46,7 @@ namespace Matrix.Core
 		/// </summary>
 		public static void Reset()
 		{
-			_id = 0;
+			id = 0;
 		}
 
 		/// <summary>
@@ -45,8 +55,8 @@ namespace Matrix.Core
 		/// </summary>
 		public static string Prefix
 		{
-			get { return _prefix; }
-			set { _prefix = value ?? string.Empty; }
+			get { return prefix; }
+			set { prefix = value ?? string.Empty; }
 		}
 	}    
 }
