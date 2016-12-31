@@ -174,25 +174,25 @@ namespace Matrix
             anonymousSubscription = XmppXElementStream.Subscribe(
                 v => { },
 
-                async () =>
+                () =>
                 {
                     anonymousSubscription?.Dispose();
-                    await Pipeline.CloseAsync();
+                    ////if (Pipeline.Channel.Open)
+                    ////    await Pipeline.CloseAsync();
                     resultCompletionSource.SetResult(true);
                 });
 
-            //OnStreamEnd += streamEnd;
-
+           
             if (resultCompletionSource.Task ==
                 await Task.WhenAny(resultCompletionSource.Task, Task.Delay(timeout)))
                 return await resultCompletionSource.Task;
 
-            await Pipeline.CloseAsync();
-
-            var ret = await resultCompletionSource.Task;
+            // timed out
             anonymousSubscription.Dispose();
-            return ret;
-        }
+            if (Pipeline.Channel.Active)
+                await Pipeline.CloseAsync();
 
+            return true;
+        }
     }
 }

@@ -25,12 +25,14 @@ namespace Matrix.Network.Handlers
             if (msg.XmlStreamEventType == XmlStreamEventType.StreamEnd)
             {
                 if (!sentStreamFooter && sentStreamHeader && ctx.Channel.IsWritable)
-                    await ctx.Channel.Pipeline.WriteAsync(streamFooter);
-
+                    await ctx.WriteAsync(streamFooter);
+                
                 if (ctx.Channel.Open)
-                    await ctx.Channel.CloseAsync();
+                { 
+                    await ctx.CloseAsync();
+                    return;
+                }
             }
-
             ctx.FireChannelRead(msg);
         }
 

@@ -79,7 +79,7 @@ namespace ConsoleClient
             Console.WriteLine("Hello World!");
             Console.ReadLine();
 
-            xmppClient.CloseAsync().GetAwaiter().GetResult();
+            var ret1 = xmppClient.CloseAsync().GetAwaiter().GetResult();
 
             Console.ReadLine();
         }
