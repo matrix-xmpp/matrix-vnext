@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Security;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
@@ -101,8 +102,10 @@ namespace Matrix
                 SessionState = SessionState.Authenticated;
                 return await ResetStreamAsync();
             }
-
-            return null;
+            else //if (res is Failure)
+            {
+               throw  new AuthenticationException();
+            }
         }
 
         private async Task<Iq> DoBindAsync()

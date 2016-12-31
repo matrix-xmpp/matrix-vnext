@@ -26,6 +26,9 @@ namespace Matrix.Network.Handlers
             {
                 if (!sentStreamFooter && sentStreamHeader && ctx.Channel.IsWritable)
                     await ctx.Channel.Pipeline.WriteAsync(streamFooter);
+
+                if (ctx.Channel.Open)
+                    await ctx.Channel.CloseAsync();
             }
 
             ctx.FireChannelRead(msg);

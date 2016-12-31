@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Net;
 using System.Reactive.Linq;
 using System.Reflection;
 using ConsoleClient;
 using Matrix;
+using Matrix.Network;
+using Matrix.Network.Resolver;
 using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
@@ -24,11 +27,22 @@ namespace ConsoleClient
                 //Username = "alex",
                 //Password = "***REMOVED***",
                 //XmppDomain = "ag-software.net",
-                Username = "gnauck",
+                //Username = "alex",
+                //Password = "***REMOVED***",
+                //XmppDomain = "jabber.org",
+                //XmppDomain = "localhost",
+
+
+                // local prosody
+                Username = "alex",
                 Password = "***REMOVED***",
-                XmppDomain = "jabber.org",
+                XmppDomain = "localhost",
                 Resource = "vnext"
             };
+
+
+            xmppClient.HostnameResolver = new StaticNameResolver(IPAddress.Parse("192.168.1.151"));
+            xmppClient.CertificateValidator = new AlwaysAcceptCertificateValidator();
 
             xmppClient
                 .XmppXElementStream

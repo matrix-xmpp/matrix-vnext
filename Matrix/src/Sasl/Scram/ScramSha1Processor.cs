@@ -36,8 +36,7 @@ namespace Matrix.Sasl.Scram
                 return ret2;
             }
 
-            // TODO
-            throw new Exception();
+            return ret1;
         }
 
         private Response GenerateFinalMessage(Challenge ch, ScramHelper scramHelper, string password)

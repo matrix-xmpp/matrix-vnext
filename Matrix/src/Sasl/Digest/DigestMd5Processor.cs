@@ -21,13 +21,14 @@ namespace Matrix.Sasl.Digest
                 var ret2 = await HandleChallenge(ret1 as Challenge, xmppClient);
                 if (ret2 is Success)
                     return ret2;
-                
+
                 if (ret2 is Challenge)
                     return await HandleChallenge(ret2 as Challenge, xmppClient);
+
+                return ret2;
             }
             
-            // TODO
-            throw new Exception();            
+            return ret1;
         }
 
         public async Task<XmppXElement> HandleChallenge(Challenge ch, XmppClient xmppClient)

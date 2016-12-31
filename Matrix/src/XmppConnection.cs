@@ -104,7 +104,16 @@ namespace Matrix
 
         public WaitForStanzaHandler WaitForStanzaHandler { get; } = new WaitForStanzaHandler();
 
-        public INameResolver HostnameResolver { get; set; } = new SrvNameResolver();
+        
+        public INameResolver HostnameResolver
+        {
+            get { return resolver; }
+            set
+            {
+                resolver = value;
+                Bootstrap.Resolver(resolver);
+            }
+        } 
         #endregion
 
         public async Task SendAsync(XmppXElement el)
