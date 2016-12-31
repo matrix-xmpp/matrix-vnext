@@ -36,7 +36,7 @@ namespace Matrix
                 .Where(el => el is Iq)
                 .Cast<Iq>()
                 .Where(iq => iq.Query is Ping && iq.Type == IqType.Get)
-                .Subscribe(async iq => await SendAsync(new Iq { Type = IqType.Result, Id = iq.Id, To = iq.From }) );
+                .Subscribe(async iq => await SendAsync(new Iq { Type = IqType.Result, Id = iq.Id, To = iq.From }));
                 
 
             Bootstrap

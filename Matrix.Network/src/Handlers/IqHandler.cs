@@ -13,7 +13,7 @@ namespace Matrix.Network.Handlers
         static readonly ConcurrentDictionary<string, Action<IChannelHandlerContext, XmppXElement>> DictFilter
             = new ConcurrentDictionary<string, Action<IChannelHandlerContext, XmppXElement>>();
 
-        public IqHandler()// : base(xmppClient)
+        public IqHandler()
         {
             Subscribe<Iq>(HandleIq);
         }
@@ -30,8 +30,6 @@ namespace Matrix.Network.Handlers
 
         public async Task<Iq> SendIqAsync(Iq iq, int timeout = 5000)
         {
-            //see: http://www.salmanq.com/blog/task-timeouts/2013/02/
-
             string iqId = iq.Id;
             var resultCompletionSource = new TaskCompletionSource<Iq>();
 
