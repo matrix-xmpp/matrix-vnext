@@ -12,7 +12,7 @@ namespace Matrix.Network.Handlers
     {
         public AutoReplyToPingHandler()
         {
-            Subscribe(
+            Handle(
                 el =>
                     el.OfType<T>()
                     && el.Cast<T>().Type == IqType.Get

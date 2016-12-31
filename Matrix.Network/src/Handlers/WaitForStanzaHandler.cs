@@ -69,13 +69,13 @@ namespace Matrix.Network.Handlers
             var action = new Action<IChannelHandlerContext, XmppXElement>(
                 (ctx, xel) =>
                 {
-                    UnSubscribe(predicate1, predicate2, predicate3);
+                    UnHandle(predicate1, predicate2, predicate3);
                     resultCompletionSource.SetResult(xel as T);
                 });
 
-            Subscribe(predicate1, action);
-            Subscribe(predicate2, action);
-            Subscribe(predicate3, action);
+            Handle(predicate1, action);
+            Handle(predicate2, action);
+            Handle(predicate3, action);
 
             await SendAsync(s);
 
@@ -84,7 +84,7 @@ namespace Matrix.Network.Handlers
                 return await resultCompletionSource.Task;
 
             // timed out, remove this iq from our dictionary
-            UnSubscribe(predicate1, predicate2, predicate3);
+            UnHandle(predicate1, predicate2, predicate3);
 
             resultCompletionSource.SetException(new TimeoutException());
 

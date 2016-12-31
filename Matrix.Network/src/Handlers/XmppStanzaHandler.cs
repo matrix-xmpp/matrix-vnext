@@ -15,12 +15,12 @@ namespace Matrix.Network.Handlers
       
         private IChannelHandlerContext channelHandlerContext;
 
-        protected XmppStanzaHandler Subscribe<T>(Action<IChannelHandlerContext, XmppXElement> action) where T : XmppXElement
+        protected XmppStanzaHandler Handle<T>(Action<IChannelHandlerContext, XmppXElement> action) where T : XmppXElement
         {
-            return Subscribe(el => el.OfType<T>(), action);
+            return Handle(el => el.OfType<T>(), action);
         }
 
-        protected XmppStanzaHandler Subscribe(Func<XmppXElement, bool> predicate, Action<IChannelHandlerContext, XmppXElement> action)
+        protected XmppStanzaHandler Handle(Func<XmppXElement, bool> predicate, Action<IChannelHandlerContext, XmppXElement> action)
         {
             if (predicate == null) return this;
             if (action == null) throw new ArgumentNullException(nameof(action));
@@ -29,7 +29,7 @@ namespace Matrix.Network.Handlers
             return this;
         }
 
-        protected XmppStanzaHandler UnSubscribe(Func<XmppXElement, bool> predicate)
+        protected XmppStanzaHandler UnHandle(Func<XmppXElement, bool> predicate)
         {
             if (predicate == null) return this;
 
@@ -39,19 +39,19 @@ namespace Matrix.Network.Handlers
             return this;
         }
 
-        protected XmppStanzaHandler UnSubscribe(Func<XmppXElement, bool> predicate1, Func<XmppXElement, bool> predicate2)
+        protected XmppStanzaHandler UnHandle(Func<XmppXElement, bool> predicate1, Func<XmppXElement, bool> predicate2)
         {
             return 
-                UnSubscribe(predicate1)
-                .UnSubscribe(predicate2);
+                UnHandle(predicate1)
+                .UnHandle(predicate2);
         }
 
-        protected XmppStanzaHandler UnSubscribe(Func<XmppXElement, bool> predicate1, Func<XmppXElement, bool> predicate2, Func<XmppXElement, bool> predicate3)
+        protected XmppStanzaHandler UnHandle(Func<XmppXElement, bool> predicate1, Func<XmppXElement, bool> predicate2, Func<XmppXElement, bool> predicate3)
         {
             return 
-                UnSubscribe(predicate1)
-                .UnSubscribe(predicate2)
-                .UnSubscribe(predicate3);
+                UnHandle(predicate1)
+                .UnHandle(predicate2)
+                .UnHandle(predicate3);
         }
 
         protected async Task SendAsync(XmppXElement el)

@@ -15,7 +15,7 @@ namespace Matrix.Network.Handlers
 
         public IqHandler()
         {
-            Subscribe<Iq>(HandleIq);
+            Handle<Iq>(HandleIq);
         }
 
         public async Task SendIq(Iq iq, Action<IChannelHandlerContext, XmppXElement> response)
