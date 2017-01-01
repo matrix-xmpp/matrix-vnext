@@ -19,7 +19,7 @@ namespace Matrix.Network.Handlers
         public  const int ThirtySeconds         = OneSecond * 30;
         public  const int OneMinute             = OneSecond * 60;
         public  const int TwoMinutes            = OneMinute * 2;
-        private const int DefaultTimeout        = TwoMinutes;
+        public  const int DefaultTimeout        = TwoMinutes;
 
         private readonly Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>> handleTypes = new Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>>();
       
@@ -109,6 +109,17 @@ namespace Matrix.Network.Handlers
         {
             Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>();
             
+            return await SendAsync<XmppXElement>(el.ToString(false), predicate, timeout);
+        }
+
+        public async Task<XmppXElement> SendAsync<T1, T2, T3, T4>(XmppXElement el, int timeout = DefaultTimeout)
+          where T1 : XmppXElement
+          where T2 : XmppXElement
+          where T3 : XmppXElement
+          where T4 : XmppXElement
+        {
+            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>();
+
             return await SendAsync<XmppXElement>(el.ToString(false), predicate, timeout);
         }
 

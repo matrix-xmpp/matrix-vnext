@@ -14,9 +14,7 @@ namespace Matrix.Sasl.Anonymous
             var authMessage = new Auth(SaslMechanism.Anonymous);
 
             return
-               await xmppClient
-                       .XmppStanzaHandler
-                       .SendAsync<Success, Failure>(authMessage);
+               await xmppClient.SendAsync<Success, Failure>(authMessage);
         }
     }
 }

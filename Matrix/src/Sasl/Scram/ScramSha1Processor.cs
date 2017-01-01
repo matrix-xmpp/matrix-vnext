@@ -22,16 +22,12 @@ namespace Matrix.Sasl.Scram
             string msg = ToB64String(scramHelper.GenerateFirstClientMessage(username));
             var authMessage = new Auth(SaslMechanism.ScramSha1, msg);
 
-            var ret1 = await xmppClient
-                       .XmppStanzaHandler
-                       .SendAsync<Failure, Challenge>(authMessage);
+            var ret1 = await xmppClient.SendAsync<Failure, Challenge>(authMessage);
 
             if (ret1 is Challenge)
             {
                 var resp = GenerateFinalMessage(ret1 as Challenge, scramHelper, password);
-                var ret2 = await xmppClient
-                      .XmppStanzaHandler
-                      .SendAsync<Failure, Success>(resp);
+                var ret2 = await xmppClient.SendAsync<Failure, Success>(resp);
 
                 return ret2;
             }

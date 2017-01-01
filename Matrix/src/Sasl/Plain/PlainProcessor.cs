@@ -13,9 +13,7 @@ namespace Matrix.Sasl.Plain
             var authMessage = new Auth(SaslMechanism.Plain, GetMessage(xmppClient));
 
             return
-                await xmppClient
-                        .XmppStanzaHandler
-                        .SendAsync<Success, Failure>(authMessage);
+                await xmppClient.SendAsync<Success, Failure>(authMessage);
         }
 
         private string GetMessage(XmppClient xmppClient)

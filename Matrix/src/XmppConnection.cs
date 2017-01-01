@@ -75,7 +75,7 @@ namespace Matrix
                     //Pipeline.AddLast(WaitForStanzaHandler);
                     //Pipeline.AddLast(IqHandler);
 
-                    Pipeline.AddLast(XmppStanzaHandler);
+                    Pipeline.AddLast(xmppStanzaHandler);
 
 
                     Pipeline.AddLast(new DisconnectHandler());
@@ -103,12 +103,8 @@ namespace Matrix
 
         private IObservable<XmlStreamEvent> XmlStreamEvent => xmppStreamEventHandler.XmlStreamEvent;
 
-        //public IqHandler IqHandler { get; } = new IqHandler();
-        public XmppStanzaHandler XmppStanzaHandler { get; } = new XmppStanzaHandler();
+        private readonly XmppStanzaHandler xmppStanzaHandler = new XmppStanzaHandler();
         
-        //public WaitForStanzaHandler WaitForStanzaHandler { get; } = new WaitForStanzaHandler();
-
-
         public INameResolver HostnameResolver
         {
             get { return resolver; }
@@ -117,15 +113,45 @@ namespace Matrix
                 resolver = value;
                 Bootstrap.Resolver(resolver);
             }
-        } 
+        }
         #endregion
+
+        #region << Send members >>
+        protected async Task<T> SendAsync<T>(string s, int timeout = XmppStanzaHandler.DefaultTimeout)
+           where T : XmppXElement
+        {
+            
+            return await xmppStanzaHandler.SendAsync<T>(s, timeout);
+        }
 
         public async Task SendAsync(XmppXElement el)
         {
             await Pipeline.WriteAndFlushAsync(el.ToString(false));
         }
 
-        internal async Task SendAsync(string s)
+        public async Task<T> SendAsync<T>(XmppXElement el, int timeout = XmppStanzaHandler.DefaultTimeout)
+             where T : XmppXElement
+        {
+            return await xmppStanzaHandler.SendAsync<T>(el, timeout);
+        }
+
+        public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, int timeout = XmppStanzaHandler.DefaultTimeout)
+           where T1 : XmppXElement
+           where T2 : XmppXElement
+        {
+            return await xmppStanzaHandler.SendAsync<T1, T2>(el, timeout);
+        }
+
+        public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, int timeout = XmppStanzaHandler.DefaultTimeout)
+          where T1 : XmppXElement
+          where T2 : XmppXElement
+          where T3 : XmppXElement
+        {
+            return await xmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout);
+        }
+        #endregion
+
+            protected async Task SendAsync(string s)
         {
             await Pipeline.WriteAndFlushAsync(s);
         }
@@ -136,7 +162,7 @@ namespace Matrix
             return await SendStreamHeaderAsync();
         }
 
-        public async Task<StreamFeatures> SendStreamHeaderAsync()
+        protected async Task<StreamFeatures> SendStreamHeaderAsync()
         {
             var streamHeader = new Stream
             {
@@ -144,7 +170,7 @@ namespace Matrix
                 Version = "1.0"
             };
 
-            return await XmppStanzaHandler.SendAsync<StreamFeatures>(streamHeader.StartTag());
+            return await SendAsync<StreamFeatures>(streamHeader.StartTag());
         }
 
 

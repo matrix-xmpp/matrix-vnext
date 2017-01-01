@@ -4,7 +4,7 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
-
+using Matrix.Network.Handlers;
 using Matrix.Sasl;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Client;
@@ -52,13 +52,7 @@ namespace Matrix
             await HandleStreamFeaturesAsync(feat);
             return iChannel;
         }
-
-        //        public async Task<bool> CloseAsync()
-        //        {
-        //            return await CloseAsync(2000);
-        //        }
-
-
+   
         private async Task HandleStreamFeaturesAsync(StreamFeatures features)
         {
             if (SessionState < SessionState.Securing && features.SupportsStartTls && UseStartTls)
@@ -84,7 +78,7 @@ namespace Matrix
                 (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
                 new ClientTlsSettings(XmppDomain));
 
-            await XmppStanzaHandler.SendAsync<Proceed>(new StartTls());
+            await SendAsync<Proceed>(new StartTls());
             Pipeline.AddFirst(tlsHandler);
             var streamFeatures = await ResetStreamAsync();
             SessionState = SessionState.Secure;
@@ -112,7 +106,7 @@ namespace Matrix
         {
             SessionState = SessionState.Binding;
             var bIq = new BindIq { Type = IqType.Set, Bind = { Resource = Resource } };
-            var resIq = await XmppStanzaHandler.SendIqAsync<Iq>(bIq);
+            var resIq = await SendIqAsync(bIq);
             SessionState = SessionState.Binded;
             return resIq as Iq;
         }
@@ -127,10 +121,16 @@ namespace Matrix
             if (version != null)
                 riq.Roster.Version = version;
                         
-            var resIq = await XmppStanzaHandler.SendIqAsync<Iq>(riq);            
+            var resIq = await SendIqAsync(riq);            
             return resIq as Iq;
         }
 
+        #region << Send iq >>
+        public async Task<Iq> SendIqAsync(Iq iq, int timeout = XmppStanzaHandler.DefaultTimeout)
+        {
+            return await SendAsync<Iq>(iq, timeout);
+        }
+        #endregion
         #region << SendPresence >>
         public async Task SendPresenceAsync(Presence pres)
         {
