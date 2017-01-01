@@ -13,8 +13,15 @@ namespace Matrix.Network.Handlers
 {
     public class XmppStanzaHandler : SimpleChannelInboundHandler<XmppXElement>
     {
-        protected const int DefaultTimeout = 500000;
-        static readonly Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>> HandleTypes = new Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>>();
+        // define some constant values which can be used as timeouts for different purposes
+        public  const int OneSecond             = 1000 /*milliseconds*/;
+        public  const int FifteenSeconds        = OneSecond * 15;
+        public  const int ThirtySeconds         = OneSecond * 30;
+        public  const int OneMinute             = OneSecond * 60;
+        public  const int TwoMinutes            = OneMinute * 2;
+        private const int DefaultTimeout        = TwoMinutes;
+
+        private readonly Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>> handleTypes = new Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>>();
       
         private IChannelHandlerContext channelHandlerContext;
 
@@ -28,7 +35,7 @@ namespace Matrix.Network.Handlers
             if (predicate == null) return this;
             if (action == null) throw new ArgumentNullException(nameof(action));
 
-            HandleTypes.Add(predicate, action);
+            handleTypes.Add(predicate, action);
             return this;
         }
 
@@ -36,25 +43,10 @@ namespace Matrix.Network.Handlers
         {
             if (predicate == null) return this;
 
-            if (HandleTypes.ContainsKey(predicate))
-                HandleTypes.Remove(predicate);
+            if (handleTypes.ContainsKey(predicate))
+                handleTypes.Remove(predicate);
 
             return this;
-        }
-
-        protected XmppStanzaHandler UnHandle(Func<XmppXElement, bool> predicate1, Func<XmppXElement, bool> predicate2)
-        {
-            return 
-                UnHandle(predicate1)
-                .UnHandle(predicate2);
-        }
-
-        protected XmppStanzaHandler UnHandle(Func<XmppXElement, bool> predicate1, Func<XmppXElement, bool> predicate2, Func<XmppXElement, bool> predicate3)
-        {
-            return 
-                UnHandle(predicate1)
-                .UnHandle(predicate2)
-                .UnHandle(predicate3);
         }
 
         protected async Task SendAsync(XmppXElement el)
@@ -75,13 +67,13 @@ namespace Matrix.Network.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, XmppXElement msg)
         {
-            var it = HandleTypes.Keys.ToList();
+            var it = handleTypes.Keys.ToList();
             foreach (var predicate in it)
             {
                 if (msg.IsMatch(predicate))
                 {
-                    if (HandleTypes.ContainsKey(predicate))
-                        HandleTypes[predicate].Invoke(ctx, msg);
+                    if (handleTypes.ContainsKey(predicate))
+                        handleTypes[predicate].Invoke(ctx, msg);
                 }
             }
             //ctx.FireChannelRead(msg);
@@ -128,7 +120,6 @@ namespace Matrix.Network.Handlers
             
             return await SendAsync<XmppXElement>(s, predicate, timeout);
         }
-      
 
         private async Task<T> SendAsync<T>(
             string s,
