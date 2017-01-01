@@ -22,7 +22,7 @@ namespace ConsoleClient
 
             ExampleHelper.SetConsoleLogger();
 
-            var xmppClient = new XmppClient()
+            var xmppClient = new XmppClient
             {
                 //Username = "alex",
                 //Password = "***REMOVED***",
@@ -32,17 +32,24 @@ namespace ConsoleClient
                 //XmppDomain = "jabber.org",
                 //XmppDomain = "localhost",
 
+                // jabber.org
+                Username = "gnauck",
+                Password = "***REMOVED***",
+                XmppDomain = "jabber.org",
 
                 // local prosody
-                Username = "alex",
-                Password = "***REMOVED***",
-                XmppDomain = "localhost",
-                Resource = "vnext"
+                //Username = "alex",
+                //Password = "***REMOVED***",
+                //XmppDomain = "localhost",
+                //HostnameResolver = new StaticNameResolver(IPAddress.Parse("192.168.1.151")),
+                //CertificateValidator = new AlwaysAcceptCertificateValidator(),
+
+                Resource = "vnext",
+
+               
             };
 
 
-            xmppClient.HostnameResolver = new StaticNameResolver(IPAddress.Parse("192.168.1.151"));
-            xmppClient.CertificateValidator = new AlwaysAcceptCertificateValidator();
 
             xmppClient
                 .XmppXElementStream

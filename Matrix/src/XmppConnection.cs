@@ -72,9 +72,12 @@ namespace Matrix
                     
 
 
-                    Pipeline.AddLast(WaitForStanzaHandler);
-                    Pipeline.AddLast(IqHandler);
-                    
+                    //Pipeline.AddLast(WaitForStanzaHandler);
+                    //Pipeline.AddLast(IqHandler);
+
+                    Pipeline.AddLast(XmppStanzaHandler);
+
+
                     Pipeline.AddLast(new DisconnectHandler());
 
                     
@@ -100,11 +103,12 @@ namespace Matrix
 
         private IObservable<XmlStreamEvent> XmlStreamEvent => xmppStreamEventHandler.XmlStreamEvent;
 
-        public IqHandler IqHandler { get; } = new IqHandler();
-
-        public WaitForStanzaHandler WaitForStanzaHandler { get; } = new WaitForStanzaHandler();
-
+        //public IqHandler IqHandler { get; } = new IqHandler();
+        public XmppStanzaHandler XmppStanzaHandler { get; } = new XmppStanzaHandler();
         
+        //public WaitForStanzaHandler WaitForStanzaHandler { get; } = new WaitForStanzaHandler();
+
+
         public INameResolver HostnameResolver
         {
             get { return resolver; }
@@ -140,7 +144,7 @@ namespace Matrix
                 Version = "1.0"
             };
 
-            return await WaitForStanzaHandler.SendAsync<StreamFeatures>(streamHeader.StartTag());
+            return await XmppStanzaHandler.SendAsync<StreamFeatures>(streamHeader.StartTag());
         }
 
 

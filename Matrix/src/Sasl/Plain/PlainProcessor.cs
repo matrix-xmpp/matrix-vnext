@@ -14,7 +14,7 @@ namespace Matrix.Sasl.Plain
 
             return
                 await xmppClient
-                        .WaitForStanzaHandler
+                        .XmppStanzaHandler
                         .SendAsync<Success, Failure>(authMessage);
         }
 

@@ -84,7 +84,7 @@ namespace Matrix
                 (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
                 new ClientTlsSettings(XmppDomain));
 
-            await WaitForStanzaHandler.SendAsync<Proceed>(new StartTls());
+            await XmppStanzaHandler.SendAsync<Proceed>(new StartTls());
             Pipeline.AddFirst(tlsHandler);
             var streamFeatures = await ResetStreamAsync();
             SessionState = SessionState.Secure;
@@ -112,7 +112,7 @@ namespace Matrix
         {
             SessionState = SessionState.Binding;
             var bIq = new BindIq { Type = IqType.Set, Bind = { Resource = Resource } };
-            var resIq = await IqHandler.SendIqAsync(bIq);
+            var resIq = await XmppStanzaHandler.SendIqAsync<Iq>(bIq);
             SessionState = SessionState.Binded;
             return resIq as Iq;
         }
@@ -127,7 +127,7 @@ namespace Matrix
             if (version != null)
                 riq.Roster.Version = version;
                         
-            var resIq = await IqHandler.SendIqAsync(riq);            
+            var resIq = await XmppStanzaHandler.SendIqAsync<Iq>(riq);            
             return resIq as Iq;
         }
 

@@ -13,7 +13,7 @@ namespace Matrix.Sasl.Digest
             var authMessage = new Auth(SaslMechanism.DigestMd5);
 
             var ret1 = await xmppClient
-                .WaitForStanzaHandler
+                .XmppStanzaHandler
                 .SendAsync<Failure, Challenge>(authMessage);
 
             if (ret1 is Challenge)
@@ -46,12 +46,12 @@ namespace Matrix.Sasl.Digest
                 byte[] b = Encoding.UTF8.GetBytes(message);
 
                 return await xmppClient
-                    .WaitForStanzaHandler
+                    .XmppStanzaHandler
                     .SendAsync<Failure, Challenge, Success>(new Response {Bytes = b});
             }
 
             return await xmppClient
-                .WaitForStanzaHandler
+                .XmppStanzaHandler
                 .SendAsync<Failure, Success>(new Response());
         }
     }
