@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
@@ -6,83 +6,6 @@
   <ItemGroup>
     <Compile Include="**\*.cs" />
     <EmbeddedResource Include="**\*.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Base - Copy\**" />
-    <Compile Remove="Bind - Copy\**" />
-    <Compile Remove="Capabilities - Copy\**" />
-    <Compile Remove="ChatStates - Copy\**" />
-    <Compile Remove="Client - Copy\**" />
-    <Compile Remove="Compression - Copy\**" />
-    <Compile Remove="Delay - Copy\**" />
-    <Compile Remove="Disco - Copy\**" />
-    <Compile Remove="ExtendedStanzaAddressing - Copy\**" />
-    <Compile Remove="LastMessageCorrection - Copy\**" />
-    <Compile Remove="Muc - Copy\**" />
-    <Compile Remove="Nickname - Copy\**" />
-    <Compile Remove="obj - Copy\**" />
-    <Compile Remove="Oob - Copy\**" />
-    <Compile Remove="Properties - Copy\**" />
-    <Compile Remove="PubSub - Copy\**" />
-    <Compile Remove="Receipts - Copy\**" />
-    <Compile Remove="ResultSetManagement - Copy\**" />
-    <Compile Remove="Roster - Copy\**" />
-    <Compile Remove="RosterItemExchange - Copy\**" />
-    <Compile Remove="Sasl - Copy\**" />
-    <Compile Remove="SecurityLabels - Copy\**" />
-    <Compile Remove="Session - Copy\**" />
-    <Compile Remove="Shim - Copy\**" />
-    <Compile Remove="Stream - Copy\**" />
-    <Compile Remove="Tls - Copy\**" />
-    <Compile Remove="XData - Copy\**" />
-    <Compile Remove="XHtmlIM - Copy\**" />
-    <EmbeddedResource Remove="Base - Copy\**" />
-    <EmbeddedResource Remove="Bind - Copy\**" />
-    <EmbeddedResource Remove="Capabilities - Copy\**" />
-    <EmbeddedResource Remove="ChatStates - Copy\**" />
-    <EmbeddedResource Remove="Client - Copy\**" />
-    <EmbeddedResource Remove="Compression - Copy\**" />
-    <EmbeddedResource Remove="Delay - Copy\**" />
-    <EmbeddedResource Remove="Disco - Copy\**" />
-    <EmbeddedResource Remove="ExtendedStanzaAddressing - Copy\**" />
-    <EmbeddedResource Remove="LastMessageCorrection - Copy\**" />
-    <EmbeddedResource Remove="Muc - Copy\**" />
-    <EmbeddedResource Remove="Nickname - Copy\**" />
-    <EmbeddedResource Remove="obj - Copy\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="Oob - Copy\**" />
-    <EmbeddedResource Remove="Properties - Copy\**" />
-    <EmbeddedResource Remove="PubSub - Copy\**" />
-    <EmbeddedResource Remove="Receipts - Copy\**" />
-    <EmbeddedResource Remove="ResultSetManagement - Copy\**" />
-    <EmbeddedResource Remove="Roster - Copy\**" />
-    <EmbeddedResource Remove="RosterItemExchange - Copy\**" />
-    <EmbeddedResource Remove="Sasl - Copy\**" />
-    <EmbeddedResource Remove="SecurityLabels - Copy\**" />
-    <EmbeddedResource Remove="Session - Copy\**" />
-    <EmbeddedResource Remove="Shim - Copy\**" />
-    <EmbeddedResource Remove="Stream - Copy\**" />
-    <EmbeddedResource Remove="Tls - Copy\**" />
-    <EmbeddedResource Remove="XData - Copy\**" />
-    <EmbeddedResource Remove="XHtmlIM - Copy\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Action.cs" />
-    <Compile Remove="Amp.cs" />
-    <Compile Remove="Condition.cs" />
-    <Compile Remove="Id - Copy.cs" />
-    <Compile Remove="IdType - Copy.cs" />
-    <Compile Remove="InvalidRules.cs" />
-    <Compile Remove="IqType - Copy.cs" />
-    <Compile Remove="MessageType - Copy.cs" />
-    <Compile Remove="Namespaces - Copy.cs" />
-    <Compile Remove="PresenceType - Copy.cs" />
-    <Compile Remove="Rule.cs" />
-    <Compile Remove="Show - Copy.cs" />
-    <Compile Remove="Tag - Copy.cs" />
-    <Compile Remove="UnsupportedActions.cs" />
-    <Compile Remove="UnsupportedConditions.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NETStandard.Library">
