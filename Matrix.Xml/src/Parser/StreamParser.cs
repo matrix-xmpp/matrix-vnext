@@ -269,12 +269,10 @@ namespace Matrix.Xml.Parser
             {
                 root = newel;
                 OnStreamStart?.Invoke(root);
-
             }
             else
             {
-                if (current != null)
-                    current.Add(newel);
+                current?.Add(newel);
                 current = newel;
             }
         }
@@ -366,11 +364,17 @@ namespace Matrix.Xml.Parser
             if (isCData)
             {
                 var cdata = new XCData(text);
-                current?.Add(cdata);
+                if (current == null)
+                    root?.Add(cdata);
+                else
+                    current.Add(cdata);
             }
             else
             {
-                current?.Add(text);
+                if (current == null)
+                    root.Add(text);
+                else
+                    current.Add(text);
             }
         }
     }
