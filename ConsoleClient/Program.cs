@@ -1,24 +1,30 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using ConsoleClient;
 using Matrix;
 using Matrix.Network;
 using Matrix.Network.Resolver;
 using Matrix.Xml;
 using Matrix.Xmpp;
+using Matrix.Xmpp.AdHocCommands;
 using Matrix.Xmpp.Base;
 using Matrix.Xmpp.Ping;
 using Matrix.Xmpp.Stream;
+
 
 namespace ConsoleClient
 {
     class Program
     {
+       
         static void Main(string[] args)
         {
             Factory.RegisterElementsFromAssembly(typeof(Matrix.Xmpp.Client.Iq).GetTypeInfo().Assembly);
+
 
             ExampleHelper.SetConsoleLogger();
 

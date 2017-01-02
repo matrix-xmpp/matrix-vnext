@@ -2,6 +2,8 @@
 // by Alexander Gnauck (alex@ag-software.net)
 
 using System;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Matrix.Xml
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
@@ -12,9 +11,7 @@ using Matrix.Network.Codecs;
 using Matrix.Network.Handlers;
 using Matrix.Network.Resolver;
 using Matrix.Xml;
-using Matrix.Xmpp;
 using Matrix.Xmpp.Client;
-using Matrix.Xmpp.Ping;
 using Matrix.Xmpp.Stream;
 
 namespace Matrix

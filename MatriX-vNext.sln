@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Matrix.Network.Tests", "Mat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{18EBFCB3-C23D-4B61-94EA-618F00873B27}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Matrix.Xmpp.Tests", "Matrix.Xmpp\tests\Matrix.Xmpp.Tests.csproj", "{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,18 @@ Global
 		{18EBFCB3-C23D-4B61-94EA-618F00873B27}.Release|x64.Build.0 = Release|Any CPU
 		{18EBFCB3-C23D-4B61-94EA-618F00873B27}.Release|x86.ActiveCfg = Release|Any CPU
 		{18EBFCB3-C23D-4B61-94EA-618F00873B27}.Release|x86.Build.0 = Release|Any CPU
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Debug|x64.ActiveCfg = Debug|x64
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Debug|x64.Build.0 = Debug|x64
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Debug|x86.ActiveCfg = Debug|x86
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Debug|x86.Build.0 = Debug|x86
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Release|x64.ActiveCfg = Release|x64
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Release|x64.Build.0 = Release|x64
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Release|x86.ActiveCfg = Release|x86
+		{DE4D0155-C2F8-4FBC-B92B-4193D7A30C40}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
