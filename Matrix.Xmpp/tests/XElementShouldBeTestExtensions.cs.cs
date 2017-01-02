@@ -16,8 +16,9 @@ namespace Matrix.Xmpp.Tests
          */
         public static void ShouldBe(this XElement actual, XElement expected)
         {
-            string sActual  = Normalize(actual).ToString(SaveOptions.DisableFormatting);
-            string sExpected = Normalize(expected).ToString(SaveOptions.DisableFormatting);
+            SaveOptions opts = SaveOptions.DisableFormatting;
+            string sActual      = Normalize(actual).ToString(opts);
+            string sExpected    = Normalize(expected).ToString(opts);
 
             sActual.ShouldBe(sExpected);
         }
