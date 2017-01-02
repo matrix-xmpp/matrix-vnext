@@ -23,15 +23,29 @@ namespace Matrix.Xmpp.Tests
             sActual.ShouldBe(sExpected);
         }
 
+        public static void ShouldNotBe(this XElement actual, XElement expected)
+        {
+            SaveOptions opts = SaveOptions.DisableFormatting;
+            string sActual = Normalize(actual).ToString(opts);
+            string sExpected = Normalize(expected).ToString(opts);
+
+            sActual.ShouldNotBe(sExpected);
+        }
+
         public static void ShouldBe(this XElement actual, string expected)
         {
             ShouldBe(actual, XElement.Parse(expected));
         }
 
-        public static void ShouldBe(this string actual, XElement expected)
+        public static void ShouldNotBe(this XElement actual, string expected)
         {
-            ShouldBe(XElement.Parse(actual), expected);
+            ShouldNotBe(actual, XElement.Parse(expected));
         }
+
+        //public static void ShouldBe(this string actual, XElement expected)
+        //{
+        //    ShouldBe(XElement.Parse(actual), expected);
+        //}
 
         /// <summary>
         /// Normalized Xml elements. For comparing Xml the order of attributes does not matter.
