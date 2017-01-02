@@ -27,7 +27,12 @@ namespace Matrix.Xmpp.Tests
         {
             ShouldBe(actual, XElement.Parse(expected));
         }
-        
+
+        public static void ShouldBe(this string actual, XElement expected)
+        {
+            ShouldBe(XElement.Parse(actual), expected);
+        }
+
         /// <summary>
         /// Normalized Xml elements. For comparing Xml the order of attributes does not matter.
         /// It also does not matter how empty tags are serialized.
