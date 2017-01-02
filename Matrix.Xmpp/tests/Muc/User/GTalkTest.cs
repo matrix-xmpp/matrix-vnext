@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using Matrix.Xml;
+﻿using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Muc.User
+namespace Matrix.Xmpp.Tests.Muc.User
 {
     [TestClass]
     public class GTalkTest

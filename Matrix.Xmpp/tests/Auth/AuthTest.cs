@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Matrix.Xml;
+﻿using Matrix.Xml;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Auth
+namespace Matrix.Xmpp.Tests.Auth
 {
     [TestClass]
     public class AuthTest

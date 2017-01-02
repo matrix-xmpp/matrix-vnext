@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using Matrix.Xmpp.Muc.User;
+﻿using Matrix.Xmpp.Muc.User;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-
-using Matrix;
-using Matrix.Xml;
-using Matrix.Xmpp.Muc.User;
-using Matrix.Xmpp.Tests;
 using X = Matrix.Xmpp.Muc.User.X;
 
-namespace Test.Xmpp.Muc.User
+namespace Matrix.Xmpp.Tests.Muc.User
 {
     [TestClass]
     public class XTest

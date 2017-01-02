@@ -1,10 +1,7 @@
 ﻿using Matrix.Xml;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 
-namespace Test.Xmpp.Mood
+namespace Matrix.Xmpp.Tests.Mood
 {
     [TestClass]
     public class MoodTest

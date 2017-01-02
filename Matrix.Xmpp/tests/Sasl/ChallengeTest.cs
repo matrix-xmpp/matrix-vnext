@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Sasl
+namespace Matrix.Xmpp.Tests.Sasl
 {
     [TestClass]
     public class ChallengeTest

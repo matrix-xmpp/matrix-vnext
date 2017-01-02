@@ -1,12 +1,11 @@
 ﻿using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Search;
-using Matrix.Xmpp.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Matrix.Xml;
 using System.Linq;
 
 
-namespace Test.Xmpp.Search
+namespace Matrix.Xmpp.Tests.Search
 {
     [TestClass]
     public class SearchTest

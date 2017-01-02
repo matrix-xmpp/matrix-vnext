@@ -1,10 +1,8 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Privacy;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Privacy
+namespace Matrix.Xmpp.Tests.Privacy
 {
     [TestClass]
     public class ItemTest

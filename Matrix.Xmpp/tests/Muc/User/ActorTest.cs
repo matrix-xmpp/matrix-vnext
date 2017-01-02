@@ -1,10 +1,8 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Muc.User;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Muc.User
+namespace Matrix.Xmpp.Tests.Muc.User
 {
     [TestClass]
     public class ActorTest

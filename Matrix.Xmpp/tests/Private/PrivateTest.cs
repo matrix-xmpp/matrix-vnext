@@ -1,7 +1,7 @@
 ﻿using Matrix.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Private
+namespace Matrix.Xmpp.Tests.Private
 {
     [TestClass]
     public class PrivateTest

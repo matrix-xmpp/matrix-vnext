@@ -1,10 +1,8 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Shim;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Shim
+namespace Matrix.Xmpp.Tests.Shim
 {
     [TestClass]
     public class ShimTests

@@ -1,10 +1,9 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Stream.Errors;
-using Matrix.Xmpp.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Test.Xmpp.Stream.Errors
+namespace Matrix.Xmpp.Tests.Stream.Errors
 {
     [TestClass]
     public class SeeOtherHostTest

@@ -1,10 +1,8 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.ResultSetManagement;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.ResultSetManagement
+namespace Matrix.Xmpp.Tests.ResultSetManagement
 {
     [TestClass]
     public class Test

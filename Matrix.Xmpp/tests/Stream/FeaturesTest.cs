@@ -2,7 +2,7 @@
 using Matrix.Xmpp.Compression;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Stream
+namespace Matrix.Xmpp.Tests.Stream
 {
     [TestClass]
     public class FeaturesTest

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Matrix.Xml;
-using Matrix.Xmpp.Privacy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Privacy
+namespace Matrix.Xmpp.Tests.Privacy
 {
     [TestClass]
     public class PrivacyTest

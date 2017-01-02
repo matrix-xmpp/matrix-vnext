@@ -2,11 +2,9 @@
 using Matrix.Xmpp.Stream;
 using Matrix.Xmpp.StreamManagement;
 using Matrix.Xmpp.StreamManagement.Ack;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.StreamManagement
+namespace Matrix.Xmpp.Tests.StreamManagement
 {
     [TestClass]
     public class StreamManagementTest

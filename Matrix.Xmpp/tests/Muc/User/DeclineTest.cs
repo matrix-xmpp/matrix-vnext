@@ -1,13 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-
-using Matrix;
 using Matrix.Core;
 using Matrix.Xml;
 using Matrix.Xmpp.Muc.User;
-using Matrix.Xmpp.Tests;
 
-namespace Test.Xmpp.Muc.User
+namespace Matrix.Xmpp.Tests.Muc.User
 {
     [TestClass]
     public class DeclineTest

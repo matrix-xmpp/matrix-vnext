@@ -1,10 +1,8 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Compression;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Compression
+namespace Matrix.Xmpp.Tests.Compression
 {
     [TestClass]
     public class CompressionTest

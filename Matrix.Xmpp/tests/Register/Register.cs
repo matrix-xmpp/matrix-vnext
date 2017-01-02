@@ -1,11 +1,9 @@
-﻿using Matrix.Xmpp;
-using Matrix.Xmpp.Client;
-using Matrix.Xmpp.Tests;
+﻿using Matrix.Xmpp.Client;
 using Matrix.Xml;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Register
+namespace Matrix.Xmpp.Tests.Register
 {
     [TestClass]
     public class Register

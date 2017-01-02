@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Matrix.Xml;
-using Matrix.Xmpp.Nickname;
 
 
-namespace Test.Xmpp.Nickname
+namespace Matrix.Xmpp.Tests.Nickname
 {
     [TestClass]
     public class Nick

@@ -2,13 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Linq;
-using System.Xml.Linq;
 using Matrix.Xml;
 using Matrix.Xmpp.Muc;
-using Matrix.Xmpp.Tests;
 using X=Matrix.Xmpp.Muc.X;
 
-namespace Test.Xmpp.Muc
+namespace Matrix.Xmpp.Tests.Muc
 {
     [TestClass]
     public class XTest

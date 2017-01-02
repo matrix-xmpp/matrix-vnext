@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Shouldly;
 
-namespace Test.Xmpp.MessageCarbons
+namespace Matrix.Xmpp.Tests.MessageCarbons
 {
     [TestClass]
     public class MessageCarbonTest

@@ -3,11 +3,10 @@ using System.Diagnostics;
 using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Rpc;
-using Matrix.Xmpp.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Test.Xmpp.Rpc
+namespace Matrix.Xmpp.Tests.Rpc
 {
     [TestClass]
     public class RpcTest

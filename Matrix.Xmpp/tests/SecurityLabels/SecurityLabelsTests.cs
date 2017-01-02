@@ -2,12 +2,9 @@
 using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.SecurityLabels;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 
-namespace Test.Xmpp.SecurityLabels
+namespace Matrix.Xmpp.Tests.SecurityLabels
 {
     [TestClass]
     public class SecurityLabelsTests

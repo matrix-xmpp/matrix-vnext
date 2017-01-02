@@ -1,10 +1,8 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.ExtendedStanzaAddressing;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.ExtendedStanzaAddressing
+namespace Matrix.Xmpp.Tests.ExtendedStanzaAddressing
 {
     [TestClass]
     public class AddressTest

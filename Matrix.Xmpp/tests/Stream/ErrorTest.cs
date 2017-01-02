@@ -1,9 +1,8 @@
 ﻿using Matrix.Xml;
-using Matrix.Xmpp.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Test.Xmpp.Stream
+namespace Matrix.Xmpp.Tests.Stream
 {
     [TestClass]
     public class ErrorTest

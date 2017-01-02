@@ -1,10 +1,8 @@
 ﻿using Matrix.Xml;
-using Matrix.Xmpp.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 
 
-namespace Test.Xmpp.Tune
+namespace Matrix.Xmpp.Tests.Tune
 {
     [TestClass]
     public class TuneTest

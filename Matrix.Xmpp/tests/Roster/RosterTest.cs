@@ -6,11 +6,9 @@ using Matrix.Xml;
 using Matrix.Xmpp.Bosh;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Roster;
-using Matrix.Xmpp.Tests;
-
 using Shouldly;
 
-namespace Test.Xmpp.Roster
+namespace Matrix.Xmpp.Tests.Roster
 {
     [TestClass]
     public class RosterTest

@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-
-using Matrix;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Matrix.Xml;
 using Matrix.Xmpp.Vcard;
-using Matrix.Xmpp.Tests;
 
-namespace Test.Xmpp.Vcard
+namespace Matrix.Xmpp.Tests.Vcard
 {
     [TestClass]
     public class EmailTest

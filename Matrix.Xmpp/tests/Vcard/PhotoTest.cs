@@ -4,7 +4,7 @@ using Matrix.Xml;
 using Matrix.Xmpp.Vcard;
 using Shouldly;
 
-namespace Test.Xmpp.Vcard
+namespace Matrix.Xmpp.Tests.Vcard
 {
     [TestClass]
     public class PhotoTest

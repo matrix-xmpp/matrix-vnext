@@ -2,11 +2,9 @@
 using System.Linq;
 using Matrix.Xml;
 using Matrix.Xmpp.MessageArchiving;
-using Matrix.Xmpp.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 
-namespace Test.Xmpp.Archiving
+namespace Matrix.Xmpp.Tests.Archiving
 {
     [TestClass]
     public class ArchivingTests

@@ -1,11 +1,10 @@
-﻿using System;
-using Matrix.Xml;
+﻿using Matrix.Xml;
 using Matrix.Xmpp.Capabilities;
 using Matrix.Xmpp.Disco;
 using Matrix.Xmpp.Stream;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Capabilities
+namespace Matrix.Xmpp.Tests.Capabilities
 {
     [TestClass]
     public class CapsTest

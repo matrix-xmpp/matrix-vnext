@@ -1,9 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Matrix.Xmpp.Client;
 
-
-namespace Test.Xmpp.Roster
+namespace Matrix.Xmpp.Tests.Roster
 {
     [TestClass]
     public class RosterManagerTest

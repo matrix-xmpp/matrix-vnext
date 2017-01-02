@@ -1,9 +1,7 @@
 ﻿using Matrix.Xmpp.Google.Mobile;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Google.GCM
+namespace Matrix.Xmpp.Tests.Google.GCM
 {
     [TestClass]
     public class GcmTest

@@ -1,11 +1,9 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Stream.Features;
-using Matrix.Xmpp.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 
 
-namespace Test.Xmpp.Stream.Features
+namespace Matrix.Xmpp.Tests.Stream.Features
 {
     [TestClass]
     public class FeatureTest

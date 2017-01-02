@@ -4,7 +4,7 @@
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-//namespace Test.Xmpp.Muc
+//namespace Matrix.Xmpp.Tests.Muc
 //{
 //    [TestClass]
 //    public class MucManagerTest

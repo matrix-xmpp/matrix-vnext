@@ -1,11 +1,9 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Client;
-using Matrix.Xmpp.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 
 
-namespace Test.Xmpp.Chatstates
+namespace Matrix.Xmpp.Tests.Chatstates
 {
     [TestClass]
     public class ChatstatesTest

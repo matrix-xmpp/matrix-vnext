@@ -5,12 +5,9 @@ using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Jingle;
 using Matrix.Xmpp.Jingle.Apps.Rtp;
 using Matrix.Xmpp.Jingle.Candidates;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 
-namespace Test.Xmpp.Jingle
+namespace Matrix.Xmpp.Tests.Jingle
 {
     [TestClass]
     public class JingleTest

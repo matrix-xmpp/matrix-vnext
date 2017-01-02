@@ -3,10 +3,9 @@
 
 using Matrix.Xml;
 using Matrix.Xmpp.Client;
-using Matrix.Xmpp.Tests;
 using Matrix.Xmpp.Muc.Admin;
 
-namespace Test.Xmpp.Muc.Admin
+namespace Matrix.Xmpp.Tests.Muc.Admin
 {
     [TestClass]
     public class AdminIqTest

@@ -2,9 +2,8 @@
 
 using Matrix.Xml;
 using Matrix.Xmpp.Muc.User;
-using Matrix.Xmpp.Tests;
 
-namespace Test.Xmpp.Muc.User
+namespace Matrix.Xmpp.Tests.Muc.User
 {
     [TestClass]
     public class InviteTest

@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Matrix.Xmpp.Tests;
 using Matrix.Xml;
-using Matrix.Xmpp;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Disco;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Disco
+namespace Matrix.Xmpp.Tests.Disco
 {
     [TestClass]
     public class DiscoTest

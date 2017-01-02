@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Matrix.Xml;
-using Matrix.Xmpp.Roster;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.RosterItemExchange
+namespace Matrix.Xmpp.Tests.RosterItemExchange
 {
     [TestClass]
     public class RosterXTest

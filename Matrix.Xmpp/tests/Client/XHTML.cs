@@ -1,12 +1,10 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.XHtmlIM;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Test.Xmpp.Client
+namespace Matrix.Xmpp.Tests.Client
 {
     [TestClass]
     public class XHTML

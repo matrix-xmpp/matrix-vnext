@@ -1,10 +1,9 @@
-﻿using Matrix.Xmpp.Tests;
-using Matrix.Xmpp.Jingle.Transports;
+﻿using Matrix.Xmpp.Jingle.Transports;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Test.Xmpp.Jingle.Transports
+namespace Matrix.Xmpp.Tests.Jingle.Transports
 {
     [TestClass]
     public class IBBTest

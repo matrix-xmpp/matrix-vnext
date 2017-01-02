@@ -2,7 +2,7 @@
 using Matrix.Xmpp.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Vcard
+namespace Matrix.Xmpp.Tests.Vcard
 {
     [TestClass]
     public class VCardTest

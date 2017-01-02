@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Matrix.Xml;
 using Matrix.Xmpp.Disco;
 
-namespace Test.Xmpp.Disco
+namespace Matrix.Xmpp.Tests.Disco
 {
     [TestClass]
     public class DiscoInfoTest

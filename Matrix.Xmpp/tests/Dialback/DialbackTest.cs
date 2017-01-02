@@ -1,12 +1,8 @@
-﻿using Matrix;
-using Matrix.Xml;
+﻿using Matrix.Xml;
 using Matrix.Xmpp.Dialback;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 
-namespace Test.Xmpp.Dialback
+namespace Matrix.Xmpp.Tests.Dialback
 {
     [TestClass]
     public class DialbackTest

@@ -1,7 +1,7 @@
 ﻿using Matrix.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Xmpp.Base
+namespace Matrix.Xmpp.Tests.Base
 {
     [TestClass]
     public class XmppXElementWithJidAttributeTest

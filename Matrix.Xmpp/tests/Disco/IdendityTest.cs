@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Matrix.Xmpp.Disco;
-namespace Test.Xmpp.Disco
+namespace Matrix.Xmpp.Tests.Disco
 {
     [TestClass]
     public class IdendityTest

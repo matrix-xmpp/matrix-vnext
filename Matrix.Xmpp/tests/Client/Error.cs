@@ -1,10 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Matrix.Xml;
-using Matrix.Xmpp.Tests;
-using Shouldly;
 
-namespace Test.Xmpp.Client
+namespace Matrix.Xmpp.Tests.Client
 {
     /*
      <error type='modify'>

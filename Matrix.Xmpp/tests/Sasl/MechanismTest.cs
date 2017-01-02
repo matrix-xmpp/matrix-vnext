@@ -4,7 +4,7 @@ using Matrix.Xmpp.Sasl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 
-namespace Test.Xmpp.Sasl
+namespace Matrix.Xmpp.Tests.Sasl
 {
     [TestClass]
     public class MechanismTest

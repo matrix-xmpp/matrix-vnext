@@ -1,8 +1,5 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.AdHocCommands;
-
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 

@@ -1,11 +1,8 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.IBB;
-using Matrix.Xmpp.Tests;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 
-namespace Test.Xmpp.IBB
+namespace Matrix.Xmpp.Tests.IBB
 {
     [TestClass]
     public class IBBTest
