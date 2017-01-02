@@ -372,9 +372,9 @@ namespace Matrix.Xml.Parser
             else
             {
                 if (current == null)
-                    root.Add(text);
+                    root?.Add(text);
                 else
-                    current.Add(text);
+                    current?.Add(text);
             }
         }
     }
