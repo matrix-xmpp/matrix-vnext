@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
@@ -29,7 +29,6 @@
     <ProjectReference Include="..\..\Matrix.Core\src\Matrix.Core.csproj" />
     <ProjectReference Include="..\..\Matrix.Xml\src\Matrix.Xml.csproj" />
     <ProjectReference Include="..\..\Matrix.Xmpp\src\Matrix.Xmpp.csproj" />
-    <ProjectReference Include="..\..\XpNet\src\XpNet.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

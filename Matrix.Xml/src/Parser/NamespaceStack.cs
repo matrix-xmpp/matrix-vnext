@@ -16,7 +16,7 @@ namespace Matrix.Xml.Parser
     /// </summary>
     public class NamespaceStack
     {
-        private readonly Stack<Dictionary<string, string>> _stack = new Stack<Dictionary<string, string>>();
+        private readonly Stack<Dictionary<string, string>> stack = new Stack<Dictionary<string, string>>();
 
         /// <summary>
         /// Create a new stack.
@@ -42,7 +42,7 @@ namespace Matrix.Xml.Parser
         /// </summary>
         public void Push()
         {
-            _stack.Push(new Dictionary<string, string>());
+            stack.Push(new Dictionary<string, string>());
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Matrix.Xml.Parser
         /// </summary>
         public void Pop()
         {
-            _stack.Pop();
+            stack.Pop();
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Matrix.Xml.Parser
         /// <param name="uri"></param>
         public void AddNamespace(string prefix, string uri)
         {
-            _stack.Peek().Add(prefix, uri);
+            stack.Peek().Add(prefix, uri);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Matrix.Xml.Parser
         /// <returns></returns>
         public string LookupNamespace(string prefix)
         {
-            foreach (Dictionary<string, string> dictionary in _stack)
+            foreach (Dictionary<string, string> dictionary in stack)
             {
                 if ((dictionary.Count > 0) && (dictionary.ContainsKey(prefix)))
                     return dictionary[prefix];
@@ -82,10 +82,7 @@ namespace Matrix.Xml.Parser
         /// <summary>
         /// The current default namespace.
         /// </summary>
-        public string DefaultNamespace
-        {
-            get { return LookupNamespace(string.Empty); }
-        }
+        public string DefaultNamespace => LookupNamespace(string.Empty);
 
 
         /// <summary>
@@ -93,7 +90,7 @@ namespace Matrix.Xml.Parser
         /// </summary>
         public void Clear()
         {
-            _stack.Clear();
+            stack.Clear();
             Init();
         }
     }

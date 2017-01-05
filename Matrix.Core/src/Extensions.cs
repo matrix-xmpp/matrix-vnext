@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using Matrix.Core.Attributes;
 using Matrix.Core.Crypt;
 
@@ -9,16 +8,25 @@ namespace Matrix.Core
 {
     public static class Extensions
     {
-
-        public static IEnumerable<TResult> ToEnumerale<TResult>(this System.Collections.IEnumerable source)
-            where TResult : struct
+        /// <summary>
+        /// Converts all bytes in the Array to a string representation.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>string representation</returns>
+        public static string ToHex(this byte[] data)
         {
-            IEnumerable<TResult> enumerable = source as IEnumerable<TResult>;
-            if (enumerable != null)
-                return enumerable;
-
-            return CastIterator<TResult>(source);
+            return BitConverter.ToString(data).Replace("-", string.Empty);
         }
+
+        //public static IEnumerable<TResult> ToEnumerale<TResult>(this System.Collections.IEnumerable source)
+        //    where TResult : struct
+        //{
+        //    IEnumerable<TResult> enumerable = source as IEnumerable<TResult>;
+        //    if (enumerable != null)
+        //        return enumerable;
+
+        //    return CastIterator<TResult>(source);
+        //}
 
         static readonly Dictionary<string, string> EnumsNameAttributeCache = new Dictionary<string, string>();
 

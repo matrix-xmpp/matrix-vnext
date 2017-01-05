@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using Matrix.Core;
 using Matrix.Core.Crypt;
 
 namespace Matrix.Sasl.Digest
@@ -80,7 +81,7 @@ namespace Matrix.Sasl.Digest
             var buf = new byte[lenght];
             rng.GetBytes(buf);
 
-            Cnonce = Hash.HexToString(buf).ToLower();
+            Cnonce = buf.ToHex().ToLower();
 #if TEST
             m_Cnonce = "28f47432f9606887d9b727e65db225eb7cb4b78073d8b6f32399400e01438f1e";
 #endif
@@ -192,8 +193,8 @@ namespace Matrix.Sasl.Digest
             var H2hex = Util.Hash.HexToString(H2);
 #endif
             // create p1 and p2 as the hex representation of H1 and H2
-            p1 = Hash.HexToString(H1).ToLower();
-            p2 = Hash.HexToString(H2).ToLower();
+            p1 = H1.ToHex().ToLower();
+            p2 = H2.ToHex().ToLower();
 
             sb.Remove(0, sb.Length);
             sb.Append(p1);
@@ -214,7 +215,7 @@ namespace Matrix.Sasl.Digest
 #if TEST
             var H3hex = Util.Hash.HexToString(H3);
 #endif
-            Response = Hash.HexToString(H3).ToLower();
+            Response = H3.ToHex().ToLower();
         }
 
         private string GenerateMessage()

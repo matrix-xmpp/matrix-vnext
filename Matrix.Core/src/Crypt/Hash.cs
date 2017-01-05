@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -48,13 +47,12 @@ namespace Matrix.Core.Crypt
         /// <returns></returns>
         public static string Sha1HashHex(string pass)
         {
-            var hash = Sha1HashBytes(pass);
-            return HexToString(hash);
+            return Sha1HashBytes(pass).ToHex();
         }
 
         public static string Sha1HashHex(byte[] pass)
         {
-            return HexToString(Sha1HashBytes(pass));
+            return Sha1HashBytes(pass).ToHex();
         }
 
         public static byte[] Sha1HashBytes(string pass)
@@ -70,13 +68,12 @@ namespace Matrix.Core.Crypt
 
         public static string Sha256HashHex(string pass)
         {
-            var hash = Sha256HashBytes(pass);
-            return HexToString(hash);
+            return Sha256HashBytes(pass).ToHex();
         }
 
         public static string Sha256HashHex(byte[] pass)
         {
-            return HexToString(Sha256HashBytes(pass));
+            return Sha256HashBytes(pass).ToHex();
         }
 
         public static byte[] Sha256HashBytes(string pass)
@@ -103,15 +100,13 @@ namespace Matrix.Core.Crypt
 
         public static string Md5HashHex(string pass)
         {
-            var hash = Md5HashBytes(pass);
-            return HexToString(hash);
+            return Md5HashBytes(pass).ToHex();
         }
 
         public static string HMACSHA256HashHex(string key, string data)
         {
-            return HexToString(HMACSHA256(key, data));
+            return HMACSHA256(key, data).ToHex();
         }
-
 
         public static byte[] HMACSHA256(byte[] key, byte[] data)
         {
@@ -139,12 +134,12 @@ namespace Matrix.Core.Crypt
 
         public static string HMACHashHex(string key, string data)
         {
-            return HexToString(HMAC(key, data));
+            return HMAC(key, data).ToHex();
         }
 
         public static byte[] HMAC(byte[] key, byte[] data)
         {
-            return new System.Security.Cryptography.HMACSHA1(key).ComputeHash(data);
+            return new HMACSHA1(key).ComputeHash(data);
         }
 
         public static byte[] HMAC(string key, byte[] data)
@@ -160,21 +155,6 @@ namespace Matrix.Core.Crypt
         public static byte[] HMAC(string key, string data)
         {
             return HMAC(Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(data));
-        }
-
-        /// <summary>
-        /// Converts all bytes in the Array to a string representation.
-        /// </summary>
-        /// <param name="buf"></param>
-        /// <returns>string representation</returns>
-        public static string HexToString(byte[] buf)
-        {
-            var sb = new StringBuilder();
-            foreach (byte b in buf)
-            {
-                sb.Append(b.ToString("x2"));
-            }
-            return sb.ToString();
         }
     }
 }

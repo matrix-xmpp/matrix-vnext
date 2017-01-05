@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Reflection;
 using Matrix;
 using Matrix.Xml;
+using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 
 
@@ -74,7 +75,7 @@ namespace ConsoleClient
             var roster = xmppClient.RequestRosterAsync().GetAwaiter().GetResult();
             Console.WriteLine(roster.ToString());
 
-            xmppClient.SendPresenceAsync().GetAwaiter().GetResult();
+            xmppClient.SendPresenceAsync(Show.Chat, "free for chat");
             
 
             Console.WriteLine("Hello World!");

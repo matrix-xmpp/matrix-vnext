@@ -26,7 +26,6 @@
     <ProjectReference Include="..\Matrix.Xml\src\Matrix.Xml.csproj" />
     <ProjectReference Include="..\Matrix.Xmpp\src\Matrix.Xmpp.csproj" />
     <ProjectReference Include="..\Matrix\src\Matrix.csproj" />
-    <ProjectReference Include="..\XpNet\src\XpNet.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
