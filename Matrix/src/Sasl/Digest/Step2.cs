@@ -81,7 +81,7 @@ namespace Matrix.Sasl.Digest
             var buf = new byte[lenght];
             rng.GetBytes(buf);
 
-            Cnonce = buf.ToHex().ToLower();
+            Cnonce = buf.ToHex();
 #if TEST
             m_Cnonce = "28f47432f9606887d9b727e65db225eb7cb4b78073d8b6f32399400e01438f1e";
 #endif
@@ -193,8 +193,8 @@ namespace Matrix.Sasl.Digest
             var H2hex = Util.Hash.HexToString(H2);
 #endif
             // create p1 and p2 as the hex representation of H1 and H2
-            p1 = H1.ToHex().ToLower();
-            p2 = H2.ToHex().ToLower();
+            p1 = H1.ToHex();
+            p2 = H2.ToHex();
 
             sb.Remove(0, sb.Length);
             sb.Append(p1);

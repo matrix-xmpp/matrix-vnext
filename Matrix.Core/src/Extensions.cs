@@ -15,7 +15,7 @@ namespace Matrix.Core
         /// <returns>string representation</returns>
         public static string ToHex(this byte[] data)
         {
-            return BitConverter.ToString(data).Replace("-", string.Empty);
+            return BitConverter.ToString(data).Replace("-", string.Empty).ToLower();
         }
 
         //public static IEnumerable<TResult> ToEnumerale<TResult>(this System.Collections.IEnumerable source)

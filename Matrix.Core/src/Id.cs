@@ -8,25 +8,23 @@ namespace Matrix.Core
     /// </summary>
     public class Id
     {
-        private static long     id;
-        private static string	prefix	   = "MX_";
-        private static IdType   idType     = IdType.ShortGuid;
+        private static long id;
+        
+        public static IdType Type { get; set; } = IdType.ShortGuid;
 
-        private static readonly object IdLock = new object();
+        /// <summary>
+        /// to Save Bandwidth on Mobile devices you can change the prefix
+        /// null is also possible to optimize Bandwidth usage
+        /// </summary>
+        public static string Prefix { get; set; } = "MX_";
 
-        public static IdType Type
-        {
-            get { return idType; }
-            set { idType = value; }
-        }
-
-		public static string GetNextId()
+        public static string GetNextId()
 		{
 		    var ret = String.Empty;
-            switch (idType)
+            switch (Type)
             {
                 case IdType.Numeric:
-                    ret += prefix;
+                    ret += Prefix;
                     ret += Interlocked.Increment(ref id);
                     break;
                 case IdType.Guid:
@@ -47,16 +45,6 @@ namespace Matrix.Core
 		public static void Reset()
 		{
 			id = 0;
-		}
-
-		/// <summary>
-		/// to Save Bandwidth on Mobile devices you can change the prefix
-		/// null is also possible to optimize Bandwidth usage
-		/// </summary>
-		public static string Prefix
-		{
-			get { return prefix; }
-			set { prefix = value ?? string.Empty; }
 		}
 	}    
 }
