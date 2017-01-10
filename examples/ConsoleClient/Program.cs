@@ -13,8 +13,6 @@ namespace ConsoleClient
     {
         static void Main(string[] args)
         {
-            Factory.RegisterElementsFromAssembly(typeof(Matrix.Xmpp.Client.Iq).GetTypeInfo().Assembly);
-
             ExampleHelper.SetConsoleLogger();
 
             var xmppClient = new XmppClient
