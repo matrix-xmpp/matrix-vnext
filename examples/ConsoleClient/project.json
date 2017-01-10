@@ -4,20 +4,27 @@
     "emitEntryPoint": true
   },
 
-  "dependencies": {
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.1"
-    },
+  "dependencies": {    
     "Microsoft.Extensions.Logging.Console": "1.1.0",
     "Matrix": {
       "target": "project"
     }
   },
 
-  "frameworks": {
+   "frameworks": {
     "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "version": "1.0.1",
+          "type": "platform"
+        }
+      },
       "imports": "dnxcore50"
-    }
+    },
+    "net451": {}
   }
+
+  
+
+
 }
