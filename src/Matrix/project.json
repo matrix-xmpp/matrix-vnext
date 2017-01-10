@@ -1,0 +1,27 @@
+﻿{
+  "name": "Matrix",
+  "version": "1.0.0",
+  "title": "Matrix",
+  "description": "MatriX XMPP library",
+  "language": "en-US",
+  "authors": [
+    "AG-Software"
+  ],
+  "copyright": "Copyright © Alexander Gnauck, AG-Software",
+
+
+  "dependencies": {
+    "Matrix.Network": {
+      "target": "project"
+    }
+  },
+
+  "frameworks": {
+    "netstandard1.3": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net451": {}
+  }
+}

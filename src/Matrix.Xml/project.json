@@ -1,0 +1,34 @@
+{
+  "name": "Matrix.Xml",
+  "version": "1.0.0",
+  "title": "Matrix.Xml",
+  "description": "Matrix.Xml",
+  "language": "en-US",
+  "authors": [
+    "AG-Software"
+  ],
+  "copyright": "Copyright © Alexander Gnauck, AG-Software",
+
+
+  "dependencies": {
+    "XpNet": "1.0.0",
+    "Matrix.Core": {
+      "target": "project"
+    }
+  },
+
+  "frameworks": {
+    "netstandard1.3": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Xml": "4.0.0.0", 
+        "System.Xml.Linq": "4.0.0.0"
+      }
+    }
+  }
+
+}

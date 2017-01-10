@@ -1,0 +1,25 @@
+﻿{
+  "name": "Matrix.Core",
+  "version": "1.0.0",
+  "title": "Matrix.Core",
+  "description": "Matrix.Core",
+  "language": "en-US",
+  "authors": [
+    "AG-Software"
+  ],
+  "copyright": "Copyright © Alexander Gnauck, AG-Software",
+
+  "dependencies": {
+
+  },
+
+  "frameworks": {
+    "netstandard1.3": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net451": {}
+  }
+
+}

@@ -1,0 +1,26 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "DnsClient": "1.0.1",
+    "DotNetty.Handlers": "0.4.0",
+    "DotNetty.Transport": "0.4.0",
+    "System.Reactive": "3.1.1",
+    "Matrix.Xmpp": {
+      "target": "project"
+    }
+  },
+
+
+  "frameworks": {
+    "netstandard1.3": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net451": {
+     
+    }
+
+  }
+}

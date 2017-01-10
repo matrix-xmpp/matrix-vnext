@@ -6,3 +6,5 @@ obj
 packages
 .vs
 temp
+.lock.json
+*.lock.json
