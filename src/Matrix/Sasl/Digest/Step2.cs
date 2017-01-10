@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using Matrix.Core;
-using Matrix.Core.Crypt;
+using Matrix.Crypt;
 
 namespace Matrix.Sasl.Digest
 {

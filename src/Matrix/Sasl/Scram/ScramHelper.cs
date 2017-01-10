@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Matrix.Core.Crypt;
+using Matrix.Crypt;
 
 namespace Matrix.Sasl.Scram
 {

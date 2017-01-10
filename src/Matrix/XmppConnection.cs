@@ -5,7 +5,6 @@ using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Matrix.Core;
 using Matrix.Network;
 using Matrix.Network.Codecs;
 using Matrix.Network.Handlers;

@@ -11,9 +11,11 @@
 
 
   "dependencies": {
-    "Matrix.Network": {
-      "target": "project"
-    }
+    "XpNet": "1.0.0",
+    "DnsClient": "1.0.1",
+    "DotNetty.Handlers": "0.4.0",
+    "DotNetty.Transport": "0.4.0",
+    "System.Reactive": "3.1.1"
   },
 
   "frameworks": {
@@ -22,6 +24,11 @@
         "NETStandard.Library": "1.6.0"
       }
     },
-    "net451": {}
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Xml": "4.0.0.0",
+        "System.Xml.Linq": "4.0.0.0",
+      }
+    }
   }
 }
