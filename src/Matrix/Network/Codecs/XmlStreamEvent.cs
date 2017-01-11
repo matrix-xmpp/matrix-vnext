@@ -20,8 +20,8 @@ namespace Matrix.Network.Codecs
         {
             Exception = exception;
         }
-        public XmlStreamEventType XmlStreamEventType { get; private set; }
 
+        public XmlStreamEventType XmlStreamEventType { get; private set; }
 
         public XmppXElement XmppXElement { get; private set; }
 

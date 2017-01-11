@@ -44,8 +44,7 @@ namespace Matrix.Sasl.Digest
         {
             string[] auth = qop.Split(',');
             // This overload was not available in the CF, so updated this to the following
-            //bool ret = Array.IndexOf(auth, "auth") < 0 ? false : true;
-            return Array.IndexOf(auth, "auth", auth.GetLowerBound(0), auth.Length) < 0 ? false : true;
+            return Array.IndexOf(auth, "auth", auth.GetLowerBound(0), auth.Length) >= 0;
         }
 
         #region << Properties and member variables >>
@@ -89,7 +88,7 @@ namespace Matrix.Sasl.Digest
         private void GenerateNc()
         {
             const int nc = 1;
-            this.Nc = nc.ToString().PadLeft(8, '0');
+            Nc = nc.ToString().PadLeft(8, '0');
         }
 
         private void GenerateDigestUri()
@@ -177,7 +176,7 @@ namespace Matrix.Sasl.Digest
             sb.Remove(0, sb.Length);
             sb.Append("AUTHENTICATE:");
             sb.Append(DigestUri);
-            if (step1.Qop.CompareTo("auth") != 0)
+            if (String.Compare(step1.Qop, "auth", StringComparison.Ordinal) != 0)
             {
                 sb.Append(":00000000000000000000000000000000");
             }

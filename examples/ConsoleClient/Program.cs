@@ -12,11 +12,8 @@ namespace ConsoleClient
 {
     class Program
     {
-
         static void Main(string[] args)
         {
-          
-
             ExampleHelper.SetConsoleLogger();
 
             var xmppClient = new XmppClient
