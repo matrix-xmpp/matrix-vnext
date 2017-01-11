@@ -3,7 +3,7 @@ using Matrix.Xmpp.Base;
 
 namespace Matrix.Xmpp.Search
 {
-    [XmppTag(Name = "item", Namespace = Namespaces.IqSearch)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.IqSearch)]
     public class SearchItem : XmppXElementWithJidAttribute
     {
         #region Schema

@@ -6,7 +6,7 @@ namespace Matrix.Xmpp.Disco
     /// <summary>
     /// 
     /// </summary>
-    [XmppTag(Name = "item", Namespace = Namespaces.DiscoItems)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.DiscoItems)]
     public class Item : XmppXElement
     {
         #region << Constructors >>

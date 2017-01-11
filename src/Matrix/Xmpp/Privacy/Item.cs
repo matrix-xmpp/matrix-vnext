@@ -3,7 +3,7 @@ using Matrix.Xml;
 
 namespace Matrix.Xmpp.Privacy
 {
-    [XmppTag(Name = "item", Namespace = Namespaces.IqPrivacy)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.IqPrivacy)]
     public class Item : XmppXElement
     {
         public Item() : base(Namespaces.IqPrivacy, "item")

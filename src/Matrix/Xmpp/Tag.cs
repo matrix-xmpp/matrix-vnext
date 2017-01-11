@@ -1,47 +1,47 @@
-namespace Matrix
+namespace Matrix.Xmpp
 {
-    internal class Tag
+    public class Tag
     {
         /// <summary>
         /// presence
         /// </summary>
-        public const string Presence        = "presence";
+        public const string Presence = "presence";
         /// <summary>
         /// presence-out
         /// </summary>
-        public const string PresenceOut    = "presence-out";
+        public const string PresenceOut = "presence-out";
         /// <summary>
         /// presence-in
         /// </summary>
-        public const string PresenceIn     = "presence-in";
+        public const string PresenceIn = "presence-in";
         /// <summary>
         /// message
         /// </summary>
-        public const string Message         = "message";
+        public const string Message = "message";
         /// <summary>
         /// iq
         /// </summary>
-        public const string Iq              = "iq";
+        public const string Iq = "iq";
         /// <summary>
         /// status
         /// </summary>
-        public const string Status          = "status";
+        public const string Status = "status";
         /// <summary>
         /// show
         /// </summary>
-        public const string Show            = "show";
+        public const string Show = "show";
         /// <summary>
         /// body
         /// </summary>
-        public const string Body            = "body";
+        public const string Body = "body";
         /// <summary>
         /// subject
         /// </summary>
-        public const string Subject         = "subject";
+        public const string Subject = "subject";
         /// <summary>
         /// thread
         /// </summary>
-        public const string Thread          = "thread";
+        public const string Thread = "thread";
 
         /// <summary>
         /// starttls

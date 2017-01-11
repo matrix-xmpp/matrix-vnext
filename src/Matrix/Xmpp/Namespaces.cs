@@ -1,4 +1,4 @@
-namespace Matrix
+namespace Matrix.Xmpp
 {
     /// <summary>
     /// XMPP namespaces

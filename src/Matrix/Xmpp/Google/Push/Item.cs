@@ -11,7 +11,7 @@ namespace Matrix.Xmpp.Google.Push
      */
     #endregion
 
-    [XmppTag(Name = "item", Namespace = Namespaces.GooglePush)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.GooglePush)]
     public class Item : XmppXElement
     {
         public Item()

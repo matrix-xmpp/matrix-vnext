@@ -3,7 +3,7 @@ using Matrix.Xml;
 
 namespace Matrix.Xmpp.PubSub
 {
-    [XmppTag(Name = "item", Namespace = Namespaces.Pubsub)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.Pubsub)]
     public class Item : XmppXElement
     {
         /// <summary>

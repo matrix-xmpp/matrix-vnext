@@ -6,7 +6,7 @@ namespace Matrix.Xmpp.SecurityLabels
     /// <summary>
     /// 
     /// </summary>
-    [XmppTag(Name = "item", Namespace = Namespaces.SecurityLabelCatalog)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.SecurityLabelCatalog)]
     public class Item : XmppXElement
     {
         /// <summary>

@@ -5,7 +5,7 @@ namespace Matrix.Xmpp.Muc.Admin
     /// <summary>
     /// 
     /// </summary>
-    [XmppTag(Name = "item", Namespace = Namespaces.MucAdmin)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.MucAdmin)]
     public class Item : Muc.Item
     {
         #region << Constructors >>

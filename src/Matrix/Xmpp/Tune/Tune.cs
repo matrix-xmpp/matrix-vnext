@@ -13,7 +13,7 @@ namespace Matrix.Xmpp.Tune
         /// <summary>
         /// Initializes a new instance of the <see cref="Tune"/> class.
         /// </summary>
-        public Tune() : base(Matrix.Namespaces.Tune, "tune")
+        public Tune() : base(Namespaces.Tune, "tune")
         {
         }
 
@@ -88,7 +88,7 @@ namespace Matrix.Xmpp.Tune
         {
             return new PubSub.PubSub
             {
-                Publish = new Publish(new Item(this)) { Node = Matrix.Namespaces.Tune }
+                Publish = new Publish(new Item(this)) { Node = Namespaces.Tune }
             };
         }
     }

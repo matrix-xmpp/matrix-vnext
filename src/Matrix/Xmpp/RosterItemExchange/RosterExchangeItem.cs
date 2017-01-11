@@ -2,7 +2,7 @@ using Matrix.Attributes;
 
 namespace Matrix.Xmpp.RosterItemExchange
 {
-    [XmppTag(Name = "item", Namespace = Namespaces.XRosterX)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.XRosterX)]
     public class RosterExchangeItem : Base.RosterItem
     {
         public RosterExchangeItem() : base(Namespaces.XRosterX)

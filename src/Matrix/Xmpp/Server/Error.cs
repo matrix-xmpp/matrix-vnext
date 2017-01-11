@@ -3,7 +3,7 @@ using Matrix.Xmpp.Base;
 
 namespace Matrix.Xmpp.Server
 {
-    [XmppTag(Name = "error", Namespace = Namespaces.Server)]
+    [XmppTag(Name = Tag.Error, Namespace = Namespaces.Server)]
     public class Error : Base.Error
     {
         public Error() : base(Namespaces.Server)

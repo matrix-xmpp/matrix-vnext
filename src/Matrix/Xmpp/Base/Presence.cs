@@ -54,13 +54,13 @@ namespace Matrix.Xmpp.Base
         /// </summary>
         public Show Show
         {
-            get { return GetTagEnumUsingNameAttrib<Show>("show"); }
+            get { return GetTagEnumUsingNameAttrib<Show>(Tag.Show); }
             set
             {
                 if (value != Show.None)
-                    SetTag("show", value.GetName());
+                    SetTag(Tag.Show, value.GetName());
                 else
-                    RemoveTag("show");
+                    RemoveTag(Tag.Show);
             }
         }
 

@@ -7,7 +7,7 @@ namespace Matrix.Xmpp.Bytestreams
     [XmppTag(Name = Tag.Query, Namespace = Namespaces.Bytestreams)]
     public class Bytestream : XmppXElement
     {
-        public Bytestream() : base(Namespaces.Bytestreams, "query")
+        public Bytestream() : base(Namespaces.Bytestreams, Tag.Query)
         {
         }
 

@@ -3,7 +3,7 @@ using Matrix.Xml;
 
 namespace Matrix.Xmpp.MessageArchiving
 {
-    [XmppTag(Name = "item", Namespace = Namespaces.Archiving)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.Archiving)]
     public class Item : XmppXElement
     {
         #region

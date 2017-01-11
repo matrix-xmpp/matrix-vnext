@@ -43,7 +43,7 @@ namespace Matrix.Xmpp.Muc.User
     /// <summary>
     /// 
     /// </summary>
-    [XmppTag(Name = "item", Namespace = Namespaces.MucUser)]
+    [XmppTag(Name = Tag.Item, Namespace = Namespaces.MucUser)]
     public class Item : Muc.Item
     {
         #region << Constructors >>
