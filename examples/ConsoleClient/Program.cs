@@ -1,34 +1,40 @@
 ﻿using System;
+using System.Xml;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using Matrix;
 using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 
-
 namespace ConsoleClient
 {
     class Program
     {
+
         static void Main(string[] args)
         {
+          
+
             ExampleHelper.SetConsoleLogger();
 
             var xmppClient = new XmppClient
             {
-                //Username = "alex",
-                //Password = "***REMOVED***",
-                //XmppDomain = "ag-software.net",
+                // AG-Software
+                Username = "alex",
+                Password = "***REMOVED***",
+                XmppDomain = "ag-software.net",
+                
                 //Username = "alex",
                 //Password = "***REMOVED***",
                 //XmppDomain = "jabber.org",
                 //XmppDomain = "localhost",
 
                 // jabber.org
-                Username = "gnauck",
-                Password = "***REMOVED***",
-                XmppDomain = "jabber.org",
+                //Username = "gnauck",
+                //Password = "***REMOVED***",
+                //XmppDomain = "jabber.org",
 
                 // local prosody
                 //Username = "alex",

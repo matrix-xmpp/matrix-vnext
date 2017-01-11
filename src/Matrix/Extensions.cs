@@ -9,7 +9,7 @@ namespace Matrix
     public static class Extensions
     {
         /// <summary>
-        /// Converts all bytes in the Array to a string representation.
+        /// Converts all bytes in the array to a HEX string representation.
         /// </summary>
         /// <param name="data"></param>
         /// <returns>string representation</returns>
@@ -18,16 +18,7 @@ namespace Matrix
             return BitConverter.ToString(data).Replace("-", string.Empty).ToLower();
         }
 
-        //public static IEnumerable<TResult> ToEnumerale<TResult>(this System.Collections.IEnumerable source)
-        //    where TResult : struct
-        //{
-        //    IEnumerable<TResult> enumerable = source as IEnumerable<TResult>;
-        //    if (enumerable != null)
-        //        return enumerable;
-
-        //    return CastIterator<TResult>(source);
-        //}
-
+        #region << Enum extensions >>
         static readonly Dictionary<string, string> EnumsNameAttributeCache = new Dictionary<string, string>();
 
         /// <summary>
@@ -66,10 +57,10 @@ namespace Matrix
             foreach (object obj in source) yield return (TResult) obj;
         }
 
-        private static string GetFullyQualifiedEnumName<T>(this T @this) where T : struct
+        private static string GetFullyQualifiedEnumName<T>(this T enumeration) where T : struct
         {
             var type = typeof(T);
-            return string.Format("{0}.{1}.{2}", type.Namespace, type.Name, System.Enum.GetName(type, @this));
+            return $"{type.Namespace}.{type.Name}.{System.Enum.GetName(type, enumeration)}";
         }
 
         public static string ToName(this HashAlgorithms hashs)
@@ -88,6 +79,7 @@ namespace Matrix
 
             return CastIterator<TResult>(source);
         }
+        #endregion
     }
 
 }

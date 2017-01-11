@@ -15,18 +15,26 @@ namespace Matrix.Tests
          */
         public static void ShouldBe(this XElement actual, XElement expected)
         {
+            // we need to reparse XmppXElement
+            XElement actual2    = XElement.Parse(actual.ToString());
+            XElement expected2  = XElement.Parse(expected.ToString());
+
             SaveOptions opts = SaveOptions.DisableFormatting;
-            string sActual      = Normalize(actual).ToString(opts);
-            string sExpected    = Normalize(expected).ToString(opts);
+            string sActual      = Normalize(actual2).ToString(opts);
+            string sExpected    = Normalize(expected2).ToString(opts);
 
             sActual.ShouldBe(sExpected);
         }
 
         public static void ShouldNotBe(this XElement actual, XElement expected)
         {
+            // we need to reparse XmppXElement
+            XElement actual2    = XElement.Parse(actual.ToString());
+            XElement expected2   = XElement.Parse(expected.ToString());
+
             SaveOptions opts = SaveOptions.DisableFormatting;
-            string sActual = Normalize(actual).ToString(opts);
-            string sExpected = Normalize(expected).ToString(opts);
+            string sActual      = Normalize(actual2).ToString(opts);
+            string sExpected    = Normalize(expected2).ToString(opts);
 
             sActual.ShouldNotBe(sExpected);
         }

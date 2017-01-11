@@ -6,8 +6,6 @@ using Shouldly;
 
 namespace Matrix.Tests.Xmpp.AdHocCommands
 {
-    
-    
     public class ActionsTests
     {
         private const string XML1

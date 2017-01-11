@@ -24,9 +24,9 @@ namespace Matrix.Xml.Parser
         ByteBuffer bufferAggregate = new ByteBuffer();
 
 
-        public event Action<XmppXElement> OnStreamStart;
-        public event Action<XmppXElement> OnStreamElement;
-        public event Action OnStreamEnd;
+        public event Action<XmppXElement>   OnStreamStart;
+        public event Action<XmppXElement>   OnStreamElement;
+        public event Action                 OnStreamEnd;
         public event Action<Exception>      OnStreamError;
 
         /// <summary>

@@ -21,6 +21,10 @@
       },
       "imports": "dnxcore50"
     },
-    "net451": {}
+    "net451": {
+      "frameworkAssemblies": {
+        
+      }
+    }
   }
 }
