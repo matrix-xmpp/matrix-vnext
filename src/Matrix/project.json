@@ -1,6 +1,6 @@
 ﻿{
   "name": "Matrix",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "title": "Matrix",
   "description": "MatriX XMPP library",
   "language": "en-US",
@@ -10,8 +10,7 @@
   "copyright": "Copyright © Alexander Gnauck, AG-Software",
 
 
-  "dependencies": {
-    "XpNet": "1.0.0",
+  "dependencies": {    
     "DnsClient": "1.0.1",
     "DotNetty.Handlers": "0.4.0",
     "DotNetty.Transport": "0.4.0",

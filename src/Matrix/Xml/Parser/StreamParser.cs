@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using STE = System.Text.Encoding;
-using XpNet;
+using Matrix.XpNet;
 namespace Matrix.Xml.Parser
 {
     /// <summary>
