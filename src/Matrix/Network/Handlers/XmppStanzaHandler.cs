@@ -13,13 +13,7 @@ namespace Matrix.Network.Handlers
 {
     public class XmppStanzaHandler : SimpleChannelInboundHandler<XmppXElement>
     {
-        // define some constant values which can be used as timeouts for different purposes
-        public  const int OneSecond             = 1000 /*milliseconds*/;
-        public  const int FifteenSeconds        = OneSecond * 15;
-        public  const int ThirtySeconds         = OneSecond * 30;
-        public  const int OneMinute             = OneSecond * 60;
-        public  const int TwoMinutes            = OneMinute * 2;
-        public  const int DefaultTimeout        = TwoMinutes;
+        public const int DefaultTimeout = TimeConstants.TwoMinutes;
 
         private readonly Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>> handleTypes = new Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>>();
       

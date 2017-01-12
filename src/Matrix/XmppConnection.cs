@@ -27,14 +27,7 @@ namespace Matrix
         protected XmppConnection()
         {
             XmlStreamEvent.Subscribe(OnXmlStreamEvent);
-
-            //XmppXElementStream
-            //    .Where(el => el is Iq)
-            //    .Cast<Iq>()
-            //    .Where(iq => iq.Query is Ping && iq.Type == IqType.Get)
-            //    .Subscribe(async iq => await SendAsync(new Iq { Type = IqType.Result, Id = iq.Id, To = iq.From }));
-                
-
+       
             Bootstrap
                 .Group(eventLoopGroup)
                 .Channel<TcpSocketChannel>()
@@ -56,21 +49,13 @@ namespace Matrix
 
                     Pipeline.AddLast(new StringEncoder());
 
-                    //Pipeline.AddLast(xmppStreamEventHandler);
-
+                    
                     Pipeline.AddLast(new AutoReplyToPingHandler<Iq>());
 
 
                     Pipeline.AddLast(new StreamFooterHandler());
                     Pipeline.AddLast(xmppStreamEventHandler);
                     
-                    
-                    
-
-
-                    //Pipeline.AddLast(WaitForStanzaHandler);
-                    //Pipeline.AddLast(IqHandler);
-
                     Pipeline.AddLast(xmppStanzaHandler);
 
 
@@ -147,7 +132,7 @@ namespace Matrix
         }
         #endregion
 
-            protected async Task SendAsync(string s)
+        protected async Task SendAsync(string s)
         {
             await Pipeline.WriteAndFlushAsync(s);
         }
@@ -172,29 +157,9 @@ namespace Matrix
 
         public async Task<bool> CloseAsync(int timeout = 2000)
         {
-            var resultCompletionSource = new TaskCompletionSource<bool>();
-
-
             IDisposable anonymousSubscription = null;
-            //anonymousSubscription = XmppXElementStreamStream.Subscribe(
-            //       v => { },
-            //       //In this example, the OnCompleted callback is also provided
-            //    async () =>
-            //    {
-            //        await pipeline.CloseAsync();
-            //        anonymousSubscription.Dispose();
-            //        resultCompletionSource.SetResult(true);
-            //    });
-
-
-            //EventHandler<EventArgs> streamEnd = null;
-            //streamEnd = async (sender, args) =>
-            //{
-            //    await pipeline.CloseAsync();
-            //    OnStreamEnd -= streamEnd;
-            //    resultCompletionSource.SetResult(true);
-            //};
-
+            var resultCompletionSource = new TaskCompletionSource<bool>();
+            
             await SendAsync(new Stream().EndTag());
 
             anonymousSubscription = XmppXElementStream.Subscribe(
