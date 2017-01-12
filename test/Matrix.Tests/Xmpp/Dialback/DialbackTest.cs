@@ -1,4 +1,5 @@
 ﻿using Matrix.Xml;
+using Matrix.Xmpp;
 using Matrix.Xmpp.Dialback;
 using Xunit;
 
