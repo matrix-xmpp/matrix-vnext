@@ -36,8 +36,3 @@ namespace Matrix.Tests.Xmpp.Vcard
         }
     }
 }
-
-
-
-
-

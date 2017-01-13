@@ -1,0 +1,14 @@
+<storage xmlns='storage:bookmarks'>
+  <conference name='matrix' jid='matrix@conference.ag-software.de' >
+    <nick>Alex</nick>
+  </conference>
+  <conference name='dev' jid='dev@conference.ag-software.de' >
+    <nick>Alex</nick>
+  </conference>
+  <conference name='jdev' jid='jdev@conference.jabber.org' >
+    <nick>Alex</nick>
+  </conference>
+  <conference name='jorg-muc@isode' jid='jorg-muc@talk.isode.com' >
+    <nick>Alex</nick>
+  </conference>
+</storage>

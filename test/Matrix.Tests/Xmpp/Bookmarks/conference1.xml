@@ -1,0 +1,7 @@
+<conference xmlns='storage:bookmarks'
+                    name='Council of Oberon'
+                    autojoin='true'
+                    jid='council@conference.underhill.org'>
+  <nick>Puck</nick>
+  <password>secret</password>
+</conference>
