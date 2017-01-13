@@ -1,0 +1,4 @@
+<iq type='get' id='foo' xmlns='jabber:client'>
+  <list xmlns='urn:xmpp:archive'
+        with='juliet@capulet.com'/>
+</iq>

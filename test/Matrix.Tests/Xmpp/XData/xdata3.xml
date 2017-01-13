@@ -1,0 +1,8 @@
+<x xmlns='jabber:x:data' type='result'>
+  <field var='var1'>
+    <value>value1</value>
+  </field>
+  <field var='var2'>
+    <value>value2</value>
+  </field>
+</x>

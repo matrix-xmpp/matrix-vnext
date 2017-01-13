@@ -1,0 +1,5 @@
+<field xmlns='jabber:x:data' var='pubsub#children'>
+  <value>queue1</value>
+  <value>queue2</value>
+  <value>queue3</value>
+</field>

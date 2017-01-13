@@ -1,0 +1,15 @@
+<x xmlns='jabber:x:data' type='result'>
+  <reported>
+    <field var='field-name' label='description' type='{field-type}'/>
+  </reported>
+  <item>
+    <field var='field-name'>
+      <value>field-value</value>
+    </field>
+  </item>
+  <item>
+    <field var='field-name'>
+      <value>field-value</value>
+    </field>
+  </item>
+</x>

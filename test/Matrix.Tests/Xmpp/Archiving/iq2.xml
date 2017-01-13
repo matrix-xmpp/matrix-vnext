@@ -1,0 +1,9 @@
+<iq type='get' id='page1' xmlns='jabber:client'>
+  <retrieve xmlns='urn:xmpp:archive'
+      with='juliet@capulet.com/chamber'
+      start='1469-07-21T02:56:15.000Z'>
+    <set xmlns='http://jabber.org/protocol/rsm'>
+      <max>100</max>
+    </set>
+  </retrieve>
+</iq>

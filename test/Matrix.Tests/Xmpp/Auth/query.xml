@@ -1,0 +1,4 @@
+<query xmlns='jabber:iq:auth'>
+  <username>gnauck</username>
+  <digest/>
+</query>

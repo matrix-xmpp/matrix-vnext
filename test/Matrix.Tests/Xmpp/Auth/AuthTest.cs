@@ -1,27 +1,36 @@
 ﻿using Matrix.Xml;
-
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.Auth
-{
-    
+{    
     public class AuthTest
     {
-        const string XML = @"<query xmlns='jabber:iq:auth'><username>gnauck</username><digest/></query>";
+        [Fact]
+        public void XmlShoudbeOfTypeAuth()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Auth.query.xml"))
+                .ShouldBeOfType<Matrix.Xmpp.Auth.Auth>();
+        }
+
+        [Fact]
+        public void TestUsername()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Auth.query.xml"))
+                .Cast<Matrix.Xmpp.Auth.Auth>()
+                .Username.ShouldBe("gnauck");
+        }
         
         [Fact]
-        public void Test1()
+        public void TestHastDigestTag()
         {
-            var el = XmppXElement.LoadXml(XML);
-            Assert.True(el is Matrix.Xmpp.Auth.Auth);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Auth.query.xml"))
+                .Cast<Matrix.Xmpp.Auth.Auth>()
+                .HasTag("digest");
 
-            var auth = el as Matrix.Xmpp.Auth.Auth;
-            Assert.Equal(auth.Username, "gnauck");
-            Assert.True(auth.HasTag("digest"));
-            Assert.True(auth.Digest != null);
-            //auth.Digest = null;
-            //Assert.True(auth.Digest == null);
-
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Auth.query.xml"))
+                .Cast<Matrix.Xmpp.Auth.Auth>()
+                .Digest.ShouldNotBeNull();
         }
     }
 }

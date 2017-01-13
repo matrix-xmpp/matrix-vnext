@@ -1,0 +1,5 @@
+<field 
+  var='muc#roomconfig_roomname'
+  type='text-single'
+  label='Natural-Language Room Name'
+  xmlns='jabber:x:data'/>

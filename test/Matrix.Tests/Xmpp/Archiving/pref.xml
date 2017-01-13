@@ -1,0 +1,10 @@
+<pref xmlns='urn:xmpp:archive'>
+  <auto save='true'/>
+  <default expire='31536000' otr='concede' save='body'/>
+  <item jid='romeo@montague.net' otr='require' save='false'/>
+  <item expire='630720000' jid='benvolio@montague.net' otr='forbid' save='message'/>
+  <session thread='ffd7076498744578d10edabfe7f4a866' save='body'/>
+  <method type='auto' use='forbid'/>
+  <method type='local' use='concede'/>
+  <method type='manual' use='prefer'/>
+</pref>
