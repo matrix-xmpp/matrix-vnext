@@ -279,6 +279,8 @@ namespace Matrix.Xml.Parser
 
         private void EndTag(byte[] buf, int offset, ContentToken ct, Tokens tok)
         {
+            // TODO we don't validate Xml right now
+            // could check here if end tag name equals the start tag name
             depth--;
             nsStack.Pop();
 

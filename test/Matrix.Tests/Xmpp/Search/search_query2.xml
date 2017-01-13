@@ -1,0 +1,14 @@
+﻿<query xmlns='jabber:iq:search'>
+  <item jid='juliet@capulet.com'>
+    <first>Juliet</first>
+    <last>Capulet</last>
+    <nick>JuliC</nick>
+    <email>juliet@shakespeare.lit</email>
+  </item>
+  <item jid='tybalt@shakespeare.lit'>
+    <first>Tybalt</first>
+    <last>Capulet</last>
+    <nick>ty</nick>
+    <email>tybalt@shakespeare.lit</email>
+  </item>
+</query>

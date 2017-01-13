@@ -14,6 +14,9 @@ namespace ConsoleClient
     {
         static void Main(string[] args)
         {
+            string xml1 = "<a><b>foo</bb></a>";
+            var el1 = XmppXElement.LoadXml(xml1);
+
             ExampleHelper.SetConsoleLogger();
 
             var xmppClient = new XmppClient

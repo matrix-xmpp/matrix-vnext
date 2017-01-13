@@ -1,0 +1,7 @@
+﻿<query xmlns='jabber:iq:search'>
+  <instructions>foo</instructions>
+  <first/>
+  <last/>
+  <nick/>
+  <email>gnauck@ag-software.de</email>
+</query>

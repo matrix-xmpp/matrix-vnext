@@ -127,6 +127,7 @@ namespace Matrix.Xml
 
             sp.OnStreamStart += (el) => stanza = el;
             sp.OnStreamElement += (el) => stanza.Add(el);
+            sp.OnStreamError += (ex) => { throw ex; };
             
             var bytes = System.Text.Encoding.UTF8.GetBytes(xml);
             sp.Write(bytes, 0, bytes.Length);

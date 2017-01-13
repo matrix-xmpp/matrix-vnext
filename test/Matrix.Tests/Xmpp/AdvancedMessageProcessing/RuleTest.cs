@@ -1,59 +1,95 @@
 ﻿using System;
 using Matrix.Xml;
 using Matrix.Xmpp.AdvancedMessageProcessing;
-using NUnit.Framework;
-using Xunit;
 using Shouldly;
-
+using Xunit;
 
 namespace Matrix.Tests.Xmpp.AdvancedMessageProcessing
 {
-    
     public class RuleTest
     {
-        public void Test1()
+        [Fact]
+        public void XmlShouldBeOfTypeRule()
         {
-            const string XML1 =
-                "<rule xmlns='http://jabber.org/protocol/amp' action='error' condition='expire-at' value='foo'/>";
-            
-            const string XML2 =
-                "<rule xmlns='http://jabber.org/protocol/amp' action='error' condition='match-resource' value='other'/>";
+            XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.rule1.xml"))
+                .ShouldBeOfType<Rule>();
+        }
 
-            const string XML3 = 
-                " <rule xmlns='http://jabber.org/protocol/amp' condition='expire-at' action='drop' value='2004-01-01T00:00:00Z'/>";
+        [Fact]
+        public void TestAction()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.rule1.xml"))
+                .Cast<Rule>()
+                .Action.ShouldBe(Matrix.Xmpp.AdvancedMessageProcessing.Action.Error);
+        }
+        
 
-            var rule1 = XmppXElement.LoadXml(XML1) as Rule;
-            Assert.Equal(rule1.Action == Matrix.Xmpp.AdvancedMessageProcessing.Action.Error, true);
-            Assert.Equal(rule1.Condition == Condition.ExpireAt, true);
-            Assert.Equal(rule1.ValueAsString, "foo");
+        [Fact]
+        public void TestCondition()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.rule1.xml"))
+                .Cast<Rule>()
+                .Condition.ShouldBe(Condition.ExpireAt);
+        }
 
-            var rule2 = XmppXElement.LoadXml(XML2) as Rule;
-            Assert.Equal(rule2.Action == Matrix.Xmpp.AdvancedMessageProcessing.Action.Error, true);
-            Assert.Equal(rule2.Condition == Condition.MatchResource, true);
-            Assert.Equal(rule2.ValueAsString, "other");
+        [Fact]
+        public void TestCondition2()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.rule2.xml"))
+                .Cast<Rule>()
+                .Condition.ShouldBe(Condition.MatchResource);
+        }
 
-            var rule3 = XmppXElement.LoadXml(XML3) as Rule;
-            Assert.Equal(rule3.ValueAsDateTime.ToUniversalTime().Equals(new DateTime(2004, 1, 1, 0, 0, 0)), true);
-            
+
+        [Fact]
+        public void TestValueAsString()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.rule1.xml"))
+                .Cast<Rule>()
+                .ValueAsString.ShouldBe("foo");
+        }
+
+        [Fact]
+        public void TestValueAsString2()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.rule2.xml"))
+                .Cast<Rule>()
+                .ValueAsString.ShouldBe("other");
+        }
+
+        [Fact]
+        public void TestExpireAt()
+        {
+            var rule = XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.rule3.xml")).Cast<Rule>();
+            Assert.Equal(rule.ValueAsDateTime.ToUniversalTime().Equals(new DateTime(2004, 1, 1, 0, 0, 0)), true);
+        }
+
+        [Fact]
+        public void BuildRule()
+        {
+            var expectedXml = Resource.Get("Xmpp.AdvancedMessageProcessing.rule1.xml");
             var rule4 = new Rule
-                {
-                    Action =
-                        Matrix.Xmpp.AdvancedMessageProcessing.Action.Error,
-                    Condition = Condition.ExpireAt,
-                    ValueAsString = "foo"
-                };
-            
-            rule4.ShouldBe(XML1);
+            {
+                Action =
+                      Matrix.Xmpp.AdvancedMessageProcessing.Action.Error,
+                Condition = Condition.ExpireAt,
+                ValueAsString = "foo"
+            };
 
-            var rule5 = new Rule
-                {
-                    Action =
-                        Matrix.Xmpp.AdvancedMessageProcessing.Action.Error,
-                    Condition = Condition.MatchResource,
-                    ValueAsString = "other"
-                };
-            
-            rule5.ShouldBe(XML2);
+            rule4.ShouldBe(expectedXml);
+        }
+
+        [Fact]
+        public void BuildRule2()
+        {
+            var expectedXml = Resource.Get("Xmpp.AdvancedMessageProcessing.rule2.xml");
+            new Rule
+            {
+                Action = Matrix.Xmpp.AdvancedMessageProcessing.Action.Error,
+                Condition = Condition.MatchResource,
+                ValueAsString = "other"
+            }
+            .ShouldBe(expectedXml);
         }
     }
 }

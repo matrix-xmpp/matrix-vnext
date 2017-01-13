@@ -1,0 +1,1 @@
+<rule xmlns='http://jabber.org/protocol/amp' condition='expire-at' action='drop' value='2004-01-01T00:00:00Z'/>

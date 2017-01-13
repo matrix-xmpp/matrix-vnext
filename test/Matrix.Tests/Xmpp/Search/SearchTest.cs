@@ -1,115 +1,107 @@
-﻿using Matrix.Xmpp.Client;
-using Matrix.Xmpp.Search;
-using Xunit;
+﻿using System.Linq;
 using Matrix.Xml;
-using System.Linq;
-
+using Matrix.Xmpp.Client;
+using Matrix.Xmpp.Search;
+using Shouldly;
+using Xunit;
 
 namespace Matrix.Tests.Xmpp.Search
 {
     
     public class SearchTest
     {
-        // response to a reoster request
-        string xml1 = @"<query xmlns='jabber:iq:search'>
-    <instructions>foo</instructions>
-    <first/>
-    <last/>
-    <nick/>
-    <email>gnauck@ag-software.de</email>
-  </query>";
-
-
-        private string xml2 = @"<query xmlns='jabber:iq:search'>
-    <item jid='juliet@capulet.com'>
-      <first>Juliet</first>
-      <last>Capulet</last>
-      <nick>JuliC</nick>
-      <email>juliet@shakespeare.lit</email>
-    </item>
-    <item jid='tybalt@shakespeare.lit'>
-      <first>Tybalt</first>
-      <last>Capulet</last>
-      <nick>ty</nick>
-      <email>tybalt@shakespeare.lit</email>
-    </item>
-  </query>";
-
-        private string xml3 = @"<item xmlns='jabber:iq:search' jid='tybalt@shakespeare.lit'>
-      <first>Tybalt</first>
-      <last>Capulet</last>
-      <nick>ty</nick>
-      <email>tybalt@shakespeare.lit</email>
-    </item>";
-
-        private string xml4 = @"<iq xmlns='jabber:client' type='result'
-    from='search.shakespeare.lit'   
-    id='search2'>
- <query xmlns='jabber:iq:search'>
-    <item jid='juliet@capulet.com'>
-      <first>Juliet</first>
-      <last>Capulet</last>
-      <nick>JuliC</nick>
-      <email>juliet@shakespeare.lit</email>
-    </item>
-    <item jid='tybalt@shakespeare.lit'>
-      <first>Tybalt</first>
-      <last>Capulet</last>
-      <nick>ty</nick>
-      <email>tybalt@shakespeare.lit</email>
-    </item>
- </query>
-</iq>";
-
         [Fact]
-        public void Test1()
+        public void XmlShouldBeOfTypeSearch()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(xml1);
-            
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Search.Search);
-            var search = xmpp1 as Matrix.Xmpp.Search.Search;
-            
-            Assert.Equal(search.Instructions, "foo");
-            Assert.Equal(search.Email, "gnauck@ag-software.de");
-
-            Matrix.Xmpp.Client.SearchIq siq = new Matrix.Xmpp.Client.SearchIq();
-            siq.Search.Last = "";
+            string xml = Resource.Get("Xmpp.Search.search_query1.xml");
+            XmppXElement.LoadXml(xml).ShouldBeOfType<Matrix.Xmpp.Search.Search>();
         }
 
         [Fact]
-        public void TestSeachWithItems()
+        public void ReadInstructions()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(xml2);
+            string xml = Resource.Get("Xmpp.Search.search_query1.xml");
+            var search = XmppXElement.LoadXml(xml).Cast<Matrix.Xmpp.Search.Search>();
+            
+            Assert.Equal(search.Email, "gnauck@ag-software.de");
+        }
 
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Search.Search);
-            var search = xmpp1 as Matrix.Xmpp.Search.Search;
+        [Fact]
+        public void ReadEmail()
+        {
+            string xml = Resource.Get("Xmpp.Search.search_query1.xml");
+            var search = XmppXElement.LoadXml(xml).Cast<Matrix.Xmpp.Search.Search>();
+            
+            Assert.Equal(search.Email, "gnauck@ag-software.de");
+        }
+
+        [Fact]
+        public void XmlShouldBeOfTypeSearchItem()
+        {
+            string xml = Resource.Get("Xmpp.Search.search_query3.xml");
+            XmppXElement.LoadXml(xml).ShouldBeOfType<SearchItem>();
+        }
+
+        [Fact]
+        public void CountItems()
+        {
+            string xml = Resource.Get("Xmpp.Search.search_query2.xml");
+            var search = XmppXElement.LoadXml(xml).Cast<Matrix.Xmpp.Search.Search>();
 
             var items = search.GetItems();
-
             Assert.Equal(items != null, true);
             Assert.Equal(items.Count(), 2);
-
         }
 
-
         [Fact]
-        public void TestSeachItem()
+        public void TestSeachItemJid()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(xml3);
-
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Search.SearchItem);
-            var item = xmpp1 as Matrix.Xmpp.Search.SearchItem;
+            string xml = Resource.Get("Xmpp.Search.search_query3.xml");
+            var item = XmppXElement.LoadXml(xml).Cast<SearchItem>();
 
             Assert.Equal(item.Jid.ToString(), "tybalt@shakespeare.lit");
-            Assert.Equal(item.First, "Tybalt");
-            Assert.Equal(item.Last, "Capulet");
+        }
+
+        [Fact]
+        public void TestSeachItemFirst()
+        {
+            string xml = Resource.Get("Xmpp.Search.search_query3.xml");
+            var item = XmppXElement.LoadXml(xml).Cast<SearchItem>();
+            
+            Assert.Equal(item.First, "Tybalt");}
+
+        [Fact]
+        public void TestSeachItemLast()
+        {
+            string xml = Resource.Get("Xmpp.Search.search_query3.xml");
+            var item = XmppXElement.LoadXml(xml).Cast<SearchItem>();
+            
             Assert.Equal(item.Nick, "ty");
+            
+        }
+
+        [Fact]
+        public void TestSeachItemNick()
+        {
+            string xml = Resource.Get("Xmpp.Search.search_query3.xml");
+            var item = XmppXElement.LoadXml(xml).Cast<SearchItem>();
+            
+            Assert.Equal(item.Nick, "ty");
+        }
+
+        [Fact]
+        public void TestSeachItemEmail()
+        {
+            string xml = Resource.Get("Xmpp.Search.search_query3.xml");
+            var item = XmppXElement.LoadXml(xml).Cast<SearchItem>();
+
             Assert.Equal(item.Email, "tybalt@shakespeare.lit");
         }
 
         [Fact]
         public void TestCreateSearchItem()
         {
+            string xml = Resource.Get("Xmpp.Search.search_query3.xml");
             var item = new SearchItem
                            {
                                Jid = "tybalt@shakespeare.lit",
@@ -119,23 +111,23 @@ namespace Matrix.Tests.Xmpp.Search
                                Email = "tybalt@shakespeare.lit"
                            };
 
-            item.ShouldBe(xml3);
+            item.ShouldBe(xml);
         }
 
         [Fact]
-        public void TestCreateSearchResults()
+        public void TestAllItemsWithproperties()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(xml4);
+            string xml = Resource.Get("Xmpp.Search.search_query4.xml");
+            var iq = XmppXElement.LoadXml(xml).Cast<Iq>();
 
-            Assert.Equal(true, xmpp1 is Iq);
-            var iq = xmpp1 as Iq;
-            var searchQuery = iq.Query as Matrix.Xmpp.Search.Search;
-            
-            var first   = new [] {"Juliet", "Tybalt"};
-            var jid     = new [] {"juliet@capulet.com", "tybalt@shakespeare.lit"};
-            var last    = new [] { "Capulet", "Capulet" };
-            var nick    = new [] { "JuliC", "ty" };
-            var email   = new [] { "juliet@shakespeare.lit", "tybalt@shakespeare.lit" };
+            var searchQuery = iq.Query.Cast<Matrix.Xmpp.Search.Search>();
+
+            var first   = new[] {"Juliet", "Tybalt"};
+            var jid     = new[] {"juliet@capulet.com", "tybalt@shakespeare.lit"};
+            var last    = new[] {"Capulet", "Capulet"};
+            var nick    = new[] {"JuliC", "ty"};
+            var email   = new[] {"juliet@shakespeare.lit", "tybalt@shakespeare.lit"};
+
             int i = 0;
             foreach (var sItem in searchQuery.GetItems())
             {
@@ -147,7 +139,41 @@ namespace Matrix.Tests.Xmpp.Search
                 Assert.Equal(sItem.Email, email[i]);
                 i++;
             }
+        }
+
+        [Fact]
+        public void TestBuildSearchQuery()
+        {
+            string expectedXml = Resource.Get("Xmpp.Search.search_query4.xml");
+
+            var searchQuery = new IqQuery<Matrix.Xmpp.Search.Search>()
+            {
+                Type    = Matrix.Xmpp.IqType.Result,
+                From    = "search.shakespeare.lit",
+                Id      = "search2"
+            };
             
+            var first   = new[] { "Juliet", "Tybalt" };
+            var jid     = new[] { "juliet@capulet.com", "tybalt@shakespeare.lit" };
+            var last    = new[] { "Capulet", "Capulet" };
+            var nick    = new[] { "JuliC", "ty" };
+            var email   = new[] { "juliet@shakespeare.lit", "tybalt@shakespeare.lit" };
+            
+            for (int i = 0; i < 2; i++)
+            {
+                searchQuery.Query.AddItem(
+                    new SearchItem
+                    {
+                        Jid = jid[i],
+                        First = first[i],
+                        Last = last[i],
+                        Nick = nick[i],
+                        Email = email[i]
+                    }
+                );
+            }
+
+            searchQuery.ShouldBe(expectedXml);
         }
     }
 }

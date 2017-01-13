@@ -13,7 +13,7 @@ namespace Matrix.Tests.Xml
     public class ExtensionsTest
     {
         [Fact]
-        public void TestIsMatch()
+        public void Test_Match_Predicates()
         {
             var pIq = new IqQuery<PingIq> {Type = IqType.Get, Id = "foo"};
 
@@ -28,8 +28,7 @@ namespace Matrix.Tests.Xml
                 .ShouldBeTrue();
             pIq.IsMatch(el => el.OfType<Iq>() && el.Cast<Iq>().Id == "foo" && el.Cast<Iq>().Type == IqType.Result)
                 .ShouldBeFalse();
-
-            Factory.RegisterElement<StreamFeatures>();
+            
 
             Func<XmppXElement, bool> predicate1 = e => e.OfType<StreamFeatures>();
             var elSf = XmppXElement.LoadXml("<stream:features xmlns:stream='http://etherx.jabber.org/streams'/>");

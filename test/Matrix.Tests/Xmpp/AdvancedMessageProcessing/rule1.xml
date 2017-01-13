@@ -1,0 +1,1 @@
+<rule xmlns='http://jabber.org/protocol/amp' action='error' condition='expire-at' value='foo'/>

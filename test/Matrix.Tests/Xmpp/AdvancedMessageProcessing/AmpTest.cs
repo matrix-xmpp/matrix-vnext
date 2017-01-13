@@ -1,52 +1,65 @@
-﻿using System;
-using Matrix.Xml;
+﻿using Matrix.Xml;
 using Matrix.Xmpp.AdvancedMessageProcessing;
-
-using Xunit;
 using Shouldly;
+using Xunit;
 
 namespace Matrix.Tests.Xmpp.AdvancedMessageProcessing
 {
     public class AmpTest
     {
         [Fact]
-        public void Test1()
+        public void TestXmlShouldBeOfTypeAmp()
         {
-            const string XML1 =
-                "<amp xmlns='http://jabber.org/protocol/amp' per-hop='true'/>";
-            
-            const string XML2 =
-                "<amp xmlns='http://jabber.org/protocol/amp' from='bernardo@hamlet.lit/elsinore' to='francisco@hamlet.lit/pda'/>";
+            XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.amp1.xml")).ShouldBeOfType<Amp>();
+        }
 
-            const string XML3 = "<amp xmlns='http://jabber.org/protocol/amp'/>";
-            
-             
-            const string XML4 = "<amp xmlns='http://jabber.org/protocol/amp' status='alert' from='bernardo@hamlet.lit/elsinore' to='francisco@hamlet.lit'/>";
+        [Fact]
+        public void PerHopShouldBeTrue()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.amp1.xml"))
+                .Cast<Amp>()
+                .PerHop.ShouldBeTrue();
+        }
 
-            var amp1 = XmppXElement.LoadXml(XML1) as Amp;
-            Assert.Equal(amp1.PerHop, true);
+        [Fact]
+        public void BuildAmpElement()
+        {
+            string expectedXml = Resource.Get("Xmpp.AdvancedMessageProcessing.amp3.xml");
+            new Amp().ShouldBe(expectedXml);
+        }
 
-            var amp2 = XmppXElement.LoadXml(XML2) as Amp;
-            Assert.Equal(amp2.From.Equals("bernardo@hamlet.lit/elsinore"), true);
-            Assert.Equal(amp2.To.Equals("francisco@hamlet.lit/pda"), true);
+        [Fact]
+        public void BuildAmpElementWithPerHopAttribute()
+        {
+            string expectedXml = Resource.Get("Xmpp.AdvancedMessageProcessing.amp1.xml");
+            new Amp { PerHop = true }.ShouldBe(expectedXml);
+        }
 
+        [Fact]
+        public void TestFrom()
+        {
+            var amp = XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.amp2.xml")).Cast<Amp>();
+            amp.From.Equals("bernardo@hamlet.lit/elsinore").ShouldBeTrue(); 
+        }
 
-            var amp3 = new Amp {};
-            amp3.ShouldBe(XML3);
+        [Fact]
+        public void TestTo()
+        {
+            var amp = XmppXElement.LoadXml(Resource.Get("Xmpp.AdvancedMessageProcessing.amp2.xml")).Cast<Amp>();
+            amp.To.Equals("francisco@hamlet.lit/pda").ShouldBeTrue();
+        }
 
-            var amp4 = new Amp
+        [Fact]
+        public void BuildAmpWithToFromStatus()
+        {
+            string expectedXml = Resource.Get("Xmpp.AdvancedMessageProcessing.amp4.xml");
+            new Amp
             {
-                PerHop = true
-            };
-            amp4.ShouldBe(XML1);
-
-            var amp44 = new Amp
-            {
-                  Status = Matrix.Xmpp.AdvancedMessageProcessing.Action.Alert,
-                  From = "bernardo@hamlet.lit/elsinore",
-                  To = "francisco@hamlet.lit"
-            };
-            amp44.ShouldBe(XML4);
+                Status = Matrix.Xmpp.AdvancedMessageProcessing.Action.Alert,
+                From = "bernardo@hamlet.lit/elsinore",
+                To = "francisco@hamlet.lit"
+            }
+            .ShouldBe(expectedXml);
         }
     }
 }

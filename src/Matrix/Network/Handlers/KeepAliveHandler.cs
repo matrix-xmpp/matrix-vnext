@@ -15,15 +15,13 @@ namespace Matrix.Network.Handlers
         private const string Whitespace = " ";
 
         private Timer keepaliveTimer;
-        public int KeepAliveInterval => 120;
+        public int KeepAliveInterval => TimeConstants.TwoMinutes;
 
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
             base.ChannelActive(context);
-
-            int interval = KeepAliveInterval * 1000;
-            keepaliveTimer = new Timer(async state =>  await context.Channel.WriteAndFlushAsync(Whitespace), null, interval, interval);
+            keepaliveTimer = new Timer(async state =>  await context.Channel.WriteAndFlushAsync(Whitespace), null, KeepAliveInterval, KeepAliveInterval);
         }
 
         public override void ChannelInactive(IChannelHandlerContext context)
@@ -36,7 +34,7 @@ namespace Matrix.Network.Handlers
         public override Task WriteAsync(IChannelHandlerContext ctx, object msg)
         {
             if (KeepAliveInterval > 0)
-                keepaliveTimer?.Change(KeepAliveInterval * 1000, KeepAliveInterval * 1000);
+                keepaliveTimer?.Change(KeepAliveInterval, KeepAliveInterval);
 
             return ctx.WriteAsync(msg);
         }
