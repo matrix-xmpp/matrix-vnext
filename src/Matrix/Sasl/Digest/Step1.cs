@@ -35,9 +35,12 @@ namespace Matrix.Sasl.Digest
 
         internal string Nonce { get; set; }
 
-        internal string Qop { get; set; }
+        /// <summary>
+        /// default Qop to "auth" when not present as documented in rfc2831
+        /// </summary>
+        internal string Qop { get; set; }       = "auth";
 
-        internal string Charset { get; set; } = "utf-8";
+        internal string Charset { get; set; }   = "utf-8";
 
         internal string Algorithm { get; set; }
 

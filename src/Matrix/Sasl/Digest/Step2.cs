@@ -24,27 +24,11 @@ namespace Matrix.Sasl.Digest
             this.xmppClient = xmppClient;
 
             this.step1.Nonce = step1.Nonce;
-
-            // fixed for SASL in amessage servers (jabberd 1.x)
-            if (SupportsAuth(step1.Qop))
-                this.step1.Qop = "auth";
-
+         
             GenerateCnonce();
             GenerateNc();
             GenerateDigestUri();
             GenerateResponse();
-        }
-
-        /// <summary>
-        /// Does the server support Auth?
-        /// </summary>
-        /// <param name="qop"></param>
-        /// <returns></returns>
-        private bool SupportsAuth(string qop)
-        {
-            string[] auth = qop.Split(',');
-            // This overload was not available in the CF, so updated this to the following
-            return Array.IndexOf(auth, "auth", auth.GetLowerBound(0), auth.Length) >= 0;
         }
 
         #region << Properties and member variables >>
@@ -174,12 +158,23 @@ namespace Matrix.Sasl.Digest
 #endif
 
             sb.Remove(0, sb.Length);
+            /*
+                from rfc2831
+                If the "qop" directive's value is "auth", then A2 is:
+
+                  A2       = { "AUTHENTICATE:", digest-uri-value }
+
+               If the "qop" value is "auth-int" or "auth-conf" then A2 is:
+
+                  A2       = { "AUTHENTICATE:", digest-uri-value,
+                           ":00000000000000000000000000000000" }
+            */
             sb.Append("AUTHENTICATE:");
             sb.Append(DigestUri);
-            if (String.Compare(step1.Qop, "auth", StringComparison.Ordinal) != 0)
-            {
+
+            if (step1.Qop != "auth")
                 sb.Append(":00000000000000000000000000000000");
-            }
+            
 
             A2 = sb.ToString();
             H2 = Encoding.ASCII.GetBytes(A2);
