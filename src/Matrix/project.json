@@ -1,6 +1,6 @@
 ﻿{
   "name": "Matrix",
-  "version": "0.1.0",
+  "version": "0.2.0-beta",
   "title": "Matrix",
   "description": "MatriX XMPP library",
   "language": "en-US",
@@ -10,7 +10,7 @@
   "copyright": "Copyright © Alexander Gnauck, AG-Software",
 
 
-  "dependencies": {    
+  "dependencies": {
     "DnsClient": "1.0.1",
     "DotNetty.Handlers": "0.4.0",
     "DotNetty.Transport": "0.4.0",
@@ -20,15 +20,21 @@
   "frameworks": {
     "netstandard1.3": {
       "dependencies": {
-        "NETStandard.Library": "1.6.0",
+        "NETStandard.Library": "1.6.0"
       }
     },
     "net451": {
       "frameworkAssemblies": {
         "System.Linq": "4.0.0.0",
         "System.Xml": "4.0.0.0",
-        "System.Xml.Linq": "4.0.0.0",
+        "System.Xml.Linq": "4.0.0.0"
       }
     }
+  },
+
+  "scripts": {
+    "postcompile": [
+      "dotnet pack --no-build --configuration Release"
+    ]
   }
 }
