@@ -28,8 +28,9 @@ namespace Matrix
 
         public string Resource { get; set; } = "MatriX";
 
-        public bool UseStartTls { get; set; } = true;
-        public bool UseCompression { get; set; } = true;
+        public bool Tls { get; set; } = true;
+
+        public bool Compression { get; set; } = true;
 
         public Show Show { get; set; } = Show.None;
 
@@ -59,7 +60,7 @@ namespace Matrix
    
         private async Task HandleStreamFeaturesAsync(StreamFeatures features)
         {
-            if (SessionState < SessionState.Securing && features.SupportsStartTls && UseStartTls)
+            if (SessionState < SessionState.Securing && features.SupportsStartTls && Tls)
             {
                 await HandleStreamFeaturesAsync(await DoStartTlsAsync());
             }
@@ -68,7 +69,7 @@ namespace Matrix
                 var authRet = await DoAuthenicateAsync(features.Mechanisms);
                 await HandleStreamFeaturesAsync(authRet);
             }
-            else if (SessionState < SessionState.Compressing && features.SupportsCompression && UseCompression)
+            else if (SessionState < SessionState.Compressing && features.SupportsCompression && Compression)
             {
                 await HandleStreamFeaturesAsync(await DoEnableCompressionAsync());
             }

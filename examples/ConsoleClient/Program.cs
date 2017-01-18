@@ -48,8 +48,8 @@ namespace ConsoleClient
                 Username = "admin",
                 Password = "***REMOVED***",
                 XmppDomain = "flepo",
-                UseStartTls = true,
-                UseCompression = true,
+                Tls = true,
+                Compression = true,
                 Resource = "vnext",
                 CertificateValidator = new AlwaysAcceptCertificateValidator(),
 
