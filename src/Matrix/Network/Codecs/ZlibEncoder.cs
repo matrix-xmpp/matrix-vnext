@@ -6,7 +6,10 @@ using Matrix.IO.Compression;
 
 namespace Matrix.Network.Codecs
 {
-    public class ZlibEncoder : MessageToMessageEncoder<IByteBuffer>
+    /// <summary>
+    /// Encoder which implements zlib compression
+    /// </summary>
+    public class ZlibEncoder : MessageToMessageEncoder<IByteBuffer>, IActive
     {
         /// <summary>
         /// is used to compress data

@@ -14,9 +14,7 @@ namespace Matrix.Network.Codecs
 
         protected override void Encode(IChannelHandlerContext context, XmppXElement message, List<object> output)
         {
-            output.Add(
-                ByteBufferUtil.EncodeString(context.Allocator, message.ToString(false), Encoding.UTF8)
-                );
+            output.Add(ByteBufferUtil.EncodeString(context.Allocator, message.ToString(false), Encoding.UTF8));
         }
     }
 }

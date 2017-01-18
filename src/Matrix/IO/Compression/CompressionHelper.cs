@@ -16,7 +16,7 @@ namespace Matrix.IO.Compression
                 // stanzas. So everything should be ok here.
                 deflater.SetInput(bIn);
                 deflater.Flush();
-
+                
                 using (var ms = new MemoryStream())
                 {
                     int ret;
