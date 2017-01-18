@@ -174,7 +174,6 @@ namespace Matrix.Sasl.Digest
 
             if (step1.Qop != "auth")
                 sb.Append(":00000000000000000000000000000000");
-            
 
             A2 = sb.ToString();
             H2 = Encoding.ASCII.GetBytes(A2);

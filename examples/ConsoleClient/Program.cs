@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using Matrix;
+using Matrix.Network;
 using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
@@ -22,10 +23,10 @@ namespace ConsoleClient
             var xmppClient = new XmppClient
             {
                 // AG-Software
-                Username = "alex",
-                Password = "***REMOVED***",
-                XmppDomain = "ag-software.net",
-                
+                //Username = "alex",
+                //Password = "***REMOVED***",
+                //XmppDomain = "ag-software.net",
+
                 //Username = "alex",
                 //Password = "***REMOVED***",
                 //XmppDomain = "jabber.org",
@@ -43,9 +44,16 @@ namespace ConsoleClient
                 //HostnameResolver = new StaticNameResolver(IPAddress.Parse("192.168.1.151")),
                 //CertificateValidator = new AlwaysAcceptCertificateValidator(),
 
+                // Openfire Flepo
+                Username = "admin",
+                Password = "***REMOVED***",
+                XmppDomain = "flepo",
+                UseStartTls = true,
+                UseCompression = true,
                 Resource = "vnext",
+                CertificateValidator = new AlwaysAcceptCertificateValidator(),
 
-               
+
             };
 
 

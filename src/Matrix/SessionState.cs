@@ -21,7 +21,7 @@
         /// The socket was updates to TLS successful
         /// </summary>
         Secure,
-
+        
         /// <summary>
         /// Authentication is in progress
         /// </summary>
@@ -31,6 +31,16 @@
         /// Session is authenticated
         /// </summary>
         Authenticated,
+
+        /// <summary>
+        /// Negotiating stream compression
+        /// </summary>
+        Compressing,
+
+        /// <summary>
+        /// Stream compression is enabled
+        /// </summary>
+        Compressed,
 
         /// <summary>
         /// Resource binding is in progress

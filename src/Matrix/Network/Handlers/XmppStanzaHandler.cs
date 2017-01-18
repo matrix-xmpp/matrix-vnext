@@ -78,13 +78,14 @@ namespace Matrix.Network.Handlers
            where T : XmppXElement
         {
             Func<XmppXElement, bool> predicate = e => e.OfType<T>();
-            return await SendAsync<T>(s, predicate, timeout);
+            return await SendAsync<T>(() => SendAsync(s), predicate, timeout);
         }
 
         public async Task<T> SendAsync<T>(XmppXElement el, int timeout = DefaultTimeout)
               where T : XmppXElement
         {
-            return await SendAsync<T>(el.ToString(false), timeout);
+            Func<XmppXElement, bool> predicate = e => e.OfType<T>();
+            return await SendAsync<T>(() => SendAsync(el), predicate, timeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, int timeout = DefaultTimeout)
@@ -92,8 +93,7 @@ namespace Matrix.Network.Handlers
            where T2 : XmppXElement
         {
             Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>();
-            
-            return await SendAsync<XmppXElement>(el.ToString(false), predicate, timeout);
+            return await SendAsync<XmppXElement>(() => SendAsync(el), predicate, timeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, int timeout = DefaultTimeout)
@@ -102,8 +102,7 @@ namespace Matrix.Network.Handlers
             where T3 : XmppXElement
         {
             Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>();
-            
-            return await SendAsync<XmppXElement>(el.ToString(false), predicate, timeout);
+            return await SendAsync<XmppXElement>(() => SendAsync(el.ToString(false)), predicate, timeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2, T3, T4>(XmppXElement el, int timeout = DefaultTimeout)
@@ -113,8 +112,7 @@ namespace Matrix.Network.Handlers
             where T4 : XmppXElement
         {
             Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>();
-
-            return await SendAsync<XmppXElement>(el.ToString(false), predicate, timeout);
+            return await SendAsync<XmppXElement>(() => SendAsync(el.ToString(false)), predicate, timeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2, T3, T4, T5>(XmppXElement el, int timeout = DefaultTimeout)
@@ -125,8 +123,7 @@ namespace Matrix.Network.Handlers
             where T5 : XmppXElement
         {
             Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>() || e.OfType<T5>();
-
-            return await SendAsync<XmppXElement>(el.ToString(false), predicate, timeout);
+            return await SendAsync<XmppXElement>( ()=>SendAsync(el.ToString(false)), predicate, timeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2>(string s, int timeout = DefaultTimeout)
@@ -134,12 +131,11 @@ namespace Matrix.Network.Handlers
           where T2 : XmppXElement
         {
             Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>();
-            
-            return await SendAsync<XmppXElement>(s, predicate, timeout);
+            return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout);
         }
 
         private async Task<T> SendAsync<T>(
-            string s,
+            Func<Task> sendTask,
             Func<XmppXElement, bool> predicate,
             int timeout = DefaultTimeout)
            where T : XmppXElement
@@ -155,9 +151,9 @@ namespace Matrix.Network.Handlers
                 });
 
             Handle(predicate, action);
-            
-            await SendAsync(s);
 
+            await sendTask();
+            
             if (resultCompletionSource.Task ==
                 await Task.WhenAny(resultCompletionSource.Task, Task.Delay(timeout)))
                 return await resultCompletionSource.Task;
@@ -180,7 +176,7 @@ namespace Matrix.Network.Handlers
                 && e.Cast<T>().Id == iq.Id
                 && (e.Cast<T>().Type == IqType.Error || e.Cast<T>().Type == IqType.Result);
 
-            return await SendAsync<T>(iq.ToString(false), predicate, timeout);
+            return await SendAsync<T>(() => SendAsync(iq), predicate, timeout);
         }
         #endregion
     }

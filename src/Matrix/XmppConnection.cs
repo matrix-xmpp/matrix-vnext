@@ -22,7 +22,7 @@ namespace Matrix
         readonly    MultithreadEventLoopGroup   eventLoopGroup         = new MultithreadEventLoopGroup();
         readonly    XmlStreamDecoder            xmlStreamDecoder       = new XmlStreamDecoder();
         readonly    XmppStreamEventHandler      xmppStreamEventHandler = new XmppStreamEventHandler();
-        private     INameResolver               resolver               = new SrvNameResolver();        
+        private     INameResolver               resolver               = new SrvNameResolver();
 
         protected XmppConnection()
         {
@@ -38,17 +38,21 @@ namespace Matrix
                 {
                     Pipeline = channel.Pipeline;
 
+                    Pipeline.AddLast(new ZlibDecoder());
+
                     Pipeline.AddLast(new LoggingHandler());
                     Pipeline.AddLast(new KeepAliveHandler());
                     //Pipeline.AddLast(new XmppLoggingHandler());
-                    
 
+                    
                     Pipeline.AddLast(xmlStreamDecoder);
-                    Pipeline.AddLast(new XmppXElementEncoder());
 
-
-                    Pipeline.AddLast(new StringEncoder());
                     
+                    //Pipeline.AddLast(new StringEncoder());
+                    Pipeline.AddLast(new ZlibEncoder());
+                    Pipeline.AddLast(new XmppXElementEncoder());
+                    Pipeline.AddLast(new UTF8StringEncoder());
+
                     Pipeline.AddLast(new AutoReplyToPingHandler<Iq>());
                     
 
@@ -57,6 +61,7 @@ namespace Matrix
                     
                     Pipeline.AddLast(xmppStanzaHandler);
 
+                    
 
                     Pipeline.AddLast(new DisconnectHandler());
 
@@ -133,7 +138,11 @@ namespace Matrix
 
         protected async Task SendAsync(string s)
         {
-            await Pipeline.WriteAndFlushAsync(s);
+            var bytes = System.Text.Encoding.UTF8.GetBytes(s);
+            //.Allocator.Buffer(4).WithOrder(this.byteOrder).WriteInt(length))
+            var buf = Pipeline.Channel.Allocator.Buffer(bytes.Length).WriteBytes(bytes);
+            await Pipeline.WriteAndFlushAsync(buf);
+            //await Pipeline.WriteAndFlushAsync(s);
         }
 
         public async Task<StreamFeatures> ResetStreamAsync()

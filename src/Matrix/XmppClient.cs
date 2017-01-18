@@ -4,10 +4,13 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
+using Matrix.Network.Codecs;
 using Matrix.Network.Handlers;
 using Matrix.Sasl;
+using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Client;
+using Matrix.Xmpp.Compression;
 using Matrix.Xmpp.Sasl;
 using Matrix.Xmpp.Stream;
 using Matrix.Xmpp.Tls;
@@ -26,6 +29,7 @@ namespace Matrix
         public string Resource { get; set; } = "MatriX";
 
         public bool UseStartTls { get; set; } = true;
+        public bool UseCompression { get; set; } = true;
 
         public Show Show { get; set; } = Show.None;
 
@@ -64,8 +68,15 @@ namespace Matrix
                 var authRet = await DoAuthenicateAsync(features.Mechanisms);
                 await HandleStreamFeaturesAsync(authRet);
             }
+            else if (SessionState < SessionState.Compressing && features.SupportsCompression && UseCompression)
+            {
+                await HandleStreamFeaturesAsync(await DoEnableCompressionAsync());
+            }
             else if (SessionState < SessionState.Binding)
+            {
                 await DoBindAsync();
+            }
+                
         }
 
         private async Task<StreamFeatures> DoStartTlsAsync()
@@ -109,6 +120,21 @@ namespace Matrix
             var resIq = await SendIqAsync(bIq);
             SessionState = SessionState.Binded;
             return resIq as Iq;
+        }
+
+        private async Task<StreamFeatures> DoEnableCompressionAsync()
+        {
+            SessionState = SessionState.Compressing;
+            var ret = await SendAsync<Compresed, Xmpp.Compression.Failure>(new Compress(Methods.Zlib));
+            if (ret.OfType<Compresed>())
+            {
+                Pipeline.Get<ZlibEncoder>().Active = true;
+                Pipeline.Get<ZlibDecoder>().Active = true;
+            }
+            
+            var streamFeatures = await ResetStreamAsync();
+            SessionState = SessionState.Compressed;
+            return streamFeatures;
         }
 
         public async Task<Iq> RequestRosterAsync(string version = null)
