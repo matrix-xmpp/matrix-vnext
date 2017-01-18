@@ -17,6 +17,9 @@ using Matrix.Xmpp.Tls;
 
 namespace Matrix
 {
+    /// <summary>
+    /// Handles XMPP client connections
+    /// </summary>
     public class XmppClient : XmppConnection
     {
         private int priority;
@@ -26,15 +29,44 @@ namespace Matrix
 
         public string Password { get; set; }
 
+        /// <summary>
+        /// Gets or sets the resource identifier.
+        /// </summary>
         public string Resource { get; set; } = "MatriX";
 
         public bool Tls { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether <see href="https://xmpp.org/extensions/xep-0138.html">XEP-0138: Stream Compression</see> should be used
+        /// on this <see cref="XmppClient" />.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if compression; otherwise, <c>false</c>.
+        /// </value>
         public bool Compression { get; set; } = true;
 
+        /// <summary>
+        /// The OPTIONAL show element contains non-human-readable XML character data that specifies the particular availability
+        /// status of an entity or specific resource.
+        /// </summary>    
         public Show Show { get; set; } = Show.None;
 
+        /// <summary>
+        /// The OPTIONAL status contains a natural-language description of availability status. 
+        /// It is normally used in conjunction with the show element to provide a detailed description of an availability state 
+        /// (e.g., "In a meeting").
+        /// </summary>
         public string Status { get; set; } = "online";
+
+        /// <summary>
+        /// The priority level of the resource. The value MUST be an integer between -128 and +127. 
+        /// If no priority is provided, a server SHOULD consider the priority to be zero.         
+        /// </summary>
+        /// <remarks>
+        /// For information regarding the semantics of priority values in stanza routing 
+        /// within instant messaging and presence applications, refer to Server Rules 
+        /// for Handling XML StanzasServer Rules for Handling XML Stanzas.
+        /// </remarks>
         public int Priority
         {
             get { return priority; }
@@ -49,7 +81,7 @@ namespace Matrix
 
         public IAuthenticate SalsHandler { get; set; } = new DefaultSaslHandler();
         #endregion
-        
+
         public async Task<IChannel> ConnectAsync()
         {
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
@@ -57,7 +89,7 @@ namespace Matrix
             await HandleStreamFeaturesAsync(feat);
             return iChannel;
         }
-   
+
         private async Task HandleStreamFeaturesAsync(StreamFeatures features)
         {
             if (SessionState < SessionState.Securing && features.SupportsStartTls && Tls)
@@ -69,7 +101,7 @@ namespace Matrix
                 var authRet = await DoAuthenicateAsync(features.Mechanisms);
                 await HandleStreamFeaturesAsync(authRet);
             }
-            else if (SessionState < SessionState.Compressing && features.SupportsCompression && Compression)
+            else if (SessionState < SessionState.Compressing && features.SupportsZlibCompression && Compression)
             {
                 await HandleStreamFeaturesAsync(await DoEnableCompressionAsync());
             }
@@ -77,7 +109,7 @@ namespace Matrix
             {
                 await DoBindAsync();
             }
-                
+
         }
 
         private async Task<StreamFeatures> DoStartTlsAsync()
@@ -110,7 +142,7 @@ namespace Matrix
             }
             else //if (res is Failure)
             {
-               throw  new AuthenticationException();
+                throw new AuthenticationException();
             }
         }
 
@@ -132,7 +164,7 @@ namespace Matrix
                 Pipeline.Get<ZlibEncoder>().Active = true;
                 Pipeline.Get<ZlibDecoder>().Active = true;
             }
-            
+
             var streamFeatures = await ResetStreamAsync();
             SessionState = SessionState.Compressed;
             return streamFeatures;
@@ -147,8 +179,8 @@ namespace Matrix
 
             if (version != null)
                 riq.Roster.Version = version;
-                        
-            var resIq = await SendIqAsync(riq);            
+
+            var resIq = await SendIqAsync(riq);
             return resIq as Iq;
         }
 
@@ -158,7 +190,7 @@ namespace Matrix
             return await SendAsync<Iq>(iq, timeout);
         }
         #endregion
-       
+
         #region << SendPresence >>
         public async Task SendPresenceAsync(Presence pres)
         {

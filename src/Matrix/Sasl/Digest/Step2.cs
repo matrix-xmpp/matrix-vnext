@@ -6,7 +6,7 @@ using Matrix.Crypt;
 namespace Matrix.Sasl.Digest
 {
     /// <summary>
-    /// Summary description for Step2.
+    /// Implementation od Digest-Md5 step 2
     /// </summary>
     internal class Step2
     {

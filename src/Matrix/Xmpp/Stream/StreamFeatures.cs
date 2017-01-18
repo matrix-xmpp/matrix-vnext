@@ -1,6 +1,7 @@
 using Matrix.Attributes;
 using Matrix.Xml;
 using Matrix.Xmpp.Capabilities;
+using Matrix.Xmpp.Compression;
 using Matrix.Xmpp.Stream.Features;
 using Matrix.Xmpp.Tls;
 
@@ -176,10 +177,7 @@ namespace Matrix.Xmpp.Stream
         /// <summary>
         /// Is StartTls xupported?
         /// </summary>
-        public bool SupportsStartTls
-        {
-            get { return StartTls != null; }
-        }
+        public bool SupportsStartTls => StartTls != null;
 
         /// <summary>
         /// Gets a value indicating whether TLS is required.
@@ -187,73 +185,51 @@ namespace Matrix.Xmpp.Stream
         /// <value>
         ///   <c>true</c> if TLS is required] otherwise, <c>false</c>.
         /// </value>
-        public bool TlsIsRequired
-        {
-            get { return StartTls != null && StartTls.Required; }
-        }
+        public bool TlsIsRequired => StartTls != null && StartTls.Required;
 
         /// <summary>
         /// Are sessions supported? This is old Jabebr stuff which should not be used anymore in XMPP.
         /// </summary>
-        public bool SupportsSession
-        {
-            get { return Session != null; }
-        }
+        public bool SupportsSession => Session != null;
 
         /// <summary>
         /// Is Stream Compression supported?
         /// </summary>
-        public bool SupportsCompression
-        {
-            get { return Compression != null; }
-        }
+        public bool SupportsCompression => Compression != null;
+
+        /// <summary>
+        /// Is ZLib Compression supported?
+        /// </summary>
+        public bool SupportsZlibCompression => SupportsCompression && Compression.Supports(Methods.Zlib);
 
         /// <summary>
         /// Is old jabber style authentication (XEP-0078: Non-SASL Authentication) supported?
         /// </summary>
-        public bool SupportsAuth
-        {
-            get { return Auth != null; }
-        }
+        public bool SupportsAuth => Auth != null;
 
         /// <summary>
         /// Is Registration supported?
         /// </summary>
-        public bool SupportsRegistration
-        {
-            get { return Register != null; }
-        }
+        public bool SupportsRegistration => Register != null;
 
         /// <summary>
         /// Is roster versioning supported?
         /// </summary>
-        public bool SupportsRosterVersioning
-        {
-            get { return RosterVersioning != null; }
-        }
+        public bool SupportsRosterVersioning => RosterVersioning != null;
 
         /// <summary>
         /// Is stream management supported?
         /// </summary>
-        public bool SupportsStreamManagement
-        {
-            get { return StreamManagement != null; }
-        }
-        
+        public bool SupportsStreamManagement => StreamManagement != null;
+
         /// <summary>
         /// Are bidirectional Server-to-Server Connections supported?
         /// </summary>
-        public bool SupportsBidi
-        {
-            get { return Bidi != null; }
-        }
+        public bool SupportsBidi => Bidi != null;
 
         /// <summary>
         /// Is message archiving supported? (XEP-0136)
         /// </summary>
-        public bool SupportsMessageArchiving
-        {
-            get { return MessageArchiving != null; }
-        }
+        public bool SupportsMessageArchiving => MessageArchiving != null;
     }
 }

@@ -3,7 +3,7 @@
 namespace Matrix.Sasl.Digest
 {
     /// <summary>
-    /// 
+    /// Implementation od Digest-Md5 step 1
     /// </summary>
     internal class Step1
     {

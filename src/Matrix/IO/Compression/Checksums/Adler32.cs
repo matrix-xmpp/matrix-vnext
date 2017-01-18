@@ -47,7 +47,7 @@ namespace Matrix.IO.Compression.Checksums
     ///    checksum of zero.)"
     /// </summary>
     /// <see cref="Matrix.IO.Compression.Streams.InflaterInputStream"/>
-    /// <see cref=Matrix.IO.Compression.Streams.DeflaterOutputStream"/>
+    /// <see cref="Matrix.IO.Compression.Streams.DeflaterOutputStream"/>
     public sealed class Adler32 : IChecksum
 	{
 		#region Instance Fields
