@@ -18,7 +18,7 @@ namespace Matrix.Network.Resolver
         {
         }
 
-        public SrvNameResolver(bool isClient)
+        public SrvNameResolver(bool isClient) : this()
         {
             IsClient = isClient;
         }
@@ -105,7 +105,7 @@ namespace Matrix.Network.Resolver
 
                     int count = 0;
                     SrvRecord result =
-                        minServers.First(s2 => rnd > ((count += s2.Weight) - s2.Weight) && rnd <= count);
+                        minServers.First(s2 => rnd > (count += s2.Weight) - s2.Weight && rnd <= count);
 
                     ret = result;
                 }

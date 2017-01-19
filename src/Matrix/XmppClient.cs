@@ -72,9 +72,7 @@ namespace Matrix
             get { return priority; }
             set
             {
-                if (value < -127 || value > 127)
-                    throw new ArgumentOutOfRangeException("The value must be an integer between -128 and +127.");
-
+                Contract.Requires<ArgumentException>(value.IsInRange(-127, 127), "The value must be an integer between - 128 and + 127.");
                 priority = value;
             }
         }
@@ -109,7 +107,6 @@ namespace Matrix
             {
                 await DoBindAsync();
             }
-
         }
 
         private async Task<StreamFeatures> DoStartTlsAsync()
@@ -149,15 +146,19 @@ namespace Matrix
         private async Task<Iq> DoBindAsync()
         {
             SessionState = SessionState.Binding;
+
             var bIq = new BindIq { Type = IqType.Set, Bind = { Resource = Resource } };
             var resIq = await SendIqAsync(bIq);
+
             SessionState = SessionState.Binded;
-            return resIq as Iq;
+
+            return resIq;
         }
 
         private async Task<StreamFeatures> DoEnableCompressionAsync()
         {
             SessionState = SessionState.Compressing;
+
             var ret = await SendAsync<Compresed, Xmpp.Compression.Failure>(new Compress(Methods.Zlib));
             if (ret.OfType<Compresed>())
             {
