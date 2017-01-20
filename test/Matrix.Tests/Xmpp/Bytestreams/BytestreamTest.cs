@@ -2,114 +2,93 @@
 using System.Linq;
 using Matrix.Xml;
 using Matrix.Xmpp.Bytestreams;
-using NUnit.Framework;
 using Xunit;
 using Shouldly;
 
-
 namespace Matrix.Tests.Xmpp.Bytestreams
 {
-    
     public class BytestreamTest
     {
-        const string XML1 = @"<query xmlns='http://jabber.org/protocol/bytestreams' 
-         sid='vxf9n471bn46'
-         mode='tcp'>
-    <streamhost 
-        jid='initiator@example.com/foo' 
-        host='192.168.4.1' 
-        port='5086'/>
-    <streamhost 
-        jid='streamhostproxy.example.net' 
-        host='24.24.24.1' 
-        zeroconf='_jabber.bytestreams'/>
-  </query>";
-
-        private const string XML2 = @" <streamhost xmlns='http://jabber.org/protocol/bytestreams'
-        jid='initiator@example.com/foo' 
-        host='192.168.4.1' 
-        port='5086'/>";
-
-        private const string XML3 = @"<streamhost xmlns='http://jabber.org/protocol/bytestreams'
-        jid='streamhostproxy.example.net' 
-        host='24.24.24.1' 
-        zeroconf='_jabber.bytestreams'/>";
-
-        private const string XML4 = "<streamhost-used xmlns='http://jabber.org/protocol/bytestreams' jid='streamhostproxy.example.net'/>";
-
-        private const string XML5 = "<activate xmlns='http://jabber.org/protocol/bytestreams'>target@example.org/bar</activate>";
-        private const string XML6 = "<activate xmlns='http://jabber.org/protocol/bytestreams'/>";
-
         [Fact]
-        public void Test1()
+        public void XmppXElementShouldbeOfTypeBytestream()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Bytestream);
-
-            var bs = xmpp1 as Bytestream;
-            if (bs != null)
-            {
-                Assert.Equal(bs.Sid, "vxf9n471bn46");
-                Assert.Equal(bs.Mode, Mode.Tcp);
-                IEnumerable<Streamhost> hosts = bs.GetStreamhosts();
-                Assert.Equal(hosts.Count(), 2);
-
-                var host1 = bs.GetStreamhosts().First(h => h.Port == 5086);
-
-                Assert.Equal(host1.Host, "192.168.4.1");
-                Assert.Equal(host1.Jid.Equals("initiator@example.com/foo"), true);
-
-                var host2 = bs.GetStreamhosts().First(h => h.Jid.Equals("streamhostproxy.example.net"));
-
-                Assert.Equal(host2.Host, "24.24.24.1");
-                Assert.Equal(host2.Zeroconf, "_jabber.bytestreams");
-            }
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Bytestreams.query1.xml")).ShouldBeOfType<Bytestream>();
         }
 
         [Fact]
-        public void Test2()
+        public void XmppXElementShouldbeOfTypeStreamhostUsed()
         {
-            var host = new Streamhost { Jid = "initiator@example.com/foo", Port = 5086, Host = "192.168.4.1" };
-            host.ShouldBe(XML2);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Bytestreams.streamhost-used.xml")).ShouldBeOfType<StreamhostUsed>();
+        }
 
-            var host2 = new Streamhost { Jid = "streamhostproxy.example.net", Host = "24.24.24.1", Zeroconf = "_jabber.bytestreams" };
-            host2.ShouldBe(XML3);
+
+        [Fact]
+        public void XmppXElementShouldbeOfTypeActivate()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Bytestreams.activate1.xml")).ShouldBeOfType<Activate>();
+        }
+
+        [Fact]
+        public void TestStreamhostProperties()
+        {
+            var bs = XmppXElement.LoadXml(Resource.Get("Xmpp.Bytestreams.query1.xml")).Cast<Bytestream>();
+            bs.Sid.ShouldBe("vxf9n471bn46");
+            bs.Mode.ShouldBe(Mode.Tcp);
+
+            IEnumerable<Streamhost> hosts = bs.GetStreamhosts();
+            hosts.Count().ShouldBe(2);
+
+            var host1 = bs.GetStreamhosts().First(h => h.Port == 5086);
+            host1.Host.ShouldBe("192.168.4.1");
+            host1.Jid.Equals("initiator@example.com/foo").ShouldBe(true);
+
+            var host2 = bs.GetStreamhosts().First(h => h.Jid.Equals("streamhostproxy.example.net"));
+            host2.Host.ShouldBe("24.24.24.1");
+            host2.Zeroconf.ShouldBe("_jabber.bytestreams");
+        }
+
+        [Fact]
+        public void BuildStreamhost()
+        {
+            var expectedXml1 = Resource.Get("Xmpp.Bytestreams.streamhost1.xml");
+            new Streamhost { Jid = "initiator@example.com/foo", Port = 5086, Host = "192.168.4.1" }
+                .ShouldBe(expectedXml1);
+
+            var expectedXml2 = Resource.Get("Xmpp.Bytestreams.streamhost2.xml");
+            new Streamhost { Jid = "streamhostproxy.example.net", Host = "24.24.24.1", Zeroconf = "_jabber.bytestreams" }
+                .ShouldBe(expectedXml2);
         }
         
         [Fact]
-        public void Test3()
+        public void BuildStreamhostUsed()
         {
-            var hu = new StreamhostUsed {Jid = "streamhostproxy.example.net"};
-            hu.ShouldBe(XML4);
+            var expectedXml = Resource.Get("Xmpp.Bytestreams.streamhost-used.xml");
+            new StreamhostUsed {Jid = "streamhostproxy.example.net"}
+                .ShouldBe(expectedXml);
         }
 
         [Fact]
-        public void Test4()
+        public void TestStreamhostUsedProperties()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML4);
-            Assert.Equal(true, xmpp1 is StreamhostUsed);
-
-            var su = xmpp1 as StreamhostUsed;
-            if (su != null)
-            {
-                Assert.Equal(su.Jid.Equals("streamhostproxy.example.net"), true);
-            }
+            var su = XmppXElement.LoadXml(Resource.Get("Xmpp.Bytestreams.streamhost-used.xml")).ShouldBeOfType<StreamhostUsed>();
+            su.Jid.Equals("streamhostproxy.example.net").ShouldBe(true);
         }
 
         [Fact]
-        public void Test5()
+        public void TestActivateProperties()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML5);
-            Assert.Equal(true, xmpp1 is Activate);
+            var expectedXml = Resource.Get("Xmpp.Bytestreams.activate2.xml");
+            var activate = XmppXElement.LoadXml(Resource.Get("Xmpp.Bytestreams.activate1.xml")).Cast<Activate>();
+            activate.Jid.Equals("target@example.org/bar").ShouldBe(true);
+        }
 
-            var activate = xmpp1 as Activate;
-            if (activate != null)
-            {
-                Assert.Equal(activate.Jid.Equals("target@example.org/bar"), true);
-                
-                activate.Jid = null;
-                activate.ShouldBe(XML6);
-            }
+        [Fact]
+        public void BuildActivate()
+        {
+            var expectedXml = Resource.Get("Xmpp.Bytestreams.activate2.xml");
+            var activate = XmppXElement.LoadXml(Resource.Get("Xmpp.Bytestreams.activate1.xml")).Cast<Activate>();
+            activate.Jid = null;
+            activate.ShouldBe(expectedXml);
         }
     }
 }

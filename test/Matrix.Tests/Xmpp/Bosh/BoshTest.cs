@@ -1,4 +1,5 @@
 ﻿using Matrix.Xml;
+using Matrix.Xmpp.Bosh;
 using Xunit;
 using Shouldly;
 
@@ -7,115 +8,73 @@ namespace Matrix.Tests.Xmpp.Bosh
      
     public class BoshTest
     {
-        private const string XML1 = @"<body type='terminate' condition='remote-connection-failed' xmlns='http://jabber.org/protocol/httpbind'/>";
-        private const string XML2 = @"<body type='terminate' condition='item-not-found' xmlns='http://jabber.org/protocol/httpbind'/>";
-        private const string XML3 = @"<body type='terminate' condition='host-unknown' xmlns='http://jabber.org/protocol/httpbind'/>";
-        private const string XML4 = @"<body type='terminate' condition='see-other-uri' xmlns='http://jabber.org/protocol/httpbind'/>";
-        private const string XML5 = @"<body type='terminate' condition='bad-request' xmlns='http://jabber.org/protocol/httpbind'/>";
-        
         [Fact]
-        public void Test1()
+        public void XmppXElementShouldbeOfTypeBody()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Bosh.Body);
-
-            var body = xmpp1 as Matrix.Xmpp.Bosh.Body;
-            if (body != null)
-            {
-                Assert.Equal(body.Condition == Matrix.Xmpp.Bosh.Condition.RemoteConnectionFailed, true);
-            }
-
-            var conf = new Matrix.Xmpp.Bosh.Body()
-            {
-                Type = Matrix.Xmpp.Bosh.Type.Terminate,
-                Condition = Matrix.Xmpp.Bosh.Condition.RemoteConnectionFailed
-            };
-
-            conf.ShouldBe(XML1);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Bosh.bosh1.xml")).ShouldBeOfType<Body>();
         }
 
         [Fact]
-        public void Test2()
+        public void TestCondition()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML2);
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Bosh.Body);
+            var body = XmppXElement.LoadXml(Resource.Get("Xmpp.Bosh.bosh1.xml")).Cast<Body>();
+            body.Condition.ShouldBe(Condition.RemoteConnectionFailed);
 
-            var body = xmpp1 as Matrix.Xmpp.Bosh.Body;
-            if (body != null)
-            {
-                Assert.Equal(body.Condition == Matrix.Xmpp.Bosh.Condition.ItemNotFound, true);
-            }
+            var body2 = XmppXElement.LoadXml(Resource.Get("Xmpp.Bosh.bosh2.xml")).Cast<Body>();
+            body2.Condition.ShouldBe(Condition.ItemNotFound);
 
-            var conf = new Matrix.Xmpp.Bosh.Body()
-            {
-                Type = Matrix.Xmpp.Bosh.Type.Terminate,
-                Condition = Matrix.Xmpp.Bosh.Condition.ItemNotFound
-            };
+            var body3 = XmppXElement.LoadXml(Resource.Get("Xmpp.Bosh.bosh3.xml")).Cast<Body>();
+            body3.Condition.ShouldBe(Condition.HostUnknown);
 
-            conf.ShouldBe(XML2);
+            var body4 = XmppXElement.LoadXml(Resource.Get("Xmpp.Bosh.bosh4.xml")).Cast<Body>();
+            body4.Condition.ShouldBe(Condition.SeeOtherUri);
+
+            var body5 = XmppXElement.LoadXml(Resource.Get("Xmpp.Bosh.bosh5.xml")).Cast<Body>();
+            body5.Condition.ShouldBe(Condition.BadRequest);
         }
 
         [Fact]
-        public void Test3()
+        public void BuildBody()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML3);
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Bosh.Body);
+            var expectedXml = Resource.Get("Xmpp.Bosh.bosh1.xml");
+            new Body
+                {
+                    Type = Type.Terminate,
+                    Condition = Condition.RemoteConnectionFailed
+                }
+                .ShouldBe(expectedXml);
 
-            var body = xmpp1 as Matrix.Xmpp.Bosh.Body;
-            if (body != null)
+            var expectedXml2 = Resource.Get("Xmpp.Bosh.bosh2.xml");
+            new Body
             {
-                Assert.Equal(body.Condition == Matrix.Xmpp.Bosh.Condition.HostUnknown, true);
+                Type = Type.Terminate,
+                Condition = Condition.ItemNotFound
             }
+            .ShouldBe(expectedXml2);
 
-            var conf = new Matrix.Xmpp.Bosh.Body()
+            var expectedXml3 = Resource.Get("Xmpp.Bosh.bosh3.xml");
+            new Body
             {
-                Type = Matrix.Xmpp.Bosh.Type.Terminate,
-                Condition = Matrix.Xmpp.Bosh.Condition.HostUnknown
-            };
-
-            conf.ShouldBe(XML3);
-        }
-
-        [Fact]
-        public void Test4()
-        {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML4);
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Bosh.Body);
-
-            var body = xmpp1 as Matrix.Xmpp.Bosh.Body;
-            if (body != null)
-            {
-                Assert.Equal(body.Condition == Matrix.Xmpp.Bosh.Condition.SeeOtherUri, true);
+                Type = Type.Terminate,
+                Condition = Condition.HostUnknown
             }
+            .ShouldBe(expectedXml3);
 
-            var conf = new Matrix.Xmpp.Bosh.Body()
+            var expectedXml4 = Resource.Get("Xmpp.Bosh.bosh4.xml");
+            new Body
             {
-                Type = Matrix.Xmpp.Bosh.Type.Terminate,
-                Condition = Matrix.Xmpp.Bosh.Condition.SeeOtherUri
-            };
-
-            conf.ShouldBe(XML4);
-        }
-
-        [Fact]
-        public void Test5()
-        {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML5);
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Bosh.Body);
-
-            var body = xmpp1 as Matrix.Xmpp.Bosh.Body;
-            if (body != null)
-            {
-                Assert.Equal(body.Condition == Matrix.Xmpp.Bosh.Condition.BadRequest, true);
+                Type = Type.Terminate,
+                Condition = Condition.SeeOtherUri
             }
+            .ShouldBe(expectedXml4);
 
-            var conf = new Matrix.Xmpp.Bosh.Body()
+            var expectedXml5 = Resource.Get("Xmpp.Bosh.bosh5.xml");
+            new Body
             {
-                Type = Matrix.Xmpp.Bosh.Type.Terminate,
-                Condition = Matrix.Xmpp.Bosh.Condition.BadRequest
-            };
-
-            conf.ShouldBe(XML5);
+                Type = Type.Terminate,
+                Condition = Condition.BadRequest
+            }
+            .ShouldBe(expectedXml5);
         }
     }
 }

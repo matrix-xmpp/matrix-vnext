@@ -1,0 +1,4 @@
+<error type='modify' xmlns='jabber:client'>
+  <bad-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+  <text xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'>dummy text</text>
+</error>

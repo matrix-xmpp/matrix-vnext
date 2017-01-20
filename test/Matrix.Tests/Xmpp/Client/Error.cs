@@ -1,64 +1,44 @@
 ﻿using Xunit;
 
 using Matrix.Xml;
+using Shouldly;
 
 namespace Matrix.Tests.Xmpp.Client
 {
-    /*
-     <error type='modify'>
-       <bad-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
-     </error>
-    */
-    
     public class Error
     {
-       
         [Fact]
-        public void Test()
+        public void TestErrors()
         {
-            // with <text/> tag
-            string xml1 = "<error type='modify' xmlns='jabber:client'><bad-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/><text xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'>dummy text</text></error>";
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error3.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.Forbidden);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error4.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.Gone);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error5.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.InternalServerError);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error6.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.ItemNotFound);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error7.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.JidMalformed);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error8.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.BadRequest);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error9.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.NotAcceptable);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error10.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.NotAuthorized);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error11.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.NotModified);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error12.xml")).Cast<Matrix.Xmpp.Client.Error>().Condition.ShouldBe(Matrix.Xmpp.Base.ErrorCondition.PaymentRequired);
             
-            // without <text/> tag
-            string xml2 = "<error type='modify' xmlns='jabber:client'><bad-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            
-            // more error test stanzas
-            string xml3 = "<error type='modify' xmlns='jabber:client'><forbidden xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            string xml4 = "<error type='modify' xmlns='jabber:client'><gone xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            string xml5 = "<error type='modify' xmlns='jabber:client'><internal-server-error xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            string xml6 = "<error type='modify' xmlns='jabber:client'><item-not-found xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            string xml7 = "<error type='modify' xmlns='jabber:client'><jid-malformed xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            string xml8 = "<error type='modify' xmlns='jabber:client'><bad-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            string xml9 = "<error type='modify' xmlns='jabber:client'><not-acceptable xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            string xml10 = "<error type='modify' xmlns='jabber:client'><not-authorized xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            string xml11 = "<error type='modify' xmlns='jabber:client'><not-modified xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
-            string xml12 = "<error type='modify' xmlns='jabber:client'><payment-required xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/></error>";
+            var err = XmppXElement.LoadXml(Resource.Get("Xmpp.Client.error1.xml")).Cast<Matrix.Xmpp.Client.Error>();
+            err.Text.ShouldBe("dummy text");
+        }
 
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml3))).Condition == Matrix.Xmpp.Base.ErrorCondition.Forbidden);
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml4))).Condition == Matrix.Xmpp.Base.ErrorCondition.Gone);
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml5))).Condition == Matrix.Xmpp.Base.ErrorCondition.InternalServerError);
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml6))).Condition == Matrix.Xmpp.Base.ErrorCondition.ItemNotFound);
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml7))).Condition == Matrix.Xmpp.Base.ErrorCondition.JidMalformed);
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml8))).Condition == Matrix.Xmpp.Base.ErrorCondition.BadRequest);
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml9))).Condition == Matrix.Xmpp.Base.ErrorCondition.NotAcceptable);
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml10))).Condition == Matrix.Xmpp.Base.ErrorCondition.NotAuthorized);
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml11))).Condition == Matrix.Xmpp.Base.ErrorCondition.NotModified);
-            Assert.Equal(true, ((Matrix.Xmpp.Client.Error)(XmppXElement.LoadXml(xml12))).Condition == Matrix.Xmpp.Base.ErrorCondition.PaymentRequired);
-            
-            XmppXElement xmpp1 = XmppXElement.LoadXml(xml1);
-           
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Client.Error);
-            
-            Matrix.Xmpp.Client.Error err = xmpp1 as Matrix.Xmpp.Client.Error;
-            Assert.Equal("dummy text", err.Text);
+        [Fact]
+        public void BuildError()
+        {
+            var expectedXml1 = Resource.Get("Xmpp.Client.error1.xml");
+            var expectedXml2 = Resource.Get("Xmpp.Client.error2.xml");
 
+            new Matrix.Xmpp.Client.Error(Matrix.Xmpp.Base.ErrorCondition.BadRequest)
+            {
+                Text = "dummy text"
+            }
+            .ShouldBe(expectedXml1);
 
-            Matrix.Xmpp.Client.Error err2 = new Matrix.Xmpp.Client.Error(Matrix.Xmpp.Base.ErrorCondition.BadRequest);
-            err2.Text = "dummy text";         
-            err2.ShouldBe(xml1);
-            
-            err2.Text = null;
-            err2.ShouldBe(xml2);
+            new Matrix.Xmpp.Client.Error(Matrix.Xmpp.Base.ErrorCondition.BadRequest)
+            .ShouldBe(expectedXml2);
         }
     }
 }

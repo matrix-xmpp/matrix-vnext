@@ -1,74 +1,46 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Xunit;
-
+using Shouldly;
 
 namespace Matrix.Tests.Xmpp.Chatstates
 {
-    
     public class ChatstatesTest
     {
-        public const string XML1 =
-            @"<message 
-                    from='bernardo@shakespeare.lit/pda'
-                    to='francisco@shakespeare.lit'
-                    type='chat' xmlns='jabber:client'>
-                  <body>Who's there?</body>
-                  <active xmlns='http://jabber.org/protocol/chatstates'/>
-                </message>";
-
-        public const string XML2 =
-            @"<message 
-                    from='bernardo@shakespeare.lit/pda'
-                    to='francisco@shakespeare.lit'
-                    type='chat' xmlns='jabber:client'>
-                  <body>Who's there?</body>                  
-                </message>";
-
-        public const string XML3 =
-           @"<message type='chat' xmlns='jabber:client'> 
-                <gone xmlns='http://jabber.org/protocol/chatstates'/>                 
-                </message>";
-
         [Fact]
-        public void Test1()
+        public void TestMessageStates()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
+            var expectedXml = XmppXElement.LoadXml(Resource.Get("Xmpp.Chatstates.message2.xml")).Cast<Message>();
+            var msg = XmppXElement.LoadXml(Resource.Get("Xmpp.Chatstates.message1.xml")).Cast<Message>();
 
-            Assert.Equal(true, xmpp1 is Message);
-            var msg = xmpp1 as Message;
-
-            Assert.Equal(msg.Chatstate == Matrix.Xmpp.Chatstates.Chatstate.Active, true);
-            Assert.Equal(msg.Chatstate == Matrix.Xmpp.Chatstates.Chatstate.Composing, false);
-            Assert.Equal(msg.Chatstate == Matrix.Xmpp.Chatstates.Chatstate.Gone, false);
+            msg.Chatstate.ShouldBe(Matrix.Xmpp.Chatstates.Chatstate.Active);
+            msg.Chatstate.ShouldNotBe(Matrix.Xmpp.Chatstates.Chatstate.Composing);
+            msg.Chatstate.ShouldNotBe(Matrix.Xmpp.Chatstates.Chatstate.Gone);
 
             msg.Chatstate = Matrix.Xmpp.Chatstates.Chatstate.None;
-            
-            msg.ShouldBe(XML2);
+            msg.ShouldBe(expectedXml);
         }
 
         [Fact]
-        public void Test2()
+        public void TestMessageStates2()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML2);
-
-            Assert.Equal(true, xmpp1 is Message);
-            var msg = xmpp1 as Message;
-
-            Assert.Equal(msg.Chatstate == Matrix.Xmpp.Chatstates.Chatstate.None, true);
-
+            var expectedXml = XmppXElement.LoadXml(Resource.Get("Xmpp.Chatstates.message1.xml")).Cast<Message>();
+            var msg = XmppXElement.LoadXml(Resource.Get("Xmpp.Chatstates.message2.xml")).Cast<Message>();
+            msg.Chatstate.ShouldBe(Matrix.Xmpp.Chatstates.Chatstate.None);
             msg.Chatstate = Matrix.Xmpp.Chatstates.Chatstate.Active;
-
-            msg.ShouldBe(XML1);
+            msg.ShouldBe(expectedXml);
         }
 
         [Fact]
-        public void Test3()
+        public void BuildChatStateMessage()
         {
-            var msg = new Message
-                          {Type = Matrix.Xmpp.MessageType.Chat, Chatstate = Matrix.Xmpp.Chatstates.Chatstate.Gone};
-
-            msg.ShouldBe(XML3);
+            var expectedXml = XmppXElement.LoadXml(Resource.Get("Xmpp.Chatstates.message3.xml")).Cast<Message>();
+            new Message
+                {
+                    Type = Matrix.Xmpp.MessageType.Chat,
+                    Chatstate = Matrix.Xmpp.Chatstates.Chatstate.Gone
+                }
+                .ShouldBe(expectedXml);
         }
     }
 }

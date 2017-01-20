@@ -1,0 +1,3 @@
+<iq xmlns='jabber:client' id='foo'>
+  <query xmlns='jabber:iq:roster'/>
+</iq>

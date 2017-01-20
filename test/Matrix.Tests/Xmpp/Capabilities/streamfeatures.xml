@@ -1,0 +1,6 @@
+<stream:features xmlns:stream='http://etherx.jabber.org/streams'>
+  <c xmlns='http://jabber.org/protocol/caps'
+     hash='sha-1'
+     node='http://jabberd.org'
+     ver='ItBTI0XLDFvVxZ72NQElAzKS9sU='/>
+</stream:features>

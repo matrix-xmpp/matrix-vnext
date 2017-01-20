@@ -1,0 +1,12 @@
+<query xmlns='http://jabber.org/protocol/bytestreams' 
+         sid='vxf9n471bn46'
+         mode='tcp'>
+    <streamhost 
+        jid='initiator@example.com/foo' 
+        host='192.168.4.1' 
+        port='5086'/>
+    <streamhost 
+        jid='streamhostproxy.example.net' 
+        host='24.24.24.1' 
+        zeroconf='_jabber.bytestreams'/>
+  </query>

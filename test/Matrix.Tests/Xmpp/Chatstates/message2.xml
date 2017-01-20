@@ -1,0 +1,6 @@
+<message
+                    from='bernardo@shakespeare.lit/pda'
+                    to='francisco@shakespeare.lit'
+                    type='chat' xmlns='jabber:client'>
+  <body>Who's there?</body>
+</message>

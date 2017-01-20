@@ -23,6 +23,7 @@ namespace Matrix
     public class XmppClient : XmppConnection
     {
         private int priority;
+        private string resource = "MatriX";
         #region << Properties >>
 
         public string Username { get; set; }
@@ -32,7 +33,15 @@ namespace Matrix
         /// <summary>
         /// Gets or sets the resource identifier.
         /// </summary>
-        public string Resource { get; set; } = "MatriX";
+        public string Resource
+        {
+            get { return resource; }
+            set
+            {
+                Contract.Requires<ArgumentNullException>(value != null, $"{nameof(Resource)} cannot be null");
+                resource = value;
+            }
+        }
 
         public bool Tls { get; set; } = true;
 
@@ -188,6 +197,8 @@ namespace Matrix
         #region << Send iq >>
         public async Task<Iq> SendIqAsync(Iq iq, int timeout = XmppStanzaHandler.DefaultTimeout)
         {
+            Contract.Requires<ArgumentNullException>(iq != null, $"{nameof(iq)} cannot be null");
+
             return await SendAsync<Iq>(iq, timeout);
         }
         #endregion
@@ -195,6 +206,8 @@ namespace Matrix
         #region << SendPresence >>
         public async Task SendPresenceAsync(Presence pres)
         {
+            Contract.Requires<ArgumentNullException>(pres != null, $"{nameof(pres)} cannot be null");
+
             await SendAsync(pres);
         }
 

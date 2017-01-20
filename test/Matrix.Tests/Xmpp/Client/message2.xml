@@ -1,0 +1,5 @@
+<message xmlns='jabber:client'>
+  <html xmlns='http://jabber.org/protocol/xhtml-im'>
+    <body xmlns='http://www.w3.org/1999/xhtml'><p>Hello World</p></body>
+  </html>
+</message>

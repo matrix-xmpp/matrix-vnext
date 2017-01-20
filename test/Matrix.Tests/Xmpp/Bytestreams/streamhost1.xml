@@ -1,0 +1,4 @@
+<streamhost xmlns='http://jabber.org/protocol/bytestreams'
+        jid='initiator@example.com/foo'
+        host='192.168.4.1'
+        port='5086'/>
