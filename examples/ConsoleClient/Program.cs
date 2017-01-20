@@ -49,7 +49,7 @@ namespace ConsoleClient
                 Password = "***REMOVED***",
                 XmppDomain = "flepo",
                 Tls = true,
-                Compression = true,
+                Compression = false,
                 Resource = "vnext",
                 CertificateValidator = new AlwaysAcceptCertificateValidator(),
 

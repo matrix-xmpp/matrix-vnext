@@ -1,0 +1,17 @@
+<stream:features xmlns:stream='http://etherx.jabber.org/streams'>
+  <starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls' />
+  <mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
+    <mechanism>CRAM-MD5</mechanism>
+    <mechanism>LOGIN</mechanism>
+    <mechanism>PLAIN</mechanism>
+    <mechanism>DIGEST-MD5</mechanism>
+    <mechanism>SCRAM-SHA-1</mechanism>
+  </mechanisms>
+  <compression xmlns='http://jabber.org/features/compress'>
+    <method>zlib</method>
+  </compression>
+  <ver xmlns='urn:xmpp:features:rosterver'>
+    <optional />
+  </ver>
+  <auth xmlns='http://jabber.org/features/iq-auth' />
+</stream:features>

@@ -1,0 +1,13 @@
+<stream:features xmlns:stream='http://etherx.jabber.org/streams'>
+  <compression xmlns='http://jabber.org/features/compress'>
+    <method>zlib</method>
+  </compression>
+  <mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
+    <mechanism>SCRAM-SHA-1</mechanism>
+    <mechanism>ANONYMOUS</mechanism>
+    <mechanism>DIGEST-MD5</mechanism>
+    <mechanism>PLAIN</mechanism>
+  </mechanisms>
+  <c xmlns='http://jabber.org/protocol/caps' hash='sha-1' node='http://www.process-one.net/en/ejabberd/' ver='wwrSvLFOLzC92POh074kJuEqYxE=' />
+  <register xmlns='http://jabber.org/features/iq-register' />
+</stream:features>

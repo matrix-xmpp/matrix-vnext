@@ -1,0 +1,3 @@
+<compression xmlns='http://jabber.org/features/compress'>
+  <method>Zlib</method>
+</compression>
