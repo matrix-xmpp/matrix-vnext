@@ -1,0 +1,16 @@
+<iq from='romeo@montague.net'
+    id='items4'
+    to='juliet@capulet.com/chamber'
+    xmlns='jabber:client' 
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/disco#items' 
+         node='http://jabber.org/protocol/tune'>
+    <item jid='pubsub.shakespeare.lit'
+          name='Romeo&apos;s CD player'
+          node='s623nms9s3bfh8js'/>
+    <item jid='pubsub.montague.net'
+          node='music/R/Romeo/iPod'/>
+    <item jid='tunes.characters.lit'
+          node='g8k4kds9sd89djf3'/>
+  </query>
+</iq>

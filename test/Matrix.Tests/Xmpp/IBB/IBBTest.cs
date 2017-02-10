@@ -1,5 +1,6 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.IBB;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.IBB
@@ -7,92 +8,75 @@ namespace Matrix.Tests.Xmpp.IBB
     
     public class IBBTest
     {
-        const string XML1 = @"<open xmlns='http://jabber.org/protocol/ibb' block-size='4096' sid='i781hf64' stanza='iq'/>";
-        const string XML2 = @"<open xmlns='http://jabber.org/protocol/ibb' block-size='4096' sid='i781hf64'/>";
-
-        const string XML3 = @"<close xmlns='http://jabber.org/protocol/ibb' sid='i781hf64'/>";
-
-        const string XML4 = @"<data xmlns='http://jabber.org/protocol/ibb' seq='99' sid='i781hf64'/>";
-
         [Fact]
-        public void Test1()
+        public void ElementSouldBeOfTypeOpen()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Open);
-
-            var open = xmpp1 as Open;
-            if (open != null)
-            {
-                Assert.Equal(open.BlockSize, 4096);
-                Assert.Equal(open.Sid, "i781hf64");
-                Assert.Equal(open.Stanza, StanzaType.Iq);
-            }
+            XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.open1.xml")).ShouldBeOfType<Open>();
         }
 
         [Fact]
-        public void Test2()
+        public void ElementSouldBeOfTypeClose()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML2);
-            Assert.Equal(true, xmpp1 is Open);
-
-            var open = xmpp1 as Open;
-            if (open != null)
-            {
-                Assert.Equal(open.BlockSize, 4096);
-                Assert.Equal(open.Sid, "i781hf64");
-                Assert.Equal(open.Stanza, StanzaType.Iq);
-            }
+            XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.close1.xml")).ShouldBeOfType<Close>();
         }
 
         [Fact]
-        public void Test3()
+        public void ElementSouldBeOfTypeData()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.data1.xml")).ShouldBeOfType<Data>();
+        }
+
+        [Fact]
+        public void TestOpenProperties()
+        {
+            var open = XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.open1.xml")).Cast<Open>();
+            Assert.Equal(open.BlockSize, 4096);
+            Assert.Equal(open.Sid, "i781hf64");
+            Assert.Equal(open.Stanza, StanzaType.Iq);
+
+            open = XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.open2.xml")).Cast<Open>();
+            Assert.Equal(open.BlockSize, 4096);
+            Assert.Equal(open.Sid, "i781hf64");
+            Assert.Equal(open.Stanza, StanzaType.Iq);
+        }
+        
+        [Fact]
+        public void TestBuildOpen()
         {
             var open = new Open {BlockSize = 4096, Sid = "i781hf64", Stanza = StanzaType.Iq};
-            open.ShouldBe(XML1);
+            open.ShouldBe(Resource.Get("Xmpp.IBB.open1.xml"));
             
             var open2 = new Open { BlockSize = 4096, Sid = "i781hf64" };
-            open2.ShouldBe(XML2);
+            open2.ShouldBe(Resource.Get("Xmpp.IBB.open2.xml"));
         }
 
         [Fact]
-        public void Test4()
+        public void TestCloseId()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML3);
-            Assert.Equal(true, xmpp1 is Close);
-
-            var close = xmpp1 as Close;
-            if (close != null)
-            {
-                Assert.Equal(close.Sid, "i781hf64");
-            }
+            var close = XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.close1.xml")).Cast<Close>();
+            Assert.Equal(close.Sid, "i781hf64");
         }
 
         [Fact]
-        public void Test5()
+        public void TestBuildClose()
         {
             var open = new Close {Sid = "i781hf64"};
-            open.ShouldBe(XML3);
+            open.ShouldBe(Resource.Get("Xmpp.IBB.close1.xml"));
         }
 
         [Fact]
-        public void Test6()
+        public void TestData()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML4);
-            Assert.Equal(true, xmpp1 is Data);
-
-            var data = xmpp1 as Data;
-            if (data != null)
-            {
-                Assert.Equal(data.Sid, "i781hf64");
-                Assert.Equal(data.Sequence, 99);
-            }
+            var data = XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.data1.xml")).Cast<Data>();
+            Assert.Equal(data.Sid, "i781hf64");
+            Assert.Equal(data.Sequence, 99);
         }
 
         [Fact]
-        public void Test7()
+        public void TestBuildData()
         {
             var data = new Data { Sid = "i781hf64", Sequence = 99 };
-            data.ShouldBe(XML4);
+            data.ShouldBe(Resource.Get("Xmpp.IBB.data1.xml"));
         }
     }
 }

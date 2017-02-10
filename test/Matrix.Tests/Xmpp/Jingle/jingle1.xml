@@ -1,0 +1,7 @@
+<jingle xmlns='urn:xmpp:jingle:1' action='transport-info' sid='cTnaKddYxmHK76S3'>
+  <content creator='initiator' name='A'>
+    <transport xmlns='urn:xmpp:jingle:transports:ice-udp:1' pwd='04Bsdmhg2N7J46VsdPPn33' ufrag='mWEp'>
+      <candidate generation='0' network='0' port='8010' protocol='udp' component='1' foundation='0' ip='FE80::DDA6:3488:E417:D4D7' priority='2130706431' type='host' id='dqMSbhh4Yc'/>
+    </transport>
+  </content>
+</jingle>

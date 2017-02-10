@@ -1,0 +1,3 @@
+<message id='foo' xmlns='jabber:client'>
+  <gcm xmlns='google:mobile:data'>{'to':'REGISTRATION_ID'}</gcm>
+</message>

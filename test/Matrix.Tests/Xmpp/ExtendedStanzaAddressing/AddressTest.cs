@@ -1,5 +1,6 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.ExtendedStanzaAddressing;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.ExtendedStanzaAddressing
@@ -7,75 +8,60 @@ namespace Matrix.Tests.Xmpp.ExtendedStanzaAddressing
     
     public class AddressTest
     {
-        private const string XML1 = @" <address xmlns='http://jabber.org/protocol/address' type='to' jid='to@header1.org' delivered='true' node='mynode' desc='dummy text'/>";
-        private const string XML2 = @" <address xmlns='http://jabber.org/protocol/address' type='to' jid='to@header1.org'/>";
-        private const string XML3 = @" <address xmlns='http://jabber.org/protocol/address' type='to' jid='to@header1.org' delivered='foo'/>";
-
-        private const string XML4 = @" <address xmlns='http://jabber.org/protocol/address' type='to' uri='xmpp://user@server.org'/>";
-
-        private const string XML5 = @"<message xmlns='jabber:client' to='multicast.jabber.org'>
-   <addresses xmlns='http://jabber.org/protocol/address'>
-       <address type='to' jid='hildjj@jabber.org/Work' desc='Joe Hildebrand'/>
-       <address type='cc' jid='jer@jabber.org/Home' desc='Jeremie Miller'/>
-   </addresses>
-    <body>Hello, world!</body></message>
-";
         [Fact]
-        public void Test1()
+        public void ElementSouldBeOfTypeAddress()
         {
-            var el = XmppXElement.LoadXml(XML1);
-            Assert.True(el is Address);
-            var add = el as Address;
+            XmppXElement.LoadXml(Resource.Get("Xmpp.ExtendedStanzaAddressing.address1.xml")).ShouldBeOfType<Address>();
+        }
+
+        [Fact]
+        public void TestAddressProperties()
+        {
+            var add = XmppXElement.LoadXml(Resource.Get("Xmpp.ExtendedStanzaAddressing.address1.xml")).Cast<Address>();;
             Assert.True(add.Delivered);
-            Assert.True(add.Type == Matrix.Xmpp.ExtendedStanzaAddressing.Type.To);
+            Assert.True(add.Type == Type.To);
             Assert.True(add.Jid.Equals("to@header1.org"));
             Assert.True(add.Node == "mynode");
+
+
         }
         
         [Fact]
-        public void Test_Without_Delivered()
+        public void TestAddressWithoutDeliveredAttribute()
         {
-            var el = XmppXElement.LoadXml(XML2);
-            Assert.True(el is Address);
-            var add = el as Address;
+            var add = XmppXElement.LoadXml(Resource.Get("Xmpp.ExtendedStanzaAddressing.address2.xml")).Cast<Address>();
+            Assert.True(!add.Delivered);
+
+            add = XmppXElement.LoadXml(Resource.Get("Xmpp.ExtendedStanzaAddressing.address3.xml")).Cast<Address>();
             Assert.True(!add.Delivered);
         }
 
-        [Fact]
-        public void Test_Wrong_Delivered_Attribute()
-        {
-            var el = XmppXElement.LoadXml(XML3);
-            Assert.True(el is Address);
-            var add = el as Address;
-            Assert.True(!add.Delivered);
-        }
+       
 
         [Fact]
-        public void Test_Uri()
+        public void TestAddressUri()
         {
-            var el = XmppXElement.LoadXml(XML4);
-            Assert.True(el is Address);
-            var add = el as Address;
+            var add = XmppXElement.LoadXml(Resource.Get("Xmpp.ExtendedStanzaAddressing.address4.xml")).Cast<Address>();
             System.Uri uri = add.Uri;
             Assert.True(uri.ToString() == "xmpp://user@server.org/");
         }
 
         [Fact]
-        public void Test_Build_Address()
+        public void TestBuildAddress()
         {
             var add = new Address
                           {
                               Node = "mynode",
-                              Type = Matrix.Xmpp.ExtendedStanzaAddressing.Type.To,
+                              Type = Type.To,
                               Jid = "to@header1.org",
                               Delivered = true,
                               Description = "dummy text"
                           };
-            add.ShouldBe(XML1);
+            add.ShouldBe(Resource.Get("Xmpp.ExtendedStanzaAddressing.address1.xml"));
         }
 
         [Fact]
-        public void Test_Message_With_Address()
+        public void TestMessageWithAddress()
         {
             var addresses = new Addresses();
             addresses.AddAddress(new Address
@@ -99,7 +85,7 @@ namespace Matrix.Tests.Xmpp.ExtendedStanzaAddressing
                     Addresses = addresses
                 };
 
-            msg.ShouldBe(XML5);
+            msg.ShouldBe(Resource.Get("Xmpp.ExtendedStanzaAddressing.address5.xml"));
         }
     }
 }

@@ -1,0 +1,1 @@
+<payload-type xmlns='urn:xmpp:jingle:apps:rtp:1' id='110' name='SPEEX' clockrate='16000' ptime='1000' maxptime='2000'/>

@@ -1,0 +1,5 @@
+<identity
+        xmlns='http://jabber.org/protocol/disco#info'
+        category='conference'
+        type='text'
+        name='Play-Specific Chatrooms'/>

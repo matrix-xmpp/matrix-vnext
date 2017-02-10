@@ -1,0 +1,10 @@
+<iq xmlns='jabber:client'
+                id='id_from_request'
+                to='user@server.com/resource'
+                type='result'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    <feature var='urn:xmpp:jingle:1'/>
+    <feature var='urn:xmpp:jingle:apps:rtp:audio'/>
+    <feature var='urn:xmpp:jingle:apps:rtp:video'/>
+  </query>
+</iq>

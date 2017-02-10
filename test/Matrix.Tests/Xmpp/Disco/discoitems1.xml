@@ -1,0 +1,12 @@
+<query xmlns='http://jabber.org/protocol/disco#items'
+         node='http://jabber.org/protocol/tune'>
+  <item jid='user1@server.com'
+        name='name1'
+        node='node1'/>
+  <item jid='user2@server.com'
+        name='name2'
+        node='node2'/>
+  <item jid='user3@server.com'
+        name='name3'
+        node='node3'/>
+</query>

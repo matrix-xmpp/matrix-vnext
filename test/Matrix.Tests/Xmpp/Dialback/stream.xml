@@ -1,0 +1,12 @@
+﻿<stream:stream
+              xmlns:stream='http://etherx.jabber.org/streams'
+              xmlns='jabber:server'
+              xmlns:db='jabber:server:dialback'
+              to='xmpp.example.com'
+              from='example.org'
+              id='D60000229F'>
+  <db:verify
+    to='example.org'
+    from='xmpp.example.com'
+    id='D60000229F'>37c69b1cf07a3f67c04a5ef5902fa5114f2c76fe4a2686482ba5b89323075643</db:verify>
+</stream:stream>

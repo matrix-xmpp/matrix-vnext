@@ -1,8 +1,8 @@
 ﻿{
   "name": "Matrix",
   "version": "0.2.0-beta",
-  "title": "Matrix",
-  "description": "MatriX XMPP library",
+  "title": "Matrix vNext",
+  "description": "MatriX vNext",
   "language": "en-US",
   "authors": [
     "AG-Software"
@@ -11,7 +11,7 @@
 
 
   "dependencies": {
-    "DnsClient": "1.0.1",
+    "DnsClient": "1.0.3",
     "DotNetty.Handlers": "0.4.0",
     "DotNetty.Transport": "0.4.0",
     "System.Reactive": "3.1.1"

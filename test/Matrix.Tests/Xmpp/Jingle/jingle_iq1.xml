@@ -1,0 +1,13 @@
+<iq xmlns='jabber:client' from='from@address.com/fromSystem' id='xxxxxxxx' to='to@address.com/toSystem' type='set'>
+  <jingle xmlns='urn:xmpp:jingle:1' action='session-initiate' initiator='from@address.com/fromSystem' sid='sidxxxxx'>
+    <content creator='initiator' name='voice'>
+      <description xmlns='urn:xmpp:jingle:apps:rtp:1' media='audio'>
+        <payload-type id='96' name='speex' clockrate='16000' />
+        <payload-type id='97' name='speex' clockrate='8000' />
+      </description>
+      <transport xmlns='urn:xmpp:jingle:transports:raw-udp:1'>
+        <candidate generation='0' id='xxxxxxxx' ip='10.1.1.104' port='13540' />
+      </transport>
+    </content>
+  </jingle>
+</iq>

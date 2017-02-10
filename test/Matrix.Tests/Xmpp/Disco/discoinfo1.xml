@@ -1,0 +1,28 @@
+<query xmlns='http://jabber.org/protocol/disco#info'>
+  <identity category='conference' name='Liverpool' type='text' />
+  <feature var='http://jabber.org/protocol/muc' />
+  <feature var='muc_public' />
+  <feature var='muc_open' />
+  <feature var='muc_unmoderated' />
+  <feature var='muc_semianonymous' />
+  <feature var='muc_unsecured' />
+  <feature var='muc_persistent' />
+  <feature var='http://jabber.org/protocol/disco#info' />
+  <x xmlns='jabber:x:data' type='result'>
+    <field var='FORM_TYPE' type='hidden'>
+      <value>http://jabber.org/protocol/muc#roominfo</value>
+    </field>
+    <field label='Description' var='muc#roominfo_description'>
+      <value>Premier League</value>
+    </field>
+    <field label='Subject' var='muc#roominfo_subject'>
+      <value />
+    </field>
+    <field label='Number of occupants' var='muc#roominfo_occupants'>
+      <value>3</value>
+    </field>
+    <field label='Creation date' var='x-muc#roominfo_creationdate'>
+      <value>20090318T10:01:47</value>
+    </field>
+  </x>
+</query>

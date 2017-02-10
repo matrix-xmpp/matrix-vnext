@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Matrix.vNext</id>
+        <version>0.2.0-beta</version>
+        <title>Matrix vNext</title>
+        <authors>AG-Software</authors>
+        <owners>AG-Software</owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>MatriX vNext</description>
+        <copyright>Copyright © Alexander Gnauck, AG-Software</copyright>
+        <language>en-US</language>
+        <dependencies>
+            <group targetFramework=".NETFramework4.5.1">
+                <dependency id="DnsClient" version="1.0.3" />
+                <dependency id="DotNetty.Handlers" version="0.4.0" />
+                <dependency id="DotNetty.Transport" version="0.4.0" />
+                <dependency id="System.Reactive" version="3.1.1" />
+            </group>
+            <group targetFramework=".NETStandard1.3">
+                <dependency id="NETStandard.Library" version="1.6.0" />
+                <dependency id="DnsClient" version="1.0.3" />
+                <dependency id="DotNetty.Handlers" version="0.4.0" />
+                <dependency id="DotNetty.Transport" version="0.4.0" />
+                <dependency id="System.Reactive" version="3.1.1" />
+            </group>
+        </dependencies>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="System.Linq" targetFramework=".NETFramework4.5.1" />
+            <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.5.1" />
+            <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework=".NETFramework4.5.1" />
+        </frameworkAssemblies>
+    </metadata>
+    <files>
+        <file src=".\bin\release\net451\Matrix.dll" target="lib\net451\Matrix.dll" />
+        <file src=".\bin\release\netstandard1.3\Matrix.dll" target="lib\netstandard1.3\Matrix.dll" />
+    </files>
+</package>

@@ -1,0 +1,4 @@
+<item jid='user1@server.com'
+           xmlns='http://jabber.org/protocol/disco#items'
+           name='name1'
+           node='node1'/>

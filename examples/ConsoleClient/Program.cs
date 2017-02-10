@@ -33,9 +33,9 @@ namespace ConsoleClient
                 //XmppDomain = "localhost",
 
                 // jabber.org
-                //Username = "gnauck",
-                //Password = "***REMOVED***",
-                //XmppDomain = "jabber.org",
+                Username = "gnauck",
+                Password = "***REMOVED***",
+                XmppDomain = "jabber.org",
 
                 // local prosody
                 //Username = "alex",
@@ -45,13 +45,13 @@ namespace ConsoleClient
                 //CertificateValidator = new AlwaysAcceptCertificateValidator(),
 
                 // Openfire Flepo
-                Username = "admin",
-                Password = "***REMOVED***",
-                XmppDomain = "flepo",
-                Tls = true,
-                Compression = false,
-                Resource = "vnext",
-                CertificateValidator = new AlwaysAcceptCertificateValidator(),
+                //Username = "admin",
+                //Password = "***REMOVED***",
+                //XmppDomain = "flepo",
+                //Tls = true,
+                //Compression = false,
+                //Resource = "vnext",
+                //CertificateValidator = new AlwaysAcceptCertificateValidator(),
 
 
             };

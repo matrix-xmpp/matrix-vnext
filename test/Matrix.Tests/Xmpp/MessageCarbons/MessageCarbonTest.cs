@@ -9,25 +9,19 @@ namespace Matrix.Tests.Xmpp.MessageCarbons
     
     public class MessageCarbonTest
     {
-        string xml1 = @"<message from='JID' to='JID' xmlns='jabber:client' type='chat'>
-   <sent xmlns = 'urn:xmpp:carbons:2'>
-     <forwarded xmlns='urn:xmpp:forward:0'>
-       <message from = 'gnauck@jabber.org' id='6c2126bc-20b8-4a33-b921-d2556fe923d6' to='resouce' type='chat' xmlns='jabber:client'>
-         <body>blarg</body>
-       </message>
-     </forwarded>
-   </sent>
- </message>";
+        [Fact]
+        public void ShouldBeOfTypeForwarded()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.MessageCarbons.forwarded1.xml")).ShouldBeOfType<Forwarded>();
+        }
 
         [Fact]
-        public void ParseTest()
+        public void MessageShouldComtainForwarded()
         {
-            var msg = XmppXElement.LoadXml(xml1);
-            var forwarded = ((ForwardContainer) (msg.FirstXmppXElement))
-                .Forwarded;
+            var msg = XmppXElement.LoadXml(Resource.Get("Xmpp.MessageCarbons.message_carbons1.xml"));
 
-            forwarded.ShouldNotBeNull();
-            
+            msg.FirstXmppXElement.Cast<ForwardContainer>()
+                .Forwarded.ShouldNotBeNull();
         }
     }
 }
