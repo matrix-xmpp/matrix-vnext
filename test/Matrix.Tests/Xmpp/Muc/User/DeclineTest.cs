@@ -8,29 +8,25 @@ namespace Matrix.Tests.Xmpp.Muc.User
     
     public class DeclineTest
     {
-        const string XML1 = @"<decline xmlns='http://jabber.org/protocol/muc#user' to='crone1@shakespeare.lit'>
-                  <reason>Sorry, I'm too busy right now.</reason>
-                </decline>";
-
         [Fact]
-        public void Test1()
+        public void ShoudBeOfTypeDecline()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Decline);
-
-            var d = xmpp1 as Decline;
-            if (d != null)
-            {
-                Assert.Equal(d.Reason, "Sorry, I'm too busy right now.");
-                Assert.Equal(d.To.Equals("crone1@shakespeare.lit"), true);
-            }
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Muc.User.decline1.xml")).ShouldBeOfType<Decline>();
         }
 
         [Fact]
-        public void Test2()
+        public void TestDecline()
+        {
+            var d = XmppXElement.LoadXml(Resource.Get("Xmpp.Muc.User.decline1.xml")).Cast<Decline>();
+            Assert.Equal(d.Reason, "Sorry, I'm too busy right now.");
+            Assert.Equal(d.To.Equals("crone1@shakespeare.lit"), true);
+        }
+
+        [Fact]
+        public void TestBuildDecline()
         {
             var dec = new Decline(new Jid("crone1@shakespeare.lit"), "Sorry, I'm too busy right now.");
-            dec.ShouldBe(XML1);
+            dec.ShouldBe(Resource.Get("Xmpp.Muc.User.decline1.xml"));
         }
     }
 }

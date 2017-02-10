@@ -7,20 +7,14 @@ namespace Matrix.Tests.Xmpp.Muc.User
     
     public class XTest
     {
-        string xml1 = @"<x xmlns='http://jabber.org/protocol/muc#user'>
-                <invite to='hecate@shakespeare.lit' />
-                <password>cauldronburn</password>               
-              </x>";
-        
-        
         [Fact]
-        public void Test1()
+        public void TestBuildUserX()
         {
             var x = new X();
             x.AddInvite(new Invite { To = "hecate@shakespeare.lit"});
             x.Password = "cauldronburn";
             
-            x.ShouldBe(xml1);
+            x.ShouldBe(Resource.Get("Xmpp.Muc.User.userx1.xml"));
         }
     }
 }

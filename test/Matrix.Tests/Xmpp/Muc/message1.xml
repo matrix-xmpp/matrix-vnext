@@ -1,0 +1,8 @@
+<message xmlns='jabber:client' from='coven@chat.shakespeare.lit' id='nzd143v8' to='hecate@shakespeare.lit'>
+  <x xmlns='http://jabber.org/protocol/muc#user'>
+    <invite from='crone1@shakespeare.lit/desktop'>
+      <reason>FOO</reason>
+    </invite>
+    <password>cauldronburn</password>
+  </x>
+</message>

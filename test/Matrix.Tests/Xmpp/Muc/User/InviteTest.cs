@@ -1,37 +1,32 @@
 ﻿using Xunit;
-
 using Matrix.Xml;
 using Matrix.Xmpp.Muc.User;
 
+using Shouldly;
+
 namespace Matrix.Tests.Xmpp.Muc.User
 {
-    
     public class InviteTest
     {
-        const string XML1 = @"<invite xmlns='http://jabber.org/protocol/muc#user' to='hecate@shakespeare.lit'>
-                  <reason>The reason.</reason>
-                </invite>";
-
         [Fact]
-        public void Test1()
+        public void ShoudBeOfTypeInvite()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Invite);
-
-            var invite = xmpp1 as Invite;
-
-            if (invite != null)
-            {
-                Assert.Equal(invite.To.Equals("hecate@shakespeare.lit"), true);
-                Assert.Equal(invite.Reason, "The reason.");
-            }
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Muc.User.invite1.xml")).ShouldBeOfType<Invite>();
         }
 
         [Fact]
-        public void Test2()
+        public void TestInvite()
+        {
+            var invite = XmppXElement.LoadXml(Resource.Get("Xmpp.Muc.User.invite1.xml")).Cast<Invite>();
+            Assert.Equal(invite.To.Equals("hecate@shakespeare.lit"), true);
+            Assert.Equal(invite.Reason, "The reason.");
+        }
+
+        [Fact]
+        public void TestBuildInvite()
         {
             var invite = new Invite("hecate@shakespeare.lit", "The reason.");
-            invite.ShouldBe(XML1);
+            invite.ShouldBe(Resource.Get("Xmpp.Muc.User.invite1.xml"));
         }
     }
 }

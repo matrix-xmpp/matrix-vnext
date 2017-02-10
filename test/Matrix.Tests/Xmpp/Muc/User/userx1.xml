@@ -1,0 +1,4 @@
+<x xmlns='http://jabber.org/protocol/muc#user'>
+  <invite to='hecate@shakespeare.lit' />
+  <password>cauldronburn</password>
+</x>

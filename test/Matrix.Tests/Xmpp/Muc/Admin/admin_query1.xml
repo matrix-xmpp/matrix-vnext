@@ -1,0 +1,5 @@
+<query xmlns='http://jabber.org/protocol/muc#admin'>
+    <item nick='pistol' role='none'>
+        <reason>my reason!</reason>
+    </item>
+</query>

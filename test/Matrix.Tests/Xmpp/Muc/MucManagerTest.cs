@@ -6,7 +6,7 @@
 
 //namespace Matrix.Tests.Xmpp.Muc
 //{
-//    
+
 //    public class MucManagerTest
 //    {
 //        private string XML1 = @"<iq xmlns='jabber:client' type='set' to='dev@conference.ag-software.de' id='foo'>
@@ -24,15 +24,15 @@
 //        public void Test()
 //        {
 //            var data = new Data
-//                           {
-//                               Type = FormType.Submit
-//                           };
+//            {
+//                Type = FormType.Submit
+//            };
 
 //            var field = new Field
-//                            {
-//                                Type = FieldType.Hidden,
-//                                Var = "FORM_TYPE"
-//                            };
+//            {
+//                Type = FieldType.Hidden,
+//                Var = "FORM_TYPE"
+//            };
 
 //            field.AddValue("http://jabber.org/protocol/muc#roomconfig");
 
@@ -105,7 +105,7 @@
 //            XmlAssertion.AssertXmlEquals(Util.GetXmlDiff(XML1, iq));
 
 //            var xmpp1 = XmppXElement.LoadXml(XML1);
-            
+
 
 //            var iq1 = xmpp1 as Iq;
 
@@ -118,7 +118,7 @@
 //                    Assert.Equal(destroy.Reason, "Macbeth doth come.");
 //                    Assert.Equal(destroy.Jid.Equals("coven@chat.shakespeare.lit"), true);
 //                }
-                
+
 //            }
 //        }
 //    }

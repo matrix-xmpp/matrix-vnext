@@ -1,54 +1,32 @@
 ﻿using Matrix.Xml;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.Mood
 {
-    
     public class MoodTest
     {
-        const string XML1 = @"<pubsub xmlns='http://jabber.org/protocol/pubsub'>
-    <publish node='http://jabber.org/protocol/mood'>
-      <item>
-        <mood xmlns='http://jabber.org/protocol/mood'>
-          <annoyed/>
-          <text>curse my nurse!</text>
-        </mood>
-      </item>
-    </publish>
-  </pubsub>";
-
-        private const string XML2 = @"<mood xmlns='http://jabber.org/protocol/mood'>
-          <annoyed/>
-          <text>curse my nurse!</text>
-        </mood>";
-
-        private const string XML3 = @"<mood xmlns='http://jabber.org/protocol/mood'>
-          <in_awe/>          
-        </mood>";
-
         [Fact]
-        public void Test1()
+        public void ShouldBeOfTypeMood()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML2);
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Mood.Mood);
-
-
-            var mood = new Matrix.Xmpp.Mood.Mood
-                {
-                    UserMood = Matrix.Xmpp.Mood.Moods.Annoyed,
-                    MoodText = "curse my nurse!"
-                };
-
-            mood.ShouldBe(XML2);
-            mood.ToPubSub().ShouldBe(XML1);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Mood.mood1.xml")).ShouldBeOfType<Matrix.Xmpp.Mood.Mood>();
         }
 
         [Fact]
-        public void Test2()
+        public void TestBuildMood()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML3);
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Mood.Mood);
+            var mood = new Matrix.Xmpp.Mood.Mood
+            {
+                UserMood = Matrix.Xmpp.Mood.Moods.Annoyed,
+                MoodText = "curse my nurse!"
+            };
 
+            mood.ShouldBe(Resource.Get("Xmpp.Mood.mood1.xml"));
+        }
+
+        [Fact]
+        public void TestBuildMood2()
+        {
             var mood = new Matrix.Xmpp.Mood.Mood
             {
                 UserMood = Matrix.Xmpp.Mood.Moods.InAwe,
@@ -58,7 +36,18 @@ namespace Matrix.Tests.Xmpp.Mood
             Assert.Equal(mood.UserMood == Matrix.Xmpp.Mood.Moods.Hungry, false);
             Assert.Equal(mood.UserMood == Matrix.Xmpp.Mood.Moods.InLove, false);
 
-            mood.ShouldBe(XML3);
+            mood.ShouldBe(Resource.Get("Xmpp.Mood.mood2.xml"));
+        }
+
+        [Fact]
+        public void TestMoodToPubsub()
+        {
+            var mood = new Matrix.Xmpp.Mood.Mood
+            {
+                UserMood = Matrix.Xmpp.Mood.Moods.Annoyed,
+                MoodText = "curse my nurse!"
+            };
+            mood.ToPubSub().ShouldBe(Resource.Get("Xmpp.Mood.pubsub1.xml"));
         }
     }
 }
