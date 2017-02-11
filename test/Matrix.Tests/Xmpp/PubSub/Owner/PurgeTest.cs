@@ -1,29 +1,29 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.PubSub.Owner;
-using NUnit.Framework;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.PubSub.Owner
 {
-    
     public class PurgeTest
     {
-        private const string XML1 =
-            @"<purge node='princely_musings' xmlns='http://jabber.org/protocol/pubsub#owner'/>";
-        
         [Fact]
-        public void Test1()
+        public void ShoudBeOfTypeCollection()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Purge);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.PubSub.Owner.purge1.xml")).ShouldBeOfType<Purge>();
+        }
 
-            var purge = xmpp1 as Purge;
-            if (purge != null)
-            {
-                Assert.Equal(purge.Node, "princely_musings");
-            }
+        [Fact]
+        public void TestPurge()
+        {
+            var purge = XmppXElement.LoadXml(Resource.Get("Xmpp.PubSub.Owner.purge1.xml")).Cast<Purge>();
+            Assert.Equal(purge.Node, "princely_musings");
+        }
 
-            new Purge {Node = "princely_musings"}.ShouldBe(XML1);
+        [Fact]
+        public void BuildPurge()
+        {
+            new Purge { Node = "princely_musings" }.ShouldBe(Resource.Get("Xmpp.PubSub.Owner.purge1.xml"));
         }
     }
 }

@@ -1,0 +1,10 @@
+<event xmlns='http://jabber.org/protocol/pubsub#event'>
+  <items node='princely_musings'>
+    <item id='ab'>
+      [ ... ENTRY ... ]
+    </item>
+    <item id='cd'>
+      [ ... ENTRY ... ]
+    </item>
+  </items>
+</event>

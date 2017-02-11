@@ -1,6 +1,6 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.PubSub.Event;
-using NUnit.Framework;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.PubSub.Event
@@ -8,25 +8,23 @@ namespace Matrix.Tests.Xmpp.PubSub.Event
     
     public class DisassociateTest
     {
-        private const string XML1 = @"<disassociate node='new-node-id' xmlns='http://jabber.org/protocol/pubsub#event'/>";
-        
         [Fact]
-        public void Test()
+        public void ShoudBeOfTypeDisassociate()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Disassociate);
-
-            var dis = xmpp1 as Disassociate;
-            if (dis != null)
-            {
-                Assert.Equal(dis.Node, "new-node-id");
-            }   
+            XmppXElement.LoadXml(Resource.Get("Xmpp.PubSub.Event.disassociate1.xml")).ShouldBeOfType<Disassociate>();
         }
 
         [Fact]
-        public void Test2()
+        public void TestDisassociate()
         {
-            new Disassociate {Node = "new-node-id"}.ShouldBe(XML1);
+            var dis = XmppXElement.LoadXml(Resource.Get("Xmpp.PubSub.Event.disassociate1.xml")).Cast<Disassociate>();
+            Assert.Equal(dis.Node, "new-node-id");
+        }
+
+        [Fact]
+        public void TestBuildDisassociate()
+        {
+            new Disassociate {Node = "new-node-id"}.ShouldBe(Resource.Get("Xmpp.PubSub.Event.disassociate1.xml"));
         }
     }
 }

@@ -1,0 +1,5 @@
+<unsubscribe
+    xmlns='http://jabber.org/protocol/pubsub'
+    node='princely_musings'
+    jid='francisco@denmark.lit'
+    subid='abcd'/>

@@ -1,31 +1,24 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Privacy;
+using Shouldly;
 using Xunit;
+using Item = Matrix.Xmpp.Privacy.Item;
 
 namespace Matrix.Tests.Xmpp.Privacy
 {
     
     public class ItemTest
     {
-        private const string XML1
-           = @"<item type='subscription' xmlns='jabber:iq:privacy' value='none' action='deny' order='5'/>";
-
-        private const string XML2
-          = @"<item xmlns='jabber:iq:privacy' value='none' action='deny' order='5'/>";
-        
-        private const string XML3
-          = @"<item xmlns='jabber:iq:privacy'><message/><presence-in/></item>";
-
-        private const string XML4
-          = @"<item xmlns='jabber:iq:privacy'/>";
+        [Fact]
+        public void ShoudBeOfTypeItem()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Privacy.item1.xml")).ShouldBeOfType<Item>();
+        }
 
         [Fact]
-        public void Test1()
+        public void TestItem()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Item);
-
-            var item = xmpp1 as Item;
+            var item = XmppXElement.LoadXml(Resource.Get("Xmpp.Privacy.item1.xml")).Cast<Item>();
             Assert.Equal(item.Val,  "none");
             Assert.Equal(item.Action, Matrix.Xmpp.Privacy.Action.Deny);
             Assert.Equal(item.Order, 5);
@@ -33,29 +26,19 @@ namespace Matrix.Tests.Xmpp.Privacy
         }
 
         [Fact]
-        public void Test2()
+        public void TestBuildItem()
         {
-            var item = new Item { Val = "none", Type = Matrix.Xmpp.Privacy.Type.Subscription, Action = Matrix.Xmpp.Privacy.Action.Deny, Order = 5};
-            item.ShouldBe(XML1);
+            var item = new Item { Val = "none", Type = Type.Subscription, Action = Action.Deny, Order = 5};
+            item.ShouldBe(Resource.Get("Xmpp.Privacy.item1.xml"));
 
-            item.Type = Matrix.Xmpp.Privacy.Type.None;
-            item.ShouldBe(XML2);
+            item.Type = Type.None;
+            item.ShouldBe(Resource.Get("Xmpp.Privacy.item2.xml"));
+
+            item = new Item { Stanza = Stanza.Message | Stanza.IncomingPresence };
+            item.ShouldBe(Resource.Get("Xmpp.Privacy.item3.xml"));
+
+            item = new Item { Stanza = Stanza.All };
+            item.ShouldBe(Resource.Get("Xmpp.Privacy.item4.xml"));
         }
-
-        [Fact]
-        public void Test3()
-        {
-            var item = new Item {Stanza = Stanza.Message | Stanza.IncomingPresence};
-            item.ShouldBe(XML3);
-        }
-
-        
-        [Fact]
-        public void Test4()
-        {
-            var item = new Item {Stanza = Stanza.All};
-            item.ShouldBe(XML4);
-        }
-
     }
 }

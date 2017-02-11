@@ -1,0 +1,8 @@
+<iq xmlns='jabber:client' type='result'
+            from='pubsub.shakespeare.lit'
+            to='hamlet@denmark.lit/elsinore'
+            id='create2'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <create node='25e3d37dabbab9541f7523321421edc5bfeb2dae'/>
+  </pubsub>
+</iq>

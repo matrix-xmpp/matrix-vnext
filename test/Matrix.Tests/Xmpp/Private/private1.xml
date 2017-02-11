@@ -1,0 +1,3 @@
+<query xmlns='jabber:iq:private'>
+  <storage xmlns='storage:bookmarks'/>
+</query>

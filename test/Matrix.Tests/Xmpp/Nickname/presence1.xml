@@ -1,0 +1,5 @@
+<presence from='narrator@moby-dick.lit/pda' to='pequod@muc.moby-dick.lit/narrator' xmlns='jabber:client'>
+  <show>away</show>
+  <status>writing</status>
+  <nick xmlns='http://jabber.org/protocol/nick'>Ishmael</nick>
+</presence>

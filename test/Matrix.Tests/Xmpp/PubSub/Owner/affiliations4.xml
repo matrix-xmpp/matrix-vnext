@@ -1,0 +1,7 @@
+<affiliations xmlns='http://jabber.org/protocol/pubsub' node='princely_musings'>
+  <affiliation node='node1' affiliation='owner'/>
+  <affiliation node='node2' affiliation='publisher'/>
+  <affiliation node='node5' affiliation='outcast'/>
+  <affiliation node='node6' affiliation='owner'/>
+  <affiliation node='node7' affiliation='publish-only'/>
+</affiliations>

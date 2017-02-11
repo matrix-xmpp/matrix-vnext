@@ -1,34 +1,30 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.PubSub.Event;
-using NUnit.Framework;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.PubSub.Event
 {
-    
     public class AssociateTest
     {
-        private const string XML1 = @"<associate node='new-node-id' xmlns='http://jabber.org/protocol/pubsub#event'/>";
-
         [Fact]
-        public void Test()
+        public void ShoudBeOfTypeAssociate()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Associate);
-
-            var ass = xmpp1 as Associate;
-            if (ass != null)
-            {
-                Assert.Equal(ass.Node, "new-node-id");
-            }
-
+            XmppXElement.LoadXml(Resource.Get("Xmpp.PubSub.Event.associate1.xml")).ShouldBeOfType<Associate>();
         }
 
         [Fact]
-        public void Test2()
+        public void TestAssociate()
+        {
+            var ass = XmppXElement.LoadXml(Resource.Get("Xmpp.PubSub.Event.associate1.xml")).Cast<Associate>();
+            Assert.Equal(ass.Node, "new-node-id");
+        }
+
+        [Fact]
+        public void TestBuildAssociate()
         {
             new Associate { Node = "new-node-id" }.
-            ShouldBe(XML1);
+            ShouldBe(Resource.Get("Xmpp.PubSub.Event.associate1.xml"));
         }
     }
 }

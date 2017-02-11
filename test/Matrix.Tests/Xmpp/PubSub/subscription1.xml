@@ -1,0 +1,4 @@
+<subscriptions xmlns='http://jabber.org/protocol/pubsub' node='princely_musings'>
+  <subscription jid='bernardo@denmark.lit' subscription='subscribed' subid='123'/>
+  <subscription jid='bernardo2@denmark.lit' subscription='unconfigured' subid='456'/>
+</subscriptions>

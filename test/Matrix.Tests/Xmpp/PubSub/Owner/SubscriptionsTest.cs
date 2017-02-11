@@ -2,7 +2,7 @@
 using System.Linq;
 using Matrix.Xml;
 using Matrix.Xmpp.PubSub;
-using NUnit.Framework;
+using Shouldly;
 using Xunit;
 using Subscription=Matrix.Xmpp.PubSub.Owner.Subscription;
 using Subscriptions=Matrix.Xmpp.PubSub.Owner.Subscriptions;
@@ -12,35 +12,31 @@ namespace Matrix.Tests.Xmpp.PubSub.Owner
     
     public class SubscriptionsTest
     {
-        private const string XML1 = @"<subscriptions node='princely_musings' xmlns='http://jabber.org/protocol/pubsub#owner'>
-                                          <subscription jid='polonius@denmark.lit' subscription='none'/>
-                                          <subscription jid='bard@shakespeare.lit' subscription='subscribed'/>
-                                        </subscriptions>";
         [Fact]
-        public void Test1()
+        public void ShoudBeOfTypeSubscriptions()
         {
-            var xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Subscriptions);
-
-            var subs = xmpp1 as Subscriptions;
-            if (subs != null)
-            {
-                Assert.Equal(subs.Node, "princely_musings");
-                IEnumerable<Subscription> ss = subs.GetSubscriptions();
-
-
-                Assert.Equal(ss.Count(), 2);
-                Assert.Equal(ss.ToArray()[0].Jid.Equals("polonius@denmark.lit"), true);
-                Assert.Equal(ss.ToArray()[0].SubscriptionState, SubscriptionState.None);
-
-                Assert.Equal(ss.ToArray()[1].Jid.Equals("bard@shakespeare.lit"), true);
-                Assert.Equal(ss.ToArray()[1].SubscriptionState, SubscriptionState.Subscribed);
-                
-            }
+            XmppXElement.LoadXml(Resource.Get("Xmpp.PubSub.Owner.subscriptions1.xml")).ShouldBeOfType<Subscriptions>();
         }
 
         [Fact]
-        public void Test2()
+        public void TestSubscriptions()
+        {
+            var subs = XmppXElement.LoadXml(Resource.Get("Xmpp.PubSub.Owner.subscriptions1.xml")).Cast<Subscriptions>();
+          
+            Assert.Equal(subs.Node, "princely_musings");
+            IEnumerable<Subscription> ss = subs.GetSubscriptions();
+
+
+            Assert.Equal(ss.Count(), 2);
+            Assert.Equal(ss.ToArray()[0].Jid.Equals("polonius@denmark.lit"), true);
+            Assert.Equal(ss.ToArray()[0].SubscriptionState, SubscriptionState.None);
+
+            Assert.Equal(ss.ToArray()[1].Jid.Equals("bard@shakespeare.lit"), true);
+            Assert.Equal(ss.ToArray()[1].SubscriptionState, SubscriptionState.Subscribed);
+        }
+
+        [Fact]
+        public void TestBuildSubscriptions()
         {
             var ss = new Subscriptions {Node = "princely_musings"};
 
@@ -55,7 +51,7 @@ namespace Matrix.Tests.Xmpp.PubSub.Owner
                                        SubscriptionState = SubscriptionState.Subscribed
                                    });
 
-            ss.ShouldBe(XML1);
+            ss.ShouldBe(Resource.Get("Xmpp.PubSub.Owner.subscriptions1.xml"));
 
             var ss2 = new Subscriptions {Node = "princely_musings"};
 
@@ -67,7 +63,7 @@ namespace Matrix.Tests.Xmpp.PubSub.Owner
             sub2.Jid = "bard@shakespeare.lit";
             sub2.SubscriptionState = SubscriptionState.Subscribed;
 
-            ss2.ShouldBe(XML1);
+            ss2.ShouldBe(Resource.Get("Xmpp.PubSub.Owner.subscriptions1.xml"));
         }
     }
 }
