@@ -1,0 +1,11 @@
+<query xmlns='jabber:iq:rpc'>
+  <methodResponse>
+    <params>
+      <param>
+        <value>
+          <string>Colorado</string>
+        </value>
+      </param>
+    </params>
+  </methodResponse>
+</query>

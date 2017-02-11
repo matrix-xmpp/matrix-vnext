@@ -1,0 +1,36 @@
+<iq id='0815' type='set' xmlns='jabber:client'>
+  <query xmlns='jabber:iq:rpc'>
+    <methodCall>
+      <methodName>bid</methodName>
+      <params>
+        <param>
+          <value>
+            <struct>
+              <member>
+                <name>symbol</name>
+                <value><string>RHAT</string></value>
+              </member>
+              <member>
+                <name>limit</name>
+                <value><double>2.25</double></value>
+              </member>
+              <member>
+                <name>some_array</name>
+                <value>
+                  <array>
+                    <data>
+                      <value><string>A</string></value>
+                      <value><string>B</string></value>
+                      <value><string>C</string></value>
+                      <value><string>D</string></value>
+                    </data>
+                  </array>
+                </value>
+              </member>
+            </struct>
+          </value>
+        </param>
+      </params>
+    </methodCall>
+  </query>
+</iq>

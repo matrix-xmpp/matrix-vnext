@@ -1,0 +1,33 @@
+<iq xmlns='jabber:client' id='0815' type='set'>
+  <query xmlns='jabber:iq:rpc'>
+    <methodCall>
+      <methodName>bid</methodName>
+      <params>
+        <param>
+          <value>
+            <struct>
+              <member>
+                <name>symbol</name>
+                <value>
+                  <string>RHAT</string>
+                </value>
+              </member>
+              <member>
+                <name>limit</name>
+                <value>
+                  <double>2.25</double>
+                </value>
+              </member>
+              <member>
+                <name>expires</name>
+                <value>
+                  <dateTime.iso8601>20020709T20:00:00</dateTime.iso8601>
+                </value>
+              </member>
+            </struct>
+          </value>
+        </param>
+      </params>
+    </methodCall>
+  </query>
+</iq>

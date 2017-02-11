@@ -1,0 +1,20 @@
+<methodResponse xmlns='jabber:iq:rpc'>
+  <fault>
+    <value>
+      <struct>
+        <member>
+          <name>faultCode</name>
+          <value>
+            <int>23</int>
+          </value>
+        </member>
+        <member>
+          <name>faultString</name>
+          <value>
+            <string>Unknown stock symbol ABCD</string>
+          </value>
+        </member>
+      </struct>
+    </value>
+  </fault>
+</methodResponse>

@@ -1,0 +1,14 @@
+<iq xmlns='jabber:client' id='4jLvG-34' to='buyer@collabnexgen.net/Smack' from='seller@collabnexgen.net/Smack' type='set'>
+  <query xmlns='jabber:iq:rpc'>
+    <methodCall>
+      <methodName>com.collabng.net.remoteable.ViewpointRemoteable.setViewpoint</methodName>
+      <params>
+        <param>
+          <value>
+            <string>viewpoint_BackView_collabng</string>
+          </value>
+        </param>
+      </params>
+    </methodCall>
+  </query>
+</iq>
