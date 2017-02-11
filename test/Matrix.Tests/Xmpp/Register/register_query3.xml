@@ -1,0 +1,3 @@
+<query xmlns='jabber:iq:register'>
+  <remove/>
+</query>

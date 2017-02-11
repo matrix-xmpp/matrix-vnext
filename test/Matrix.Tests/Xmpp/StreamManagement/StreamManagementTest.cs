@@ -2,196 +2,162 @@
 using Matrix.Xmpp.Stream;
 using Matrix.Xmpp.StreamManagement;
 using Matrix.Xmpp.StreamManagement.Ack;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.StreamManagement
 {
-    
     public class StreamManagementTest
     {
-        const string FEATURES = @"<stream:features xmlns:stream='http://etherx.jabber.org/streams'>
-                 <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>
-                   <required/>
-                 </bind>
-                 <sm xmlns='urn:xmpp:sm:3'>
-                   <optional/>
-                 </sm>
-               </stream:features>";
-
-        const string FEATURES2 = @"<stream:features xmlns:stream='http://etherx.jabber.org/streams'>
-                 <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>
-                   <required/>
-                 </bind>                 
-               </stream:features>";
-
-
-        const string FEATURES3 = @"<sm xmlns='urn:xmpp:sm:3'>
-                   <optional/>
-                 </sm>";
-
-        const string FAILED     = @"<failed xmlns='urn:xmpp:sm:3'>
-            <unexpected-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
-            </failed>";
-
-        const string FAILED2 = @"<failed xmlns='urn:xmpp:sm:3'/>";
-
-        const string ENABLE     = @"<enable xmlns='urn:xmpp:sm:3'/>";
-        const string ENABLED    = @"<enabled xmlns='urn:xmpp:sm:3' id='abcd' resume='true'/>";
-        const string ENABLED2   = @"<enabled xmlns='urn:xmpp:sm:3' id='abcd' resume='1'/>";
-        const string ENABLED3   = @"<enabled xmlns='urn:xmpp:sm:3' id='abcd'/>";
-
-        const string REQUEST = @"<r xmlns='urn:xmpp:sm:3'/>";
-        const string ANSWER = @"<a xmlns='urn:xmpp:sm:3' h='0'/>";
-
-        private const string RESUME = @"<resume xmlns='urn:xmpp:sm:3' h='1' previd='some-long-sm-id'/>";
-        private const string RESUMED = @"<resumed xmlns='urn:xmpp:sm:3' h='3' previd='some-long-sm-id'/>";
-
         [Fact]
-        public void FeaturesTest()
+        public void ShouldBeOfTypeStreamFetaures()
         {
-            var el  = XmppXElement.LoadXml(FEATURES);
-            var el2 = XmppXElement.LoadXml(FEATURES2);
-
-            Assert.Equal(el  is StreamFeatures, true);
-            Assert.Equal(el2 is StreamFeatures, true);
-
-            var feats = el as StreamFeatures;
-            if (feats != null)
-            {
-                Assert.Equal(feats.SupportsStreamManagement, true);
-            }
-
-            var feats2 = el2 as StreamFeatures;
-            if (feats2 != null)
-            {
-                Assert.Equal(feats2.SupportsStreamManagement, false);
-            }
-
-            new Matrix.Xmpp.Stream.Features.StreamManagement { Optional = true }.ShouldBe(FEATURES3);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.stream_features1.xml")).ShouldBeOfType<StreamFeatures>();
+            XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.stream_features2.xml")).ShouldBeOfType<StreamFeatures>();
         }
 
         [Fact]
-        public void FailedTest()
+        public void TestStreamFeatures()
         {
-            var el = XmppXElement.LoadXml(FAILED);
+            var feats = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.stream_features1.xml")).Cast<StreamFeatures>();
+            Assert.Equal(feats.SupportsStreamManagement, true);
 
-            Assert.Equal(el is Failed, true);
+            var feats2 = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.stream_features2.xml")).Cast<StreamFeatures>();
+            Assert.Equal(feats2.SupportsStreamManagement, false);
+        }
 
-            var failed = el as Failed;
-            if (failed != null)
-            {
-                Assert.Equal(failed.Condition == Matrix.Xmpp.Base.ErrorCondition.UnexpectedRequest, true);
-            }
+        [Fact]
+        public void TestBuildSm()
+        {
+            new Matrix.Xmpp.Stream.Features.StreamManagement { Optional = true }.ShouldBe(Resource.Get("Xmpp.StreamManagement.sm1.xml"));
+        }
+
+        [Fact]
+        public void ShouldBeOfTypeStreamFailed()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.failed1.xml")).ShouldBeOfType<Failed>();
+        }
+
+        [Fact]
+        public void TestFailed()
+        {
+            var failed = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.failed1.xml")).Cast<Failed>();
+            Assert.Equal(failed.Condition == Matrix.Xmpp.Base.ErrorCondition.UnexpectedRequest, true);
+        }
+        
+        [Fact]
+        public void TestBuildFailed()
+        {
+            new Failed().ShouldBe(Resource.Get("Xmpp.StreamManagement.failed2.xml"));
+        }
+
+        [Fact]
+        public void ShouldBeOfTypeEnable()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.enable1.xml")).ShouldBeOfType<Enable>();
+        }
+        
+        [Fact]
+        public void ShouldBeOfTypeEnabled()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.enabled1.xml")).ShouldBeOfType<Enabled>();
+        }
+
+        [Fact]
+        public void TestBuildEnable()
+        {
+            new Enable().ShouldBe(Resource.Get("Xmpp.StreamManagement.enable1.xml"));
+        }
+
+        [Fact]
+        public void TestEnabled()
+        {
+            var enabled = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.enabled1.xml")).Cast<Enabled>();
+            Assert.Equal(enabled.Id, "abcd");
+            Assert.Equal(enabled.Resume, true);
+         
+            var enabled2 = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.enabled2.xml")).Cast<Enabled>();
+            Assert.Equal(enabled2.Resume, true);
             
-            new Failed().ShouldBe(FAILED2);
+            var enabled3 = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.enabled3.xml")).Cast<Enabled>();
+            Assert.Equal(enabled3.Resume, false);
+        }
+        
+        [Fact]
+        public void TestBuildEnabled()
+        {
+            new Enabled { Resume = true, Id = "abcd" }.ShouldBe(Resource.Get("Xmpp.StreamManagement.enabled1.xml"));
         }
 
         [Fact]
-        public void EnableTest()
+        public void ShouldBeOfTypeRequest()
         {
-            var el = XmppXElement.LoadXml(ENABLE);
-
-            Assert.Equal(el is Enable, true);
-
-            new Enable().ShouldBe(ENABLE);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.r1.xml")).ShouldBeOfType<Request>();
         }
 
         [Fact]
-        public void EnabledTest()
+        public void ShouldBeOfTypeAnswer()
         {
-            var el  = XmppXElement.LoadXml(ENABLED);
-            var el2 = XmppXElement.LoadXml(ENABLED2);
-            var el3 = XmppXElement.LoadXml(ENABLED3);
-
-            Assert.Equal(el  is Enabled, true);
-            Assert.Equal(el2 is Enabled, true);
-            Assert.Equal(el3 is Enabled, true);
-
-            var enabled = el as Enabled;
-            if (enabled != null)
-            {
-                Assert.Equal(enabled.Id, "abcd");
-                Assert.Equal(enabled.Resume, true);
-            }
-
-            var enabled2 = el2 as Enabled;
-            if (enabled2 != null)
-            {
-                Assert.Equal(enabled2.Resume, true);
-            }
-
-            var enabled3 = el3 as Enabled;
-            if (enabled3 != null)
-            {
-                Assert.Equal(enabled3.Resume, false);
-            }
-
-            new Enabled { Resume = true, Id = "abcd" }.ShouldBe(ENABLED);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.a1.xml")).ShouldBeOfType<Answer>();
         }
 
         [Fact]
-        public void RequestTest()
+        public void TestBuildRequest()
         {
-            var el = XmppXElement.LoadXml(REQUEST);
-            
-            Assert.Equal(el is Request, true);
-            
-            var req = el as Request;
-            if (req != null)
-            {
-            }
-
-            new Request().ShouldBe(REQUEST);
+            new Request().ShouldBe(Resource.Get("Xmpp.StreamManagement.r1.xml"));
         }
 
         [Fact]
-        public void AnswerTest()
+        public void TestAnswer()
         {
-            var el = XmppXElement.LoadXml(ANSWER);
-
-            Assert.Equal(el is Answer, true);
-
-            var a = el as Answer;
-            if (a != null)
-            {
-                Assert.Equal(a.LastHandledStanza, 0);
-            }
-
-            new Answer { LastHandledStanza = 0 }.ShouldBe(ANSWER);
+            var a = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.a1.xml")).Cast<Answer>();
+            Assert.Equal(a.LastHandledStanza, 0);
         }
 
         [Fact]
-        public void ResumeTest()
+        public void TestBuildAnswer()
         {
-            var el = XmppXElement.LoadXml(RESUME);
-
-            Assert.Equal(el is Resume, true);
-
-            var r = el as Resume;
-            if (r != null)
-            {
-                Assert.Equal(r.LastHandledStanza, 1);
-                Assert.Equal(r.PreviousId, "some-long-sm-id");
-            }
-
-            new Resume { LastHandledStanza = 1, PreviousId = "some-long-sm-id" }.ShouldBe(RESUME);
+            new Answer { LastHandledStanza = 0 }.ShouldBe(Resource.Get("Xmpp.StreamManagement.a1.xml"));
         }
 
         [Fact]
-        public void ResumedTest()
+        public void ShouldBeOfTypeResume()
         {
-            var el = XmppXElement.LoadXml(RESUMED);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.resume1.xml")).ShouldBeOfType<Resume>();
+        }
 
-            Assert.Equal(el is Resumed, true);
+        [Fact]
+        public void ShouldBeOfTypeResumed()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.resumed1.xml")).ShouldBeOfType<Resumed>();
+        }
 
-            var r = el as Resumed;
-            if (r != null)
-            {
-                Assert.Equal(r.LastHandledStanza, 3);
-                Assert.Equal(r.PreviousId, "some-long-sm-id");
-            }
+        [Fact]
+        public void TestResume()
+        {
+            var r = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.resume1.xml")).Cast<Resume>();
+            Assert.Equal(r.LastHandledStanza, 1);
+            Assert.Equal(r.PreviousId, "some-long-sm-id");
+        }
 
-            new Resumed { LastHandledStanza = 3, PreviousId = "some-long-sm-id" }.ShouldBe(RESUMED);
+        [Fact]
+        public void TestBuildResume()
+        {
+            new Resume { LastHandledStanza = 1, PreviousId = "some-long-sm-id" }.ShouldBe(Resource.Get("Xmpp.StreamManagement.resume1.xml"));
+        }
+
+        [Fact]
+        public void TestResumed()
+        {
+            var r = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.resumed1.xml")).ShouldBeOfType<Resumed>();
+            Assert.Equal(r.LastHandledStanza, 3);
+            Assert.Equal(r.PreviousId, "some-long-sm-id");
+        }
+
+        [Fact]
+        public void TestBuildResumed()
+        {
+            new Resumed { LastHandledStanza = 3, PreviousId = "some-long-sm-id" }.ShouldBe(Resource.Get("Xmpp.StreamManagement.resumed1.xml"));
         }
     }
 }

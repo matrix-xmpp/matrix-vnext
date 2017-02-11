@@ -1,29 +1,7 @@
-﻿using System;
-using Xunit;
-using Matrix.Xml;
-using Matrix.Xmpp.Vcard;
-using Shouldly;
-
-namespace Matrix.Tests.Xmpp.Vcard
-{
-    public class PhotoTest
-    {
-        [Fact]
-        public void XmlShouldBeTypeOfPhoto()
-        {
-            XmppXElement.LoadXml(Resource.Get("Xmpp.Vcard.photo1.xml")).ShouldBeOfType<Photo>();
-            XmppXElement.LoadXml(Resource.Get("Xmpp.Vcard.photo2.xml")).ShouldBeOfType<Photo>();
-            XmppXElement.LoadXml(Resource.Get("Xmpp.Vcard.photo3.xml")).ShouldBeOfType<Photo>();
-        }
-
-        [Fact]
-        public void TestPhoto1()
-        {
-            var photo = XmppXElement.LoadXml(Resource.Get("Xmpp.Vcard.photo1.xml")).Cast<Photo>();
-            byte[] b1 = photo.Binval;
-
-            byte[] bcheck =
-                Convert.FromBase64String(@"/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAUEBAQEBAUEBAUIBQQFCAoHBQUHCgsJCQoJCQsOCws
+<PHOTO xmlns='vcard-temp'>
+<TYPE>image/jpeg</TYPE>
+<BINVAL>
+/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAUEBAQEBAUEBAUIBQQFCAoHBQUHCgsJCQoJCQsOCws
 LCwsLDgsNDQ4NDQsRERISEREZGBgYGRwcHBwcHBwcHBz/2wBDAQYGBgsKCxUODhUXEw8TFx0cHB
 wcHR0cHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBz/wAARCABuAFADA
 REAAhEBAxEB/8QAGwAAAwEBAQEBAAAAAAAAAAAABAUGBwIDCAD/xAA8EAABAwIEBAQDBgUCBwAA
@@ -80,25 +58,5 @@ nSiUral/hNBt9SX6YDBo+T5M3MscpEgHJE6S2jz5KSrd0kFV6b9cBqdXy9UvCepOhl2aMumkQ8S
 HL9Os20VSRBSyL/wCMAZBz9ml5jzLsWA4wKknCsQFcEuvOgr26bYBvXay8/TEKEHCfmwfNI4RWV
 sTFF5bJ6+br2wEodGWe289LTzLjEYBYV95x3QSmOok1X3LvgC8s0gGTnNrEjOobK7nq2shdNvjg
 PTMWQINfKlxoyDCd0CB7qYXJBS6d8BpI5Lp2VqjRQYablpCjOj94iDc10jruiXv1wDbNUUkdgym
-ocUxKLzi8Tpr6l2TAf//Z");
-
-            b1.ShouldBe(bcheck);
-        }
-
-        [Fact]
-        public void TestPhoto2()
-        {
-            var photo2 = XmppXElement.LoadXml(Resource.Get("Xmpp.Vcard.photo2.xml")).Cast<Photo>();
-            byte[] b2 = photo2.Binval;
-            b2.ShouldBe(new byte[0]);
-        }
-
-        [Fact]
-        public void TestPhoto3()
-        {
-            var photo3 = XmppXElement.LoadXml(Resource.Get("Xmpp.Vcard.photo3.xml")).Cast<Photo>();
-            byte[] b3 = photo3.Binval;
-            Assert.Equal(b3, null);
-        }
-    }
-}
+ocUxKLzi8Tpr6l2TAf//Z</BINVAL>
+</PHOTO>

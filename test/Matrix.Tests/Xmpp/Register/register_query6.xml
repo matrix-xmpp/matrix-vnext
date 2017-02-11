@@ -1,0 +1,8 @@
+<iq type='result' id='reg1' xmlns='jabber:client'>
+  <query xmlns='jabber:iq:register'>
+    <instructions>Instructions</instructions>
+    <username>Alex</username>
+    <password>12345</password>
+    <email>alex@server.org</email>
+  </query>
+</iq>

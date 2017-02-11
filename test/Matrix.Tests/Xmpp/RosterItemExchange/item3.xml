@@ -1,0 +1,6 @@
+<item xmlns='http://jabber.org/protocol/rosterx'
+                            action='modify'
+                            jid='rosencrantz@denmark.lit'
+                            name='Rosencrantz'>
+  <group>Visitors</group>
+</item>

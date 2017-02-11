@@ -1,0 +1,6 @@
+<query xmlns='jabber:iq:register'>
+  <instructions>instructions</instructions>
+  <username/>
+  <password/>
+  <email/>
+</query>

@@ -1,0 +1,5 @@
+<iq xmlns='jabber:client' type='set' from='bill@shakespeare.lit/globe' id='unreg1'>
+  <query xmlns='jabber:iq:register'>
+    <remove/>
+  </query>
+</iq>

@@ -1,0 +1,5 @@
+<item jid='benvolio@example.org'
+            xmlns='jabber:iq:roster'
+            name='Benvolio'
+            subscription='both'
+            approved='true'/>

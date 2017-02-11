@@ -1,0 +1,5 @@
+<stream:features xmlns:stream='http://etherx.jabber.org/streams'>
+  <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>
+    <required/>
+  </bind>
+</stream:features>

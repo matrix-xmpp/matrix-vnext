@@ -1,0 +1,8 @@
+<item jid='benvolio@example.org'
+        xmlns='jabber:iq:roster' 
+        name='Benvolio'
+        subscription='both'>
+    <group>Friends</group>
+    <group>Friends2</group>
+    <group>Friends3</group>
+</item>

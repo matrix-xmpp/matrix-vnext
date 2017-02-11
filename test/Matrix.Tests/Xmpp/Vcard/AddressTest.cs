@@ -1,29 +1,22 @@
 ﻿using Xunit;
 using Matrix.Xml;
 using Matrix.Xmpp.Vcard;
+using Shouldly;
 
 namespace Matrix.Tests.Xmpp.Vcard
 {
-    
     public class AddressTest
     {
-        string xml1 = @"<ADR xmlns='vcard-temp'>
-			<WORK/>
-			<EXTADD>Suite 600</EXTADD>
-			<STREET>1899 Wynkoop Street</STREET>
-			<LOCALITY>Denver</LOCALITY>
-			<REGION>CO</REGION>
-			<PCODE>80202</PCODE>
-			<CTRY>USA</CTRY>
-		</ADR>";
+        [Fact]
+        public void XmlShouldBeTypeOfEmail()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Vcard.address1.xml")).ShouldBeOfType<Address>();
+        }
 
         [Fact]
-        public void Test1()
+        public void TestAddress()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(xml1);
-            Assert.Equal(true, xmpp1 is Address);
-
-            Address address1 = xmpp1 as Address;
+            Address address1 = XmppXElement.LoadXml(Resource.Get("Xmpp.Vcard.address1.xml")).Cast<Address>();
             Assert.Equal(address1.IsWork, true);
             Assert.Equal(address1.IsHome, false);
             Assert.Equal(address1.ExtraAddress, "Suite 600");
@@ -32,7 +25,6 @@ namespace Matrix.Tests.Xmpp.Vcard
             Assert.Equal(address1.Region, "CO");
             Assert.Equal(address1.PostCode, "80202");
             Assert.Equal(address1.Country, "USA");
-
         }
     }
 }

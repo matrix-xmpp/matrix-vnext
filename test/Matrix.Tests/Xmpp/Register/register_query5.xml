@@ -1,0 +1,3 @@
+<iq type='get' id='reg1' xmlns='jabber:client'>
+  <query xmlns='jabber:iq:register'/>
+</iq>

@@ -1,0 +1,3 @@
+<failed xmlns='urn:xmpp:sm:3'>
+  <unexpected-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+</failed>
