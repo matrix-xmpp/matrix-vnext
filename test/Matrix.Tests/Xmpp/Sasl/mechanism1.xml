@@ -1,0 +1,1 @@
+<mechanism xmlns='urn:ietf:params:xml:ns:xmpp-sasl' kerb:principal='xmpp/sso.agsoft.com@SSO.AGSOFT.COM' xmlns:kerb='http://jabber.com/protocol/kerberosinfo'>GSSAPI</mechanism>

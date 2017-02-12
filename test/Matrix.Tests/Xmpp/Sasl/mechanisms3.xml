@@ -1,0 +1,5 @@
+<mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
+  <mechanism>GSSAPI</mechanism>
+  <mechanism>DIGEST-MD5</mechanism>
+  <hostname xmlns='urn:xmpp:domain-based-name:0'>auth43.us.example.com</hostname>
+</mechanisms>

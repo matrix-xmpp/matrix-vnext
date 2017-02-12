@@ -1,37 +1,31 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Stream.Features;
+using Shouldly;
 using Xunit;
-
 
 namespace Matrix.Tests.Xmpp.Stream.Features
 {
-    
     public class FeatureTest
     {
-        private const string XML1 = @"<ver xmlns='urn:xmpp:features:rosterver'>
-            <optional/>
-          </ver>";
-
-        private const string XML2 = @"<ver xmlns='urn:xmpp:features:rosterver'>
-            <required/>
-          </ver>";
-        
         [Fact]
-        public void Test1()
+        public void TestShouldbeOfTypeRosterVersioning()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is RosterVersioning);
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Stream.Features.ver1.xml")).ShouldBeOfType<RosterVersioning>();
+        }
 
-            var rv = xmpp1 as RosterVersioning;
+        [Fact]
+        public void TestRosterVersioning()
+        {
+            var rv = XmppXElement.LoadXml(Resource.Get("Xmpp.Stream.Features.ver1.xml")).Cast<RosterVersioning>();
             Assert.Equal(rv.Optional, true);
             Assert.Equal(rv.Required, false);
         }
 
         [Fact]
-        public void Test2()
+        public void TestBuildRosterVersioning()
         {
-            var rv = new RosterVersioning {Required = true};
-            rv.ShouldBe(XML2);
+            new RosterVersioning {Required = true}
+                .ShouldBe(Resource.Get("Xmpp.Stream.Features.ver2.xml"));
         }
     }
 }

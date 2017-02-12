@@ -1,0 +1,3 @@
+<stream:error xmlns:stream='http://etherx.jabber.org/streams'>
+  <invalid-xml xmlns='urn:ietf:params:xml:ns:xmpp-streams' />
+</stream:error>

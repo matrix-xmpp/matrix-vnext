@@ -1,47 +1,40 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.Sasl
 {
-    
     public class FailureTest
     {
-        private string XML1 = @"<failure xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
-  <invalid-authzid/>
-</failure>";
-
-        private string XML2 = @"<failure xmlns='urn:ietf:params:xml:ns:xmpp-sasl'/>";
+        [Fact]
+        public void ShouldBeOfTypeChallenge()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.failure1.xml")).ShouldBeOfType<Failure>();
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.failure2.xml")).ShouldBeOfType<Failure>();
+        }
 
         [Fact]
-        public void Test1()
+        public void TestFailure1()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-
-            var fail = xmpp1 as Failure;
-
+            var fail = XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.failure1.xml")).Cast<Failure>();
             Assert.Equal(fail.Condition == FailureCondition.InvalidAuthzId, true);
         }
 
         [Fact]
-        public void Test2()
+        public void TestFailure2()
         {
-            XmppXElement xmpp2 = XmppXElement.LoadXml(XML2);
-
-            var fail = xmpp2 as Failure;
-
+            var fail = XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.failure2.xml")).Cast<Failure>();
             Assert.Equal(fail.Condition == FailureCondition.UnknownCondition, true);
         }
 
         [Fact]
-        public void Test3()
+        public void TestBuildFailure()
         {
-            var fail = new Failure()
+            new Failure
             {
                 Condition = FailureCondition.InvalidAuthzId
-            };
-            
-            fail.ShouldBe(XML1);
+            }.ShouldBe(Resource.Get("Xmpp.Sasl.failure1.xml"));
         }
     }
 }

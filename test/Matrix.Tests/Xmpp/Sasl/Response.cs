@@ -1,21 +1,23 @@
 ﻿using System.Text;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.Sasl
 {
-    
     public class ResponseTest
     {
-        const string XML1 = "<response xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>ZHVtbXkgdmFsdWU=</response>";
+        [Fact]
+        public void ShouldBeOfTypeResponse()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.response1.xml")).ShouldBeOfType<Response>();
+        }
 
         [Fact]
-        public void Test1()
+        public void TestResponse()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            
-            var resp = xmpp1 as Response;
+            var resp = XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.response1.xml")).Cast<Response>();
 
             byte[] bval = resp.Bytes;
             string sval = Encoding.ASCII.GetString(bval);

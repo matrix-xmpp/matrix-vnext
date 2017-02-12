@@ -1,0 +1,33 @@
+<catalog xmlns='urn:xmpp:sec-label:catalog:2'
+      to='example.com' name='Default'
+      desc='an example set of labels'
+          restrict='false'>
+        <item selector='Classified|SECRET'>
+            <securitylabel xmlns='urn:xmpp:sec-label:0'>
+                <displaymarking fgcolor='black' bgcolor='red'>SECRET</displaymarking>
+                <label>
+                    <esssecuritylabel xmlns='urn:xmpp:sec-label:ess:0'
+                        >MQYCAQQGASk=</esssecuritylabel>
+                </label>
+            </securitylabel>
+        </item>
+        <item selector='Classified|CONFIDENTIAL'>
+            <securitylabel xmlns='urn:xmpp:sec-label:0'>
+                <displaymarking fgcolor='black' bgcolor='navy'>CONFIDENTIAL</displaymarking>
+                <label>
+                    <esssecuritylabel xmlns='urn:xmpp:sec-label:ess:0'
+                        >MQYCAQMGASk</esssecuritylabel>
+                </label>
+            </securitylabel>
+        </item>
+        <item selector='Classified|RESTRICTED'>
+            <securitylabel xmlns='urn:xmpp:sec-label:0'>
+                <displaymarking fgcolor='black' bgcolor='aqua'>RESTRICTED</displaymarking>
+                <label>
+                    <esssecuritylabel xmlns='urn:xmpp:sec-label:ess:0'
+                        >MQYCAQIGASk=</esssecuritylabel>
+                </label>
+            </securitylabel>
+        </item>
+        <item selector='UNCLASSIFIED' default='true'/>
+  </catalog>

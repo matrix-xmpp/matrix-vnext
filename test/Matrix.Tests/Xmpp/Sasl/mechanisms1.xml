@@ -1,0 +1,5 @@
+<mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
+  <mechanism>DIGEST-MD5</mechanism>
+  <mechanism>PLAIN</mechanism>
+  <mechanism kerb:principal='xmpp/ssops.sso.avaya.com@SSO.AVAYA.COM' xmlns:kerb='http://jabber.com/protocol/kerberosinfo'>GSSAPI</mechanism>
+</mechanisms>

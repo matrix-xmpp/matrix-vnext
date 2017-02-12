@@ -1,44 +1,39 @@
 ﻿using Matrix.Xml;
 using Matrix.Xmpp.Stream.Errors;
+using Shouldly;
 using Xunit;
-
 
 namespace Matrix.Tests.Xmpp.Stream.Errors
 {
-    
     public class SeeOtherHostTest
     {
-        private const string XML1 = @"<see-other-host xmlns='urn:ietf:params:xml:ns:xmpp-streams'>foo.com</see-other-host>";
-
-        private const string XML2 = @"<see-other-host xmlns='urn:ietf:params:xml:ns:xmpp-streams'>foo.com:80</see-other-host>";
+        [Fact]
+        public void TestShouldbeOfTypeHeaders()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Stream.Errors.see_other_host1.xml")).ShouldBeOfType<SeeOtherHost>();
+        }
 
         [Fact]
-        public void Test1()
+        public void TestSeeOtherHost1()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is SeeOtherHost);
-
-            var soh = xmpp1 as SeeOtherHost;
+            var soh = XmppXElement.LoadXml(Resource.Get("Xmpp.Stream.Errors.see_other_host1.xml")).Cast<SeeOtherHost>();
             Assert.Equal(soh.Hostname, "foo.com");
             Assert.Equal(soh.Port, 5222);
         }
 
         [Fact]
-        public void Test2()
+        public void TestSeeOtherHost2()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML2);
-            Assert.Equal(true, xmpp1 is SeeOtherHost);
-
-            var soh = xmpp1 as SeeOtherHost;
+            var soh = XmppXElement.LoadXml(Resource.Get("Xmpp.Stream.Errors.see_other_host2.xml")).Cast<SeeOtherHost>(); ;
             Assert.Equal(soh.Hostname, "foo.com");
             Assert.Equal(soh.Port, 80);
         }
 
         [Fact]
-        public void Test3()
+        public void TestbuildSeeOtherHost()
         {
-            var soh = new SeeOtherHost {Port = 80, Hostname = "foo.com" };
-            soh.ShouldBe(XML2);
+            new SeeOtherHost {Port = 80, Hostname = "foo.com" }
+                .ShouldBe(Resource.Get("Xmpp.Stream.Errors.see_other_host2.xml"));
         }
     }
 }

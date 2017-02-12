@@ -1,51 +1,24 @@
-﻿using System.Xml.Linq;
-using Matrix.Xml;
+﻿using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
 using Xunit;
 using Shouldly;
 
 namespace Matrix.Tests.Xmpp.Sasl
 {
-    
     public class MechanismTest
     {
-        
-        //const  string XML1 = "<stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism kerb:principal='xmpp/ssops.sso.avaya.com@SSO.AVAYA.COM' xmlns:kerb='http://jabber.com/protocol/kerberosinfo'>GSSAPI</mechanism></mechanisms></stream:features>";//const  string XML1 = "<stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism kerb:principal='xmpp/ssops.sso.avaya.com@SSO.AVAYA.COM' xmlns:kerb='http://jabber.com/protocol/kerberosinfo'>GSSAPI</mechanism></mechanisms></stream:features>";
-        const string XML1 = "<mechanism xmlns='urn:ietf:params:xml:ns:xmpp-sasl' kerb:principal='xmpp/ssops.sso.avaya.com@SSO.AVAYA.COM' xmlns:kerb='http://jabber.com/protocol/kerberosinfo'>GSSAPI</mechanism>";
-
         [Fact]
-        public void Test1()
+        public void ShouldBeOfTypeMechanism()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Mechanism);
-
-            var mech = xmpp1 as Mechanism;
-
-            if (mech != null)
-            {
-                string princ = mech.GetAttribute("http://jabber.com/protocol/kerberosinfo", "principal");
-                Assert.Equal(princ, "xmpp/ssops.sso.avaya.com@SSO.AVAYA.COM");
-            }
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.mechanism1.xml")).ShouldBeOfType<Mechanism>();
         }
 
         [Fact]
-        public void Test2()
+        public void TestMechanism()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            xmpp1.ShouldBeOfType<Mechanism>();
-            
-            //var mech = xmpp1 as Mechanism;
+            var mech = XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.mechanism1.xml")).Cast<Mechanism>();
 
-            //if (mech != null) Assert.Equal(mech.KerberosPrincipal, "xmpp/ssops.sso.avaya.com@SSO.AVAYA.COM");
+            string princ = mech.GetAttribute("http://jabber.com/protocol/kerberosinfo", "principal");
+            Assert.Equal(princ, "xmpp/sso.agsoft.com@SSO.AGSOFT.COM");
         }
-
-        [Fact]
-        public void Test3()
-        {
-            var mech = new Mechanism();
-            
-            mech.Add(new XAttribute("{http://www.w3.org/2000/xmlns/}kerb", "http://jabber.com/protocol/kerberosinfo"));
-            mech.Add(new XAttribute("{http://jabber.com/protocol/kerberosinfo}principal", "xmpp/ssops.sso.avaya.com@SSO.AVAYA.COM"));
-        }
-    }
-}
+    }}

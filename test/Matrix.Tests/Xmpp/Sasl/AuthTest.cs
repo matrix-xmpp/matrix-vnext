@@ -1,31 +1,34 @@
 ﻿using System.Text;
 using Matrix.Xml;
+using Shouldly;
 using Xunit;
-
 
 namespace Matrix.Tests.Xmpp.Sasl
 {
     
     public class AuthTest
     {
-        const string XML1 = "<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>ZHVtbXkgdmFsdWU=</auth>";
+        [Fact]
+        public void ShouldBeOfTypeAuth()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.auth1.xml")).ShouldBeOfType<Matrix.Xmpp.Sasl.Auth>();
+        }
 
         [Fact]
-        public void Test1()
+        public void TestAuth()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-
-
-            var resp = xmpp1 as Matrix.Xmpp.Sasl.Auth;
+            var resp = XmppXElement.LoadXml(Resource.Get("Xmpp.Sasl.auth1.xml")).Cast<Matrix.Xmpp.Sasl.Auth>();
 
             byte[] bval = resp.Bytes;
             string sval = Encoding.ASCII.GetString(bval);
             Assert.Equal("dummy value", sval);
+        }
 
-            var auth2 = new Matrix.Xmpp.Sasl.Auth { Bytes = Encoding.ASCII.GetBytes("dummy value") };
-            auth2.ShouldBe(XML1);
-            
-            var auth3 = new Matrix.Xmpp.Sasl.Auth { Bytes = null };
+        [Fact]
+        public void TestBuildAuth()
+        {
+            new Matrix.Xmpp.Sasl.Auth { Bytes = Encoding.ASCII.GetBytes("dummy value") }
+                .ShouldBe(Resource.Get("Xmpp.Sasl.auth1.xml"));
         }
     }
 }

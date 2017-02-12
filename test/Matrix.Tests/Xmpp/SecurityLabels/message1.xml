@@ -1,0 +1,9 @@
+<message xmlns='jabber:client'>
+  <body>This content is classified.</body>
+  <securitylabel xmlns='urn:xmpp:sec-label:0'>
+    <displaymarking fgcolor='black' bgcolor='red'>SECRET</displaymarking>
+    <label>
+      <esssecuritylabel xmlns='urn:xmpp:sec-label:ess:0'>MQYCAQQGASk=</esssecuritylabel>
+    </label>
+  </securitylabel>
+</message>

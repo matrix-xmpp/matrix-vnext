@@ -2,69 +2,17 @@
 using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.SecurityLabels;
+using Shouldly;
 using Xunit;
 
 namespace Matrix.Tests.Xmpp.SecurityLabels
 {
-    
     public class SecurityLabelsTests
     {
-        private const string xml1 = @"<message xmlns='jabber:client'>
-    <body>This content is classified.</body>
-    <securitylabel xmlns='urn:xmpp:sec-label:0'>
-        <displaymarking fgcolor='black' bgcolor='red'>SECRET</displaymarking>
-        <label><esssecuritylabel xmlns='urn:xmpp:sec-label:ess:0'>MQYCAQQGASk=</esssecuritylabel></label>
-    </securitylabel>
-</message>";
-
-        private const string xml2 = @"<catalog xmlns='urn:xmpp:sec-label:catalog:2'
-      to='example.com' name='Default'
-      desc='an example set of labels'
-          restrict='false'>
-        <item selector='Classified|SECRET'>
-            <securitylabel xmlns='urn:xmpp:sec-label:0'>
-                <displaymarking fgcolor='black' bgcolor='red'>SECRET</displaymarking>
-                <label>
-                    <esssecuritylabel xmlns='urn:xmpp:sec-label:ess:0'
-                        >MQYCAQQGASk=</esssecuritylabel>
-                </label>
-            </securitylabel>
-        </item>
-        <item selector='Classified|CONFIDENTIAL'>
-            <securitylabel xmlns='urn:xmpp:sec-label:0'>
-                <displaymarking fgcolor='black' bgcolor='navy'>CONFIDENTIAL</displaymarking>
-                <label>
-                    <esssecuritylabel xmlns='urn:xmpp:sec-label:ess:0'
-                        >MQYCAQMGASk</esssecuritylabel>
-                </label>
-            </securitylabel>
-        </item>
-        <item selector='Classified|RESTRICTED'>
-            <securitylabel xmlns='urn:xmpp:sec-label:0'>
-                <displaymarking fgcolor='black' bgcolor='aqua'>RESTRICTED</displaymarking>
-                <label>
-                    <esssecuritylabel xmlns='urn:xmpp:sec-label:ess:0'
-                        >MQYCAQIGASk=</esssecuritylabel>
-                </label>
-            </securitylabel>
-        </item>
-        <item selector='UNCLASSIFIED' default='true'/>
-  </catalog>";
-
-        private const string xml3 = @"<securitylabel xmlns='urn:xmpp:sec-label:0'>
-                <displaymarking fgcolor='blackxxx' bgcolor='red'>SECRET</displaymarking>
-                <label>
-                    <esssecuritylabel xmlns='urn:xmpp:sec-label:ess:0'
-                        >MQYCAQQGASk=</esssecuritylabel>
-                </label>
-            </securitylabel>";
-
         [Fact]
-        public void Test1()
+        public void TestMessageWuthSecurityLabel()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(xml1);
-
-            var msg = xmpp1 as Message;
+            var msg = XmppXElement.LoadXml(Resource.Get("Xmpp.SecurityLabels.message1.xml")).Cast<Message>();
             var secLabel = msg.Element<SecurityLabel>();
 
             Assert.Equal(secLabel != null, true);
@@ -80,35 +28,38 @@ namespace Matrix.Tests.Xmpp.SecurityLabels
         }
 
         [Fact]
-        public void Test2()
+        public void TestBuildMessageWithSecurityLabel()
         {
-            var msg = new Message
+            new Message
+            {
+                Body = "This content is classified.",
+                SecurityLabel = new SecurityLabel
                 {
-                    Body = "This content is classified.",
-                    SecurityLabel = new SecurityLabel
+                    DisplayMarking = new DisplayMarking
                     {
-                        DisplayMarking = new DisplayMarking
-                            {
-                                ForegroundColor = Color.Black,
-                                BackgroundColor = Color.Red,
-                                Value = "SECRET"
-                            },
-                        Label = new Label
-                            {
-                                EssSecurityLabel = new EssSecurityLabel {Value = "MQYCAQQGASk="}
-                            }
+                        ForegroundColor = Color.Black,
+                        BackgroundColor = Color.Red,
+                        Value = "SECRET"
+                    },
+                    Label = new Label
+                    {
+                        EssSecurityLabel = new EssSecurityLabel {Value = "MQYCAQQGASk="}
                     }
-                };
+                }
+            }
+            .ShouldBe(Resource.Get("Xmpp.SecurityLabels.message1.xml"));
+        }
 
-            msg.ShouldBe(xml1);
+        [Fact]
+        public void TestShouldbeOfTypeCatalog()
+        {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.SecurityLabels.catalog1.xml")).ShouldBeOfType<Catalog>();
         }
 
         [Fact]
         public void TestCatalog()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(xml2);
-
-            var catalog = xmpp1 as Catalog;
+            var catalog = XmppXElement.LoadXml(Resource.Get("Xmpp.SecurityLabels.catalog1.xml")).Cast<Catalog>();
 
             Assert.Equal(catalog != null, true);
             Assert.Equal(catalog.To.Bare, "example.com");
@@ -138,8 +89,7 @@ namespace Matrix.Tests.Xmpp.SecurityLabels
             Assert.Equal(seclabel3.DisplayMarking.ForegroundColor == Color.Black, true);
             Assert.Equal(seclabel3.DisplayMarking.BackgroundColor == Color.Aqua, true);
             Assert.Equal(seclabel3.DisplayMarking.Value, "RESTRICTED");
-
-
+            
             var item4 = items.ElementAt(3);
             Assert.Equal(item4.Selector, "UNCLASSIFIED");
         }
@@ -147,9 +97,7 @@ namespace Matrix.Tests.Xmpp.SecurityLabels
         [Fact]
         public void TestSecurityLabelWithUnknownColor()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(xml3);
-
-            var label = xmpp1 as SecurityLabel;
+            var label = XmppXElement.LoadXml(Resource.Get("Xmpp.SecurityLabels.securitylabel1.xml")).Cast<SecurityLabel>();
             var display = label.DisplayMarking;
             Assert.Equal(display.ForegroundColor == Color.UnknownColor, true);
         }

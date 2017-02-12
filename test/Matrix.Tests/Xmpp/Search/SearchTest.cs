@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Matrix.Tests.Xmpp.Search
 {
-    
     public class SearchTest
     {
         [Fact]

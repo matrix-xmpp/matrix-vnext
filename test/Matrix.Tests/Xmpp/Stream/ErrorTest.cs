@@ -1,47 +1,38 @@
 ﻿using Matrix.Xml;
+using Shouldly;
 using Xunit;
-
 
 namespace Matrix.Tests.Xmpp.Stream
 {
-    
     public class ErrorTest
     {
-        string XML1 = @"<stream:error xmlns:stream='http://etherx.jabber.org/streams'>
-  <resource-constraint xmlns='urn:ietf:params:xml:ns:xmpp-streams' />
-</stream:error>";
-
-        string XML2 = @"<stream:error xmlns:stream='http://etherx.jabber.org/streams'>
-  <invalid-xml xmlns='urn:ietf:params:xml:ns:xmpp-streams' />
-</stream:error>";
-
         [Fact]
-        public void Test1()
+        public void TestBuildstreamError()
         {
-            var xmpp1 = new Matrix.Xmpp.Stream.Error(Matrix.Xmpp.Stream.ErrorCondition.ResourceConstraint);
-            xmpp1.ShouldBe(XML1);
+            new Matrix.Xmpp.Stream.Error(Matrix.Xmpp.Stream.ErrorCondition.ResourceConstraint)
+                .ShouldBe(Resource.Get("Xmpp.Stream.stream_error1.xml"));
 
-            var xmpp2 = new Matrix.Xmpp.Stream.Error(Matrix.Xmpp.Stream.ErrorCondition.InvalidXml);
-            xmpp2.ShouldBe(XML2);
+            new Matrix.Xmpp.Stream.Error(Matrix.Xmpp.Stream.ErrorCondition.InvalidXml)
+                .ShouldBe(Resource.Get("Xmpp.Stream.stream_error2.xml"));
         }
 
         [Fact]
-        public void Test2()
+        public void TestShouldbeOfTypeError()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML1);
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Stream.Error);
-            var error = xmpp1 as Matrix.Xmpp.Stream.Error;
-            
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Stream.stream_error1.xml")).ShouldBeOfType<Matrix.Xmpp.Stream.Error>();
+        }
+
+        [Fact]
+        public void TestStreamError1()
+        {
+            var error = XmppXElement.LoadXml(Resource.Get("Xmpp.Stream.stream_error1.xml")).Cast<Matrix.Xmpp.Stream.Error>();
             Assert.Equal(error.Condition == Matrix.Xmpp.Stream.ErrorCondition.ResourceConstraint, true);
         }
 
         [Fact]
-        public void Test3()
+        public void TestStreamError2()
         {
-            XmppXElement xmpp1 = XmppXElement.LoadXml(XML2);
-            Assert.Equal(true, xmpp1 is Matrix.Xmpp.Stream.Error);
-            var error = xmpp1 as Matrix.Xmpp.Stream.Error;
-
+            var error = XmppXElement.LoadXml(Resource.Get("Xmpp.Stream.stream_error2.xml")).Cast<Matrix.Xmpp.Stream.Error>();
             Assert.Equal(error.Condition == Matrix.Xmpp.Stream.ErrorCondition.InvalidXml, true);
         }
     }
