@@ -1,9 +1,8 @@
-﻿using System;
-using Matrix.Attributes;
+﻿using Matrix.Attributes;
 using Shouldly;
 using Xunit;
 
-namespace Matrix.Core.Tests
+namespace Matrix.Tests
 {
     public class EnumTests
     {

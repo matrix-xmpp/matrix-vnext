@@ -1,10 +1,8 @@
 ﻿using Shouldly;
 using Xunit;
-using Matrix;
 
 namespace Matrix.Tests
 {
- 
     public class JidTests
     {
 

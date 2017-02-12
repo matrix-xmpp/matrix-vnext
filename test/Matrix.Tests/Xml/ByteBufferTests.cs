@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Xunit;
-using Matrix.Xml;
 using Matrix.Xml.Parser;
 using Shouldly;
 

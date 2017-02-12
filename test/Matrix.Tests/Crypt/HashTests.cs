@@ -36,8 +36,7 @@ namespace Matrix.Tests.Crypt
 
             MD5         900150983CD24FB0D6963F7D28E17F72
         */
-
-
+        
         [Fact]
         public void HashAlgorithmsOutputTest()
         {

@@ -1,7 +1,6 @@
 ﻿using System;
 using Xunit;
 using Shouldly;
-using Matrix;
 using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Client;
@@ -13,7 +12,7 @@ namespace Matrix.Tests.Xml
     public class ExtensionsTest
     {
         [Fact]
-        public void Test_Match_Predicates()
+        public void TestMatchPredicates()
         {
             var pIq = new IqQuery<PingIq> {Type = IqType.Get, Id = "foo"};
 
