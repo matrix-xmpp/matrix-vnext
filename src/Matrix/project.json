@@ -1,6 +1,6 @@
 ﻿{
   "name": "Matrix",
-  "version": "0.2.0-beta",
+  "version": "0.3.0-beta",
   "title": "Matrix vNext",
   "description": "MatriX vNext",
   "language": "en-US",
@@ -8,6 +8,7 @@
     "AG-Software"
   ],
   "copyright": "Copyright © Alexander Gnauck, AG-Software",
+
 
 
   "dependencies": {

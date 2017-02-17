@@ -6,7 +6,8 @@
   },
 
   "dependencies": {
-    "Matrix":"0.3.0-beta",
+    "Matrix": "0.3.0-beta",
+    "Matrix.Srv": "1.0.0",
     "Microsoft.Extensions.Logging.Console": "1.1.0"
   },
 

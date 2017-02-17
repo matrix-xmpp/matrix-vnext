@@ -4,6 +4,7 @@ using Matrix;
 using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
+using Matrix.Srv;
 
 namespace ConsoleClient
 {
@@ -32,6 +33,7 @@ namespace ConsoleClient
                 Username = "gnauck",
                 Password = "***REMOVED***",
                 XmppDomain = "jabber.org",
+                HostnameResolver = new SrvNameResolver(),
 
                 // local prosody
                 //Username = "alex",
