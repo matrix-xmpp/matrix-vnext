@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Matrix.Idn;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
 
