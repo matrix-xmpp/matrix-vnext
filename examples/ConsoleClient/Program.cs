@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Xml;
 using System.Reactive.Linq;
-using System.Reflection;
-using System.Xml.Linq;
 using Matrix;
-using Matrix.Network;
 using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;

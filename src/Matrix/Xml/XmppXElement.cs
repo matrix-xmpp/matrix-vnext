@@ -102,7 +102,7 @@ namespace Matrix.Xml
         }
 
         /// <summary>
-        /// LBuild a XmppXElement from a byte array.
+        /// Build a XmppXElement from a byte array.
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="index">The index.</param>

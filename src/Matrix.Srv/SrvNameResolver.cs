@@ -7,7 +7,7 @@ using DnsClient;
 using DnsClient.Protocol;
 using DotNetty.Transport.Bootstrapping;
 
-namespace Matrix.Network.Resolver
+namespace Matrix.Srv
 {
     public class SrvNameResolver : INameResolver
     {

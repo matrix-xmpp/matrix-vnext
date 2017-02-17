@@ -1,11 +1,12 @@
 {
   "version": "1.0.0-*",
   "buildOptions": {
-    "emitEntryPoint": true
+      "emitEntryPoint": true,
+      "debugType": "portable"
   },
 
   "dependencies": {
-    "Matrix": "0.2.0-beta",
+    "Matrix":"0.3.0-beta",
     "Microsoft.Extensions.Logging.Console": "1.1.0"
   },
 
