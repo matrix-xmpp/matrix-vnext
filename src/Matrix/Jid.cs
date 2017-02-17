@@ -45,13 +45,10 @@ namespace Matrix
         m_Resource  ==> resourceprep
         */
         
-        // !!! 
-        // use this internal variables only if you know what you are doing
-        // !!!
-        internal string m_Jid;
-		internal string m_User;
-		internal string m_Server;
-		internal string m_Resource;
+        private string fullJid;
+        private string m_User;
+        private string m_Server;
+        private string m_Resource;
 
         /// <summary>
         /// Create a new Jid object.
@@ -68,14 +65,14 @@ namespace Matrix
 		/// <param name="jid">XMPP ID, in string form examples: user@server/Resource, user@server</param>
 		public Jid(string jid)
 		{			
-			m_Jid = jid;
+			fullJid = jid;
 			Parse(jid);
 		}
 
         public Jid(string jid, bool stringPrep)
         {
-            m_Jid = jid;
-            Parse(m_Jid);
+            fullJid = jid;
+            Parse(fullJid);
 
             if (!stringPrep)
                 return;
@@ -165,10 +162,8 @@ namespace Matrix
                 if (string.IsNullOrEmpty(fullJid))
                     return false;
 
-                m_Jid = fullJid;
-
-                int atPos = m_Jid.IndexOf('@');
-                int slashPos = m_Jid.IndexOf('/');
+                int atPos = fullJid.IndexOf('@');
+                int slashPos = fullJid.IndexOf('/');
 
                 // some more validations
                 // @... or /...
@@ -189,13 +184,13 @@ namespace Matrix
                     if (slashPos == -1)
                     {
                         // JID Contains only the Server
-                        server = m_Jid;
+                        server = fullJid;
                     }
                     else
                     {
                         // JID Contains only the Server and Resource
-                        server = m_Jid.Substring(0, slashPos);
-                        resource = m_Jid.Substring(slashPos + 1);
+                        server = fullJid.Substring(0, slashPos);
+                        resource = fullJid.Substring(slashPos + 1);
                     }
                 }
                 else
@@ -204,15 +199,15 @@ namespace Matrix
                     {
                         // We have no resource
                         // Devide User and Server (user@server)
-                        server = m_Jid.Substring(atPos + 1);
-                        user = m_Jid.Substring(0, atPos);
+                        server = fullJid.Substring(atPos + 1);
+                        user = fullJid.Substring(0, atPos);
                     }
                     else
                     {
                         // We have all
-                        user = m_Jid.Substring(0, atPos);
-                        server = m_Jid.Substring(atPos + 1, slashPos - atPos - 1);
-                        resource = m_Jid.Substring(slashPos + 1);
+                        user = fullJid.Substring(0, atPos);
+                        server = fullJid.Substring(atPos + 1, slashPos - atPos - 1);
+                        resource = fullJid.Substring(slashPos + 1);
                     }
                 }
 
@@ -223,17 +218,19 @@ namespace Matrix
                 if (resource != null)
                     m_Resource = resource;
 
+                this.fullJid = fullJid;
+
                 return true;
             }
             catch (Exception)
             {
                 return false;
             }
-		}               
-        
-        internal void BuildJid()
+		}
+
+        private void BuildJid()
         {
-            m_Jid = BuildJid(m_User, m_Server, m_Resource);
+            fullJid = BuildJid(m_User, m_Server, m_Resource);
         }
 
         private string BuildJid(string user, string server, string resource)
@@ -253,10 +250,7 @@ namespace Matrix
 			return sb.ToString();
 		}
         
-		public override string ToString()
-		{
-			return m_Jid;
-		}
+		public override string ToString() => fullJid;
 
 	    #region << Properties >>
 
@@ -377,13 +371,7 @@ namespace Matrix
 		/// <summary>
 		/// The Bare Jid only (user@server).
 		/// </summary>		
-        public string Bare
-		{
-			get
-			{				
-				return BuildJid(m_User, m_Server, null);
-			}
-        }
+        public string Bare => BuildJid(m_User, m_Server, null);
 
 	    #endregion
 
@@ -418,34 +406,25 @@ namespace Matrix
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        bool IEquatable<Jid>.Equals(Jid other)
-        {
-            return new FullJidComparer().Compare(other, this) == 0;
-        }
+        bool IEquatable<Jid>.Equals(Jid other) => new FullJidComparer().Compare(other, this) == 0;
 
-        #endregion
+	    #endregion
         /// <summary>
         /// Compares Full jid (user@server/resource)
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(Jid other)
-        {            
-            return new FullJidComparer().Compare(other, this) == 0; 
-        }       
+        public bool Equals(Jid other) => new FullJidComparer().Compare(other, this) == 0;
 
-        /// <summary>
+	    /// <summary>
         /// Compares his with the given IComparer
         /// </summary>
         /// <param name="other"></param>
         /// <param name="comparer"></param>
         /// <returns></returns>
-        public bool Equals(Jid other, IComparer<Jid> comparer)
-		{            
-            return comparer.Compare(other, this) == 0;			
-		}
+        public bool Equals(Jid other, IComparer<Jid> comparer) => comparer.Compare(other, this) == 0;
 
-        #region IComparable<Jid> Members
+	    #region IComparable<Jid> Members
         /// <summary>
         /// Compares the current object with another object of the same type.
         /// </summary>
@@ -461,11 +440,9 @@ namespace Matrix
         /// Greater than zero
         /// This object is greater than <paramref name="other"/>.
         /// </returns>
-        public int CompareTo(Jid other)
-        {            
-            return new FullJidComparer().Compare(other, this);
-        }
-        #endregion
+        public int CompareTo(Jid other) => new FullJidComparer().Compare(other, this);
+
+	    #endregion
 
         #region << XEP-0106: JID Escaping >>
         /// <summary>
@@ -601,10 +578,6 @@ namespace Matrix
         /// Clones this instance.
         /// </summary>
         /// <returns></returns>
-        public Jid Clone()
-        {
-            return MemberwiseClone() as Jid;
-        }
-        
-    }
+        public Jid Clone() => MemberwiseClone() as Jid;
+	}
 }
