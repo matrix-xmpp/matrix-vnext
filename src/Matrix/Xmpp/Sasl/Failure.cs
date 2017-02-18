@@ -51,7 +51,7 @@ namespace Matrix.Xmpp.Sasl
         /// <summary>
         /// An optional text description for the authentication failure.
         /// </summary>
-        public string Text
+        public new string Text
         {
             get { return GetTag("text"); }
             set { SetTag("text", value); }

@@ -316,7 +316,7 @@ namespace Matrix.Xmpp.Client
         /// Gets or sets the <see cref="Error"/>.
         /// </summary>
         /// <value>The error.</value>
-        public Error Error
+        public new Error Error
         {
             get { return Element<Error>(); }
             set { Replace(value); }

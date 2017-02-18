@@ -138,7 +138,7 @@ namespace Matrix.Xmpp.Base
         /// <summary>
         /// The optional error text
         /// </summary>
-        public string Text
+        public new string Text
         {
             get
             {

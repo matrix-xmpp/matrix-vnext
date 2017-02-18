@@ -63,7 +63,7 @@ namespace Matrix.Xmpp.Stream
         /// associated with the included condition element (or elements).
         /// </para>
         /// </summary>
-        public string Text
+        public new string Text
         {
             get { return GetTag(Namespaces.Streams, "text"); }
             set

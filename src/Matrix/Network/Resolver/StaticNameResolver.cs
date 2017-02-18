@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using DotNetty.Transport.Bootstrapping;
 
@@ -19,13 +20,16 @@ namespace Matrix.Network.Resolver
 
         public async Task<EndPoint> ResolveAsync(EndPoint address)
         {
-            var asDns = address as DnsEndPoint;
-            if (asDns != null)
+            return await Task<EndPoint>.Factory.StartNew(() =>
             {
-                return new IPEndPoint(Ip, Port);
-            }
-            
-            return address;
+                var asDns = address as DnsEndPoint;
+                if (asDns != null)
+                {
+                    return new IPEndPoint(Ip, Port);
+                }
+
+                return address;
+            });
         }
     }
 }

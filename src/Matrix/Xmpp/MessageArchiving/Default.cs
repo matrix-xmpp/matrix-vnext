@@ -59,7 +59,7 @@ namespace Matrix.Xmpp.MessageArchiving
         /// <summary>
         /// Specifies the user's default setting for Save Mode
         /// </summary>
-        public SaveType Save
+        public new SaveType Save
         {
             get { return GetAttributeEnum<SaveType>("save"); }
             set { SetAttribute("save", value.ToString().ToLower()); }

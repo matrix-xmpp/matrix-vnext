@@ -140,7 +140,7 @@ namespace Matrix.Xmpp.Register
         /// Gets or sets the text.
         /// </summary>
         /// <value>The text.</value>
-        public string Text
+        public new string Text
         {
             get { return GetTag("text"); }
             set { SetTag("text", value); }

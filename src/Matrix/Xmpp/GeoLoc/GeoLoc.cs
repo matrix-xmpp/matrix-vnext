@@ -94,7 +94,7 @@ namespace Matrix.Xmpp.GeoLoc
         /// <summary>
         /// A catch-all element that captures any other information about the location.
         /// </summary>
-        public string Text
+        public new string Text
         {
             get { return GetTag("text"); }
             set { SetTag("text", value); }

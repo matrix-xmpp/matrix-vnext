@@ -22,7 +22,7 @@ namespace Matrix.Xmpp.MessageArchiving
         {
         }
 
-        public bool Save
+        public new bool Save
         {
             get { return GetAttributeBool("save"); }
             set { SetAttribute("save", value); }

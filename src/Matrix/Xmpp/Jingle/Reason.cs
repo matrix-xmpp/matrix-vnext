@@ -79,7 +79,7 @@ namespace Matrix.Xmpp.Jingle
         /// Provides a human-readable information about the reason for this action.
         /// </summary>
         /// <value>The human-readable text.</value>
-        public string Text
+        public new string Text
         {
             get { return GetTag("text");}
             set { SetTag("text", value);}

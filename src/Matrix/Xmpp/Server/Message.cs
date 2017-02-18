@@ -184,7 +184,7 @@ namespace Matrix.Xmpp.Server
         /// <summary>
         /// Error object
         /// </summary>
-        public Error Error
+        public new Error Error
         {
             get { return Element<Error>(); }
             set { Replace<Error>(value); }
