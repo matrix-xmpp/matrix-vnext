@@ -35,7 +35,7 @@ namespace Matrix.Srv
             var asDns = address as DnsEndPoint;
 
 
-            var srvRecord = await  LookupSrvRecords(asDns.Host);
+            var srvRecord = await LookupSrvRecords(asDns.Host);
             if (srvRecord != null)
             {
                 var dnsEndPoint = new DnsEndPoint(srvRecord.Target, srvRecord.Port);
