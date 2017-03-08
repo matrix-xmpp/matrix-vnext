@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Linq;
 using Matrix;
+using Matrix.Network.Handlers;
 using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
@@ -17,7 +18,7 @@ namespace ConsoleClient
 
             ExampleHelper.SetConsoleLogger();
 
-            var xmppClient = new XmppClient
+            var xmppClient = new XmppClient()
             {
                 // AG-Software
                 //Username = "alex",
@@ -54,6 +55,7 @@ namespace ConsoleClient
 
             };
 
+            //xmppClient.AddHandler(new AutoReplyToPingHandler<Iq>());
 
 
             xmppClient
@@ -85,7 +87,7 @@ namespace ConsoleClient
             var roster = xmppClient.RequestRosterAsync().GetAwaiter().GetResult();
             Console.WriteLine(roster.ToString());
 
-            xmppClient.SendPresenceAsync(Show.Chat, "free for chat");
+            xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
             
 
             Console.WriteLine("Hello World!");
