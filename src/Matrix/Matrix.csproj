@@ -10,16 +10,15 @@
     <TargetFrameworks>netstandard1.3;net451</TargetFrameworks>
     <AssemblyName>Matrix</AssemblyName>
     <PackageId>Matrix</PackageId>
-    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.0</NetStandardImplicitPackageVersion>
+    
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DnsClient" Version="1.0.3" />
-    <PackageReference Include="DotNetty.Handlers" Version="0.4.0" />
-    <PackageReference Include="DotNetty.Transport" Version="0.4.0" />
+    <PackageReference Include="DotNetty.Handlers" Version="0.4.2" />
+    <PackageReference Include="DotNetty.Transport" Version="0.4.2" />
     <PackageReference Include="System.Reactive" Version="3.1.1" />
   </ItemGroup>
 
@@ -33,6 +32,12 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+    <PackageReference Include="System.Globalization.Extensions">
+      <Version>4.3.0</Version>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
