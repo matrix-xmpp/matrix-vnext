@@ -70,7 +70,8 @@ namespace Matrix.Network.Handlers
                         handleTypes[predicate].Invoke(ctx, msg);
                 }
             }
-            //ctx.FireChannelRead(msg);
+
+            ctx.FireChannelRead(msg);
         }
 
         #region << SendAsync members >>
@@ -178,6 +179,7 @@ namespace Matrix.Network.Handlers
 
             return await SendAsync<T>(() => SendAsync(iq), predicate, timeout);
         }
+
         #endregion
     }
 }
