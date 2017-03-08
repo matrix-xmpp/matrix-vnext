@@ -44,7 +44,6 @@ namespace Matrix
 
                     
                     Pipeline.AddLast(xmlStreamDecoder);
-
                     
                     //Pipeline.AddLast(new StringEncoder());
                     Pipeline.AddLast(new ZlibEncoder());
@@ -59,15 +58,14 @@ namespace Matrix
                     
                     Pipeline.AddLast(xmppStanzaHandler);
 
-                    
+                    Pipeline.AddLast(CatchAllXmppStanzaHandler.Name, new CatchAllXmppStanzaHandler());
+                    //AddHandler(new AutoReplyToPingHandler<Iq>());
 
                     Pipeline.AddLast(new DisconnectHandler());
 
-                    
+                    //ChannelInitializer?.Initialize(channel.Pipeline);
                 }));
         }
-
-      
 
         private void OnXmlStreamEvent(XmlStreamEvent xmlStreamEvent)
         {
@@ -97,6 +95,8 @@ namespace Matrix
                 Bootstrap.Resolver(resolver);
             }
         }
+
+        //public IChannelInitializer ChannelInitializer { get; set; }
         #endregion
 
         #region << Send members >>
