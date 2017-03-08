@@ -1,3 +1,5 @@
+using Matrix.Attributes;
+
 namespace Matrix.Xmpp.Client
 {
     /// <summary>

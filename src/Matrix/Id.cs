@@ -31,9 +31,7 @@ namespace Matrix
                     ret += Guid.NewGuid().ToString();
                     break;
                 case IdType.ShortGuid:
-                    ret += Convert
-                                .ToBase64String(Guid.NewGuid().ToByteArray())
-                                .Substring(0, 22);
+                    ret += GenerateShortGuid();
                     break;
             }
 		    return ret;
@@ -46,5 +44,12 @@ namespace Matrix
 		{
 			id = 0;
 		}
-	}    
+
+        public static string GenerateShortGuid()
+        {
+            return Convert
+                .ToBase64String(Guid.NewGuid().ToByteArray())
+                .Substring(0, 22);
+        }
+    }    
 }
