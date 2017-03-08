@@ -7,7 +7,7 @@ using Matrix.Crypt;
 
 namespace Matrix.Sasl.Scram
 {
-    internal class ScramHelper
+    public class ScramHelper
     {
         private const int LenghtClientNonce     = 24;
         private const int LenghtServerNonce     = 24;
@@ -20,7 +20,6 @@ namespace Matrix.Sasl.Scram
         private string clientNonceB64;
         private string serverNonceB64;
 
-        private byte[] salt;
         private byte[] storedKey;
         private byte[] serverKey;
 
@@ -100,28 +99,27 @@ namespace Matrix.Sasl.Scram
         }
         #endregion
 
-        #region << server messages >>
+        #region << server messages >>        
         /// <summary>
         /// Generates the first Server message bases on the first client message and the plain password
         /// </summary>
         /// <param name="msg">first client message</param>
-        /// <param name="pass">plain password</param>
+        /// <param name="passSalted">The password salted.</param>
+        /// <param name="salt">The salt.</param>
+        /// <param name="iterations">number of iterations for the Hi method.</param>
         /// <returns></returns>
-        public string GenerateFirstServerMessage(string msg, string pass)
+        public string GenerateFirstServerMessage(string msg, byte[] passSalted, byte[] salt, int iterations)
         {
             var pairs = ParseMessage(msg);
 
             string clientNonce = pairs["r"];
-            string user = pairs["n"];
+            //string user = pairs["n"];
 
             serverNonceB64 = GenerateServerNonce();
-            salt = GenerateSalt();
-
-            var saltedPassword = Hi(pass, salt, DefaultIterationCount);
-
-            var clientKey = Hash.HMAC(saltedPassword, "Client Key");
+           
+            var clientKey = Hash.HMAC(passSalted, "Client Key");
             storedKey = Hash.Sha1HashBytes(clientKey);
-            serverKey = Hash.HMAC(saltedPassword, "Server Key");
+            serverKey = Hash.HMAC(passSalted, "Server Key");
 
             var sb = new StringBuilder();
 
@@ -134,12 +132,26 @@ namespace Matrix.Sasl.Scram
             sb.Append(",");
 
             sb.Append("i=");
-            sb.Append(DefaultIterationCount);
+            sb.Append(iterations);
 
             firstClientMessage = msg;
             firstServerMessage = sb.ToString();
 
             return firstServerMessage;
+        }
+
+        /// <summary>
+        /// Generates the first Server message bases on the first client message and the plain password
+        /// </summary>
+        /// <param name="msg">first client message</param>
+        /// <param name="passPlain">plain password</param>
+        /// <param name="iterations">number of iterations for the Hi method.</param>
+        /// <returns></returns>
+        public string GenerateFirstServerMessage(string msg, string passPlain, int iterations = DefaultIterationCount)
+        {
+            var salt = GenerateSalt();
+            var passSalted = Hi(passPlain, salt, iterations);
+            return GenerateFirstServerMessage(msg, passSalted, salt, iterations);
         }
 
         /// <summary>
@@ -151,8 +163,8 @@ namespace Matrix.Sasl.Scram
         {
             var pairs = ParseMessage(finalClient);
 
-            string channelbinding = pairs["c"];
-            string nonce = pairs["r"];
+            //string channelbinding = pairs["c"];
+            //string nonce = pairs["r"];
             string proof = pairs["p"];
 
             byte[] bProof = Convert.FromBase64String(proof);
