@@ -1,0 +1,7 @@
+﻿<stream:stream xmlns:stream="http://etherx.jabber.org/streams" version="1.0" xmlns="jabber:client" to="localhost" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+<stream:features>
+    <mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
+        <mechanism>PLAIN</mechanism>
+    </mechanisms>
+</stream:features>
+<success xmlns="urn:ietf:params:xml:ns:xmpp-sasl"/>

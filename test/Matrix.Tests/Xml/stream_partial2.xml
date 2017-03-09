@@ -1,0 +1,16 @@
+﻿<stream:stream xmlns:stream="http://etherx.jabber.org/streams" version="1.0" xmlns="jabber:client" to="localhost" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+<stream:features>
+    <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
+      <required/>
+    </bind>
+    <session xmlns="urn:ietf:params:xml:ns:xmpp-session">
+      <optional/>
+    </session>
+    <c xmlns="http://jabber.org/protocol/caps" node="http://prosody.im" ver="oxBiiFkjfIU4zAle9Gk8+Qn8Fhk=" hash="sha-1"/>
+</stream:features>
+<iq type="result" id="bind">
+  <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
+    <jid>alex@localhost/MatriX</jid>
+  </bind>
+</iq>
+</stream:stream>

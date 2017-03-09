@@ -114,7 +114,7 @@ namespace Matrix
             }
             else if (SessionState < SessionState.Binding)
             {
-                await DoBindAsync();
+                await DoBindAsync(features);
             }
         }
 
@@ -152,16 +152,22 @@ namespace Matrix
             }
         }
 
-        private async Task<Iq> DoBindAsync()
+        private async Task<Iq> DoBindAsync(StreamFeatures features)
         {
             SessionState = SessionState.Binding;
 
             var bIq = new BindIq { Type = IqType.Set, Bind = { Resource = Resource } };
-            var resIq = await SendIqAsync(bIq);
+            var resBindIq = await SendIqAsync(bIq);
+
+            if (features.SupportsSession && !features.Session.Optional)
+            {
+                var sessionIq = new SessionIq { Type = IqType.Set };
+                var resSessionIq = await SendIqAsync(sessionIq);
+            }
 
             SessionState = SessionState.Binded;
 
-            return resIq;
+            return resBindIq;
         }
 
         private async Task<StreamFeatures> DoEnableCompressionAsync()

@@ -46,7 +46,7 @@ namespace Matrix.Network.Handlers
             }
             if (!sentStreamFooter)
             {
-                if (sent != null && sent.Equals(streamFooter))
+                if (sent != null && sent.StartsWith(streamFooter))
                     sentStreamFooter = true;
             }
             return context.WriteAsync(message);

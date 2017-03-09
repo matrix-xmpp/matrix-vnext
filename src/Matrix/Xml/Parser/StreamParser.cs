@@ -13,7 +13,9 @@ namespace Matrix.Xml.Parser
     public class StreamParser
     {
         bool isCData;
-        int depth;
+        string cData;
+
+        int depth = 0;
         XmppXElement root;
         XmppXElement current;
 
@@ -138,6 +140,7 @@ namespace Matrix.Xml.Parser
                             isCData = true;
                             break;
                         case Tokens.CdataSectClose:
+                            CloseCDataSection();
                             isCData = false;
                             break;
                         case Tokens.XmlDeclaration:
@@ -354,22 +357,29 @@ namespace Matrix.Xml.Parser
             return val;
         }
 
+        private void CloseCDataSection()
+        {               
+            var cdataNode = new XCData(cData);
+            if (current == null)
+                root?.Add(cdataNode);
+            else
+                current.Add(cdataNode);
+
+            cData = string.Empty;
+        }
+
         /// <summary>
         /// Add a Text or CDATA node
         /// </summary>
         /// <param name="text">value(content of the node</param>
         private void AddText(string text)
         {
-            if (text == "")
+            if (string.IsNullOrEmpty(text))
                 return;
 
             if (isCData)
             {
-                var cdata = new XCData(text);
-                if (current == null)
-                    root?.Add(cdata);
-                else
-                    current.Add(cdata);
+                cData += text;                
             }
             else
             {

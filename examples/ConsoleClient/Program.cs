@@ -12,10 +12,7 @@ namespace ConsoleClient
     class Program
     {
         static void Main(string[] args)
-        {
-            string xml1 = "<a><b>foo</bb></a>";
-            var el1 = XmppXElement.LoadXml(xml1);
-
+        {           
             ExampleHelper.SetConsoleLogger();
 
             var xmppClient = new XmppClient()
@@ -57,6 +54,18 @@ namespace ConsoleClient
 
             //xmppClient.AddHandler(new AutoReplyToPingHandler<Iq>());
 
+
+
+            //xmppClient
+            //   .XmppXElementStream
+            //   .Where(el => el is Presence)
+            //   .Subscribe(el =>
+            //   {
+            //       System.Diagnostics.Debug.WriteLine(el.ToString());                   
+            //   });
+
+
+          
 
             xmppClient
                 .XmppXElementStream

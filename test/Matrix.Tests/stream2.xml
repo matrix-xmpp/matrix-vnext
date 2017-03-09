@@ -27,10 +27,7 @@
                 <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
                     <required/>
                 </bind>
-                <session xmlns="urn:ietf:params:xml:ns:xmpp-session">
-                    <optional/>
-                </session>
-                <c xmlns="http://jabber.org/protocol/caps" node="http://prosody.im" ver="oxBiiFkjfIU4zAle9Gk8+Qn8Fhk=" hash="sha-1"/>
+                <session xmlns="urn:ietf:params:xml:ns:xmpp-session"/>                
             </stream:features>]]>
     </stanza>
 
@@ -56,5 +53,12 @@
     </stanza>
     <stanza type="server" id="5">
         <![CDATA[<iq type="result" id="{id}" to="alex@localhost/MatriX"/>]]>
+    </stanza>
+
+    <stanza type="client" id="6">
+      <![CDATA[</stream:stream>]]>
+    </stanza>
+    <stanza type="server" id="6">
+      <![CDATA[</stream:stream>]]>
     </stanza>
 </stream>

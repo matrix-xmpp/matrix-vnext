@@ -51,11 +51,11 @@ namespace Matrix
                     Pipeline.AddLast(new UTF8StringEncoder());
 
                     Pipeline.AddLast(new AutoReplyToPingHandler<Iq>());
-                    
 
-                    Pipeline.AddLast(new StreamFooterHandler());
                     Pipeline.AddLast(xmppStreamEventHandler);
-                    
+                    Pipeline.AddLast(new StreamFooterHandler());
+                    //Pipeline.AddLast(xmppStreamEventHandler);
+
                     Pipeline.AddLast(xmppStanzaHandler);
 
                     Pipeline.AddLast(CatchAllXmppStanzaHandler.Name, new CatchAllXmppStanzaHandler());
@@ -136,11 +136,7 @@ namespace Matrix
 
         protected async Task SendAsync(string s)
         {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(s);
-            //.Allocator.Buffer(4).WithOrder(this.byteOrder).WriteInt(length))
-            var buf = Pipeline.Channel.Allocator.Buffer(bytes.Length).WriteBytes(bytes);
-            await Pipeline.WriteAndFlushAsync(buf);
-            //await Pipeline.WriteAndFlushAsync(s);
+            await Pipeline.WriteAndFlushAsync(s);            
         }
 
         public async Task<StreamFeatures> ResetStreamAsync()

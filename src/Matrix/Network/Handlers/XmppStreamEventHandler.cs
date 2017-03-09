@@ -20,7 +20,6 @@ namespace Matrix.Network.Handlers
             base.ChannelInactive(context);
             xmppXElementStreamSubject.OnCompleted();
         }
-
        
         protected override void ChannelRead0(IChannelHandlerContext ctx, XmlStreamEvent msg)
         {
@@ -36,7 +35,7 @@ namespace Matrix.Network.Handlers
             }
             else if (msg.XmlStreamEventType == XmlStreamEventType.StreamEnd)
             {
-                //xmppXElementStreamSubject.OnCompleted();
+                xmppXElementStreamSubject.OnCompleted();
             }
             else if (msg.XmlStreamEventType == XmlStreamEventType.StreamError)
             {
