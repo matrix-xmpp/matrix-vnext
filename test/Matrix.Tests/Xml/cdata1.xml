@@ -1,0 +1,9 @@
+﻿<stanza type='client' id='4'>
+  <![CDATA[
+      <iq type='set' id='bind_1'>
+          <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>
+              <resource> Psi +</ resource >
+          </bind>
+      </iq>
+  ]]>
+</stanza>
