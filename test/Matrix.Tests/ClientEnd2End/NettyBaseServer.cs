@@ -14,15 +14,14 @@ namespace Matrix.Tests.ClientEnd2End
         public static readonly  int         Port            = 5222;
 
         public async Task<Func<Task>> StartServerAsync(bool tcpNoDelay, Action<IChannel> childHandlerSetupAction, TaskCompletionSource<bool> testPromise)
-        {          
-
+        {
             var bossGroup = new MultithreadEventLoopGroup(1);
             var workerGroup = new MultithreadEventLoopGroup();
             bool started = false;
             try
             {
                 ServerBootstrap b = new ServerBootstrap()
-                    .Group(bossGroup, workerGroup)                    
+                    .Group(bossGroup, workerGroup)
                     .Channel<TcpServerSocketChannel>()
                     .Handler(new ExceptionCatchHandler(ex => testPromise.TrySetException(ex)))
                     .ChildHandler(new ActionChannelInitializer<ISocketChannel>(childHandlerSetupAction))
