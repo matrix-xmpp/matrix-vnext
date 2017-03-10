@@ -159,6 +159,9 @@ namespace Matrix
             var bIq = new BindIq { Type = IqType.Set, Bind = { Resource = Resource } };
             var resBindIq = await SendIqAsync(bIq);
 
+            if (resBindIq.Type != IqType.Result)
+                throw new BindException(resBindIq);
+
             if (features.SupportsSession && !features.Session.Optional)
             {
                 var sessionIq = new SessionIq { Type = IqType.Set };
