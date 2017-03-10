@@ -15,15 +15,14 @@ namespace Matrix.Tests.ClientEnd2End
         public async Task LoginShouldFailWithAuthenticationException()
         {
             var testPromise = new TaskCompletionSource<bool>();
-            Func<Task> closeServerFunc = await StartServerAsync(true, ch =>
+            Func<Task> closeServerFunc = await StartServerAsync(ch =>
             {
                 ch.Pipeline.AddLast(
                     new StringEncoder(),
                     new StringDecoder(),
                     new TestServerHandler("ClientEnd2End.stream_not_authorized.xml"));
             }, testPromise);
-
-
+            
             try
             {
                 var xmppClient = new XmppClient()
@@ -51,7 +50,7 @@ namespace Matrix.Tests.ClientEnd2End
         public async Task LoginShouldFailWithBindException()
         {
             var testPromise = new TaskCompletionSource<bool>();
-            Func<Task> closeServerFunc = await StartServerAsync(true, ch =>
+            Func<Task> closeServerFunc = await StartServerAsync(ch =>
             {
                 ch.Pipeline.AddLast(
                     new StringEncoder(),
@@ -80,7 +79,6 @@ namespace Matrix.Tests.ClientEnd2End
                 Task serverCloseTask = closeServerFunc();
                 serverCloseTask.Wait(ShutdownTimeout);
             }
-
         }
     }
 }
