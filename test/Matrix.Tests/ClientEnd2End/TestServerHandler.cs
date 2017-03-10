@@ -1,7 +1,6 @@
 ﻿using DotNetty.Transport.Channels;
 using Matrix.Xml;
 
-using System.Text;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -25,28 +24,20 @@ namespace Matrix.Tests.ClientEnd2End
             if (data.Contains("<stream:stream "))
             {
                 var res = GetStanzaAsString(TestDocument, "server", packetCounter);
-                if (res != null)
-                {
-                   
-                    ctx.WriteAndFlushAsync(res).GetAwaiter().GetResult();                    
-                }               
+                if (res != null)                
+                    ctx.WriteAndFlushAsync(res).GetAwaiter().GetResult();                                    
             }
             else if (data.Contains("</stream:stream"))
             {
                 var res = GetStanzaAsString(TestDocument, "server", packetCounter);
-                if (res != null)
-                {
-                    ctx.WriteAndFlushAsync(res).GetAwaiter().GetResult();                   
-                }
+                if (res != null)                
+                    ctx.WriteAndFlushAsync(res).GetAwaiter().GetResult();                                   
             }
             else
             {
                 var res = GetStanza(TestDocument, "server", packetCounter, data);
-                if (res != null)
-                {
-                    ctx.WriteAndFlushAsync(res).GetAwaiter().GetResult();
-                    System.Diagnostics.Debug.WriteLine($"SEND: {res}");
-                }                
+                if (res != null)                
+                    ctx.WriteAndFlushAsync(res).GetAwaiter().GetResult();                
             }
         }
 
