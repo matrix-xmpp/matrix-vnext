@@ -107,6 +107,14 @@ namespace Matrix
             return await xmppStanzaHandler.SendAsync<T>(s, timeout);
         }
 
+        protected async Task<XmppXElement> SendAsync<T1, T2>(string s, int timeout = XmppStanzaHandler.DefaultTimeout)
+            where T1 : XmppXElement
+            where T2 : XmppXElement
+        {
+
+            return await xmppStanzaHandler.SendAsync<T1, T2>(s, timeout);
+        }
+
         public async Task SendAsync(XmppXElement el)
         {
             await Pipeline.WriteAndFlushAsync(el.ToString(false));
@@ -145,7 +153,14 @@ namespace Matrix
             return await SendStreamHeaderAsync();
         }
 
-        protected async Task<StreamFeatures> SendStreamHeaderAsync()
+        /// <summary>
+        /// Sends the XMPP stream header and awaits the reply.
+        /// </summary>
+        /// <exception cref="StreamErrorException">
+        /// Throws a StreamErrorException when the server returns a stream error
+        /// </exception>
+        /// <returns></returns>
+        protected async Task<StreamFeatures> SendStreamHeaderAsync(int timeout = XmppStanzaHandler.DefaultTimeout)
         {
             var streamHeader = new Stream
             {
@@ -153,7 +168,12 @@ namespace Matrix
                 Version = "1.0"
             };
 
-            return await SendAsync<StreamFeatures>(streamHeader.StartTag());
+            var res = await SendAsync<StreamFeatures, Xmpp.Stream.Error>(streamHeader.StartTag(), timeout);
+
+            if (res.OfType<StreamFeatures>())
+                return res.Cast<StreamFeatures>();
+            else //if (res.OfType<Xmpp.Stream.Error>())
+                throw new StreamErrorException(res.Cast<Xmpp.Stream.Error>());            
         }
 
 

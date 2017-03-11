@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using Matrix.Attributes;
 using Matrix.Crypt;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Matrix
 {
@@ -92,6 +94,15 @@ namespace Matrix
         public static bool IsInRange(this int value, int min, int max)
         {
             return (value >= min && value <= max);
+        }
+        #endregion
+
+        #region << TaskExtensions >>
+        public static Task WhenCanceled(this CancellationToken cancellationToken)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            cancellationToken.Register(s => ((TaskCompletionSource<bool>)s).SetResult(true), tcs);
+            return tcs.Task;
         }
         #endregion
     }

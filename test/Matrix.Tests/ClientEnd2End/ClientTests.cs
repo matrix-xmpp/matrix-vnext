@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Xunit;
 using Matrix.Network.Resolver;
 using Shouldly;
-using System.Security.Authentication;
 using System;
 using DotNetty.Codecs;
 
@@ -27,9 +26,9 @@ namespace Matrix.Tests.ClientEnd2End
             {
                 var xmppClient = new XmppClient()
                 {
-                    Username = "alex",
-                    Password = "secret",
-                    XmppDomain = "localhost",
+                    Username    = "alex",
+                    Password    = "secret",
+                    XmppDomain  = "localhost",
                     HostnameResolver = new StaticNameResolver(IPAddress.Parse("127.0.0.1"), 5222)
                 };
 
@@ -69,6 +68,41 @@ namespace Matrix.Tests.ClientEnd2End
                 };
 
                 ShouldThrowExtensions.ShouldThrow<BindException>(
+                    () => xmppClient.ConnectAsync().GetAwaiter().GetResult()
+                    );
+
+                await xmppClient.CloseAsync();
+            }
+            finally
+            {
+                Task serverCloseTask = closeServerFunc();
+                serverCloseTask.Wait(ShutdownTimeout);
+            }
+        }
+        
+        [Fact]
+        public async Task LoginShouldFailWithStreamErrorException()
+        {
+            var testPromise = new TaskCompletionSource<bool>();
+            Func<Task> closeServerFunc = await StartServerAsync(ch =>
+            {
+                ch.Pipeline.AddLast(
+                    new StringEncoder(),
+                    new StringDecoder(),
+                    new TestServerHandler("ClientEnd2End.stream_error_host_unknown.xml"));
+            }, testPromise);
+
+            try
+            {
+                var xmppClient = new XmppClient()
+                {
+                    Username = "alex",
+                    Password = "secret",
+                    XmppDomain = "unknown",
+                    HostnameResolver = new StaticNameResolver(IPAddress.Parse("127.0.0.1"), 5222)
+                };
+
+                ShouldThrowExtensions.ShouldThrow<StreamErrorException>(
                     () => xmppClient.ConnectAsync().GetAwaiter().GetResult()
                     );
 

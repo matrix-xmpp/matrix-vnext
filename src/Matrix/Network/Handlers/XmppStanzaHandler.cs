@@ -8,6 +8,7 @@ using DotNetty.Transport.Channels;
 using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
+using System.Threading;
 
 namespace Matrix.Network.Handlers
 {
@@ -82,6 +83,23 @@ namespace Matrix.Network.Handlers
             return await SendAsync<T>(() => SendAsync(s), predicate, timeout);
         }
 
+        public async Task<XmppXElement> SendAsync<T1, T2>(string s, int timeout = DefaultTimeout)
+            where T1 : XmppXElement
+            where T2 : XmppXElement
+        {
+            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>();
+            return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout);
+        }
+
+        public async Task<XmppXElement> SendAsync<T1, T2, T3>(string s, int timeout = DefaultTimeout)
+            where T1 : XmppXElement
+            where T2 : XmppXElement
+            where T3 : XmppXElement
+        {
+            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>();
+            return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout);
+        }
+
         public async Task<T> SendAsync<T>(XmppXElement el, int timeout = DefaultTimeout)
               where T : XmppXElement
         {
@@ -127,18 +145,21 @@ namespace Matrix.Network.Handlers
             return await SendAsync<XmppXElement>( ()=>SendAsync(el.ToString(false)), predicate, timeout);
         }
 
-        public async Task<XmppXElement> SendAsync<T1, T2>(string s, int timeout = DefaultTimeout)
-          where T1 : XmppXElement
-          where T2 : XmppXElement
-        {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>();
-            return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout);
-        }
+        //private async Task<T> SendAsync<T>(
+        //      Func<Task> sendTask,
+        //      Func<XmppXElement, bool> predicate,
+        //      int timeout = DefaultTimeout)
+        //     where T : XmppXElement
+        //{
+        //    return await SendAsync<T>(sendTask, predicate, timeout, CancellationToken.None);
+        //}
+
 
         private async Task<T> SendAsync<T>(
             Func<Task> sendTask,
             Func<XmppXElement, bool> predicate,
-            int timeout = DefaultTimeout)
+            int timeout
+            /*CancellationToken cancellationToken*/)
            where T : XmppXElement
 
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Security;
-using System.Security.Authentication;
 using System.Threading.Tasks;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
@@ -89,6 +88,15 @@ namespace Matrix
         public IAuthenticate SalsHandler { get; set; } = new DefaultSaslHandler();
         #endregion
 
+        /// <summary>
+        /// Connect to the XMPP server.
+        /// This establishes the connection to teh server, including TLS, authentication, resource binding and
+        /// compression.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
+        /// <exception cref="BindException">Thrown when resource binding fails.</exception>
+        /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error</exception>
         public async Task<IChannel> ConnectAsync()
         {
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
@@ -148,7 +156,7 @@ namespace Matrix
             }
             else //if (res is Failure)
             {
-                throw new AuthenticationException();
+                throw new AuthenticationException(res);
             }
         }
 
