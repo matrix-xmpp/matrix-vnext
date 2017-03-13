@@ -4,12 +4,13 @@ using Matrix.Sasl.Plain;
 using Matrix.Sasl.Scram;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
+using System.Threading;
 
 namespace Matrix.Sasl
 {
     public class DefaultSaslHandler : IAuthenticate
     {
-        public async Task<XmppXElement> AuthenticateAsync(Mechanisms mechanisms, XmppClient xmppClient)
+        public async Task<XmppXElement> AuthenticateAsync(Mechanisms mechanisms, XmppClient xmppClient, CancellationToken cancellationToken)
         {
             ISaslProcessor saslProc = null;
             if (mechanisms.SupportsMechanism(SaslMechanism.ScramSha1))
@@ -21,7 +22,7 @@ namespace Matrix.Sasl
             else if (mechanisms.SupportsMechanism(SaslMechanism.Plain))
                 saslProc = new PlainProcessor();
 
-            return await saslProc.AuthenticateClientAsync(xmppClient);
+            return await saslProc.AuthenticateClientAsync(xmppClient, cancellationToken);
         }
     }
 }

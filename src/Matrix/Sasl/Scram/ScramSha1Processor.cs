@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 using Matrix.Idn;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
+using System.Threading;
 
 namespace Matrix.Sasl.Scram
 {
     public class ScramSha1Processor : ISaslProcessor
     {
-        public async Task<XmppXElement> AuthenticateClientAsync(XmppClient xmppClient)
+        public async Task<XmppXElement> AuthenticateClientAsync(XmppClient xmppClient, CancellationToken cancellationToken)
         {
             var scramHelper = new ScramHelper();
 
@@ -23,12 +24,12 @@ namespace Matrix.Sasl.Scram
             string msg = ToB64String(scramHelper.GenerateFirstClientMessage(username));
             var authMessage = new Auth(SaslMechanism.ScramSha1, msg);
 
-            var ret1 = await xmppClient.SendAsync<Failure, Challenge>(authMessage);
+            var ret1 = await xmppClient.SendAsync<Failure, Challenge>(authMessage, cancellationToken);
 
             if (ret1 is Challenge)
             {
                 var resp = GenerateFinalMessage(ret1 as Challenge, scramHelper, password);
-                var ret2 = await xmppClient.SendAsync<Failure, Success>(resp);
+                var ret2 = await xmppClient.SendAsync<Failure, Success>(resp, cancellationToken);
 
                 return ret2;
             }

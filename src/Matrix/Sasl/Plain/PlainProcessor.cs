@@ -3,17 +3,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
+using System.Threading;
 
 namespace Matrix.Sasl.Plain
 {
     public class PlainProcessor : ISaslProcessor
     {
-        public async Task<XmppXElement> AuthenticateClientAsync(XmppClient xmppClient)
+        public async Task<XmppXElement> AuthenticateClientAsync(XmppClient xmppClient, CancellationToken cancellationToken)
         {
             var authMessage = new Auth(SaslMechanism.Plain, GetMessage(xmppClient));
 
             return
-                await xmppClient.SendAsync<Success, Failure>(authMessage);
+                await xmppClient.SendAsync<Success, Failure>(authMessage, cancellationToken);
         }
 
         private string GetMessage(XmppClient xmppClient)

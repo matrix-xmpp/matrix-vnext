@@ -13,6 +13,7 @@ using Matrix.Xmpp.Compression;
 using Matrix.Xmpp.Sasl;
 using Matrix.Xmpp.Stream;
 using Matrix.Xmpp.Tls;
+using System.Threading;
 
 namespace Matrix
 {
@@ -99,34 +100,49 @@ namespace Matrix
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error</exception>
         public async Task<IChannel> ConnectAsync()
         {
+            return await ConnectAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Connect to the XMPP server.
+        /// This establishes the connection to teh server, including TLS, authentication, resource binding and
+        /// compression.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
+        /// <exception cref="BindException">Thrown when resource binding fails.</exception>
+        /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error</exception>
+        public async Task<IChannel> ConnectAsync(CancellationToken cancellationToken)
+        {
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
-            var feat = await SendStreamHeaderAsync();
-            await HandleStreamFeaturesAsync(feat);
+            var feat = await SendStreamHeaderAsync(cancellationToken);
+            await HandleStreamFeaturesAsync(feat, cancellationToken);
             return iChannel;
         }
 
-        private async Task HandleStreamFeaturesAsync(StreamFeatures features)
+        private async Task HandleStreamFeaturesAsync(StreamFeatures features, CancellationToken cancellationToken)
         {
             if (SessionState < SessionState.Securing && features.SupportsStartTls && Tls)
             {
-                await HandleStreamFeaturesAsync(await DoStartTlsAsync());
+                await HandleStreamFeaturesAsync(await DoStartTlsAsync(cancellationToken), cancellationToken);
             }
             else if (SessionState < SessionState.Authenticating)
             {
-                var authRet = await DoAuthenicateAsync(features.Mechanisms);
-                await HandleStreamFeaturesAsync(authRet);
+                var authRet = await DoAuthenicateAsync(features.Mechanisms, cancellationToken);
+                await HandleStreamFeaturesAsync(authRet, cancellationToken);
             }
             else if (SessionState < SessionState.Compressing && features.SupportsZlibCompression && Compression)
             {
-                await HandleStreamFeaturesAsync(await DoEnableCompressionAsync());
+                await HandleStreamFeaturesAsync(await DoEnableCompressionAsync(cancellationToken), cancellationToken);
             }
             else if (SessionState < SessionState.Binding)
             {
-                await DoBindAsync(features);
+                await DoBindAsync(features, cancellationToken);
             }
         }
 
-        private async Task<StreamFeatures> DoStartTlsAsync()
+        private async Task<StreamFeatures> DoStartTlsAsync(CancellationToken cancellationToken)
         {
             SessionState = SessionState.Securing;
             var tlsHandler =
@@ -138,21 +154,21 @@ namespace Matrix
 
             await SendAsync<Proceed>(new StartTls());
             Pipeline.AddFirst(tlsHandler);
-            var streamFeatures = await ResetStreamAsync();
+            var streamFeatures = await ResetStreamAsync(cancellationToken);
             SessionState = SessionState.Secure;
 
             return streamFeatures;
         }
 
-        private async Task<StreamFeatures> DoAuthenicateAsync(Mechanisms mechanisms)
+        private async Task<StreamFeatures> DoAuthenicateAsync(Mechanisms mechanisms, CancellationToken cancellationToken)
         {
             SessionState = SessionState.Authenticating;
-            var res = await SalsHandler.AuthenticateAsync(mechanisms, this);
+            var res = await SalsHandler.AuthenticateAsync(mechanisms, this, cancellationToken);
 
             if (res is Success)
             {
                 SessionState = SessionState.Authenticated;
-                return await ResetStreamAsync();
+                return await ResetStreamAsync(cancellationToken);
             }
             else //if (res is Failure)
             {
@@ -160,12 +176,12 @@ namespace Matrix
             }
         }
 
-        private async Task<Iq> DoBindAsync(StreamFeatures features)
+        private async Task<Iq> DoBindAsync(StreamFeatures features, CancellationToken cancellationToken)
         {
             SessionState = SessionState.Binding;
 
             var bIq = new BindIq { Type = IqType.Set, Bind = { Resource = Resource } };
-            var resBindIq = await SendIqAsync(bIq);
+            var resBindIq = await SendIqAsync(bIq, cancellationToken);
 
             if (resBindIq.Type != IqType.Result)
                 throw new BindException(resBindIq);
@@ -173,7 +189,7 @@ namespace Matrix
             if (features.SupportsSession && !features.Session.Optional)
             {
                 var sessionIq = new SessionIq { Type = IqType.Set };
-                var resSessionIq = await SendIqAsync(sessionIq);
+                var resSessionIq = await SendIqAsync(sessionIq, cancellationToken);
             }
 
             SessionState = SessionState.Binded;
@@ -181,18 +197,18 @@ namespace Matrix
             return resBindIq;
         }
 
-        private async Task<StreamFeatures> DoEnableCompressionAsync()
+        private async Task<StreamFeatures> DoEnableCompressionAsync(CancellationToken cancellationToken)
         {
             SessionState = SessionState.Compressing;
 
-            var ret = await SendAsync<Compresed, Xmpp.Compression.Failure>(new Compress(Methods.Zlib));
+            var ret = await SendAsync<Compresed, Xmpp.Compression.Failure>(new Compress(Methods.Zlib), cancellationToken);
             if (ret.OfType<Compresed>())
             {
                 Pipeline.Get<ZlibEncoder>().Active = true;
                 Pipeline.Get<ZlibDecoder>().Active = true;
             }
 
-            var streamFeatures = await ResetStreamAsync();
+            var streamFeatures = await ResetStreamAsync(cancellationToken);
             SessionState = SessionState.Compressed;
             return streamFeatures;
         }
@@ -213,6 +229,11 @@ namespace Matrix
 
         #region << Send iq >>
         public async Task<Iq> SendIqAsync(Iq iq, int timeout = XmppStanzaHandler.DefaultTimeout)
+        {
+            return await SendIqAsync(iq, CancellationToken.None, timeout);
+        }
+
+        public async Task<Iq> SendIqAsync(Iq iq, CancellationToken cancellationToken, int timeout = XmppStanzaHandler.DefaultTimeout)
         {
             Contract.Requires<ArgumentNullException>(iq != null, $"{nameof(iq)} cannot be null");
 
