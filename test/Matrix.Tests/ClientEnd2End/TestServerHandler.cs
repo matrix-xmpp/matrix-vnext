@@ -50,6 +50,9 @@ namespace Matrix.Tests.ClientEnd2End
 
             var xEl = XmppXElement.LoadXml(sStanza);
 
+            if (xEl == null)
+                return null;
+
             if (request != null)
             {
                 if (request.StartsWith("<iq") && (xEl.Name == "{jabber:client}iq" || xEl.Name == "iq"))

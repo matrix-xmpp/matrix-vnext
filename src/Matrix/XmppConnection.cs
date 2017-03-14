@@ -101,14 +101,38 @@ namespace Matrix
         #endregion
 
         #region << Send members >>
-        protected async Task<T> SendAsync<T>(string s, int timeout = XmppStanzaHandler.DefaultTimeout)
-           where T : XmppXElement
+        protected async Task<T> SendAsync<T>(string s)
+            where T : XmppXElement
         {
-            
+            return await SendAsync<T>(s, XmppStanzaHandler.DefaultTimeout);
+        }
+        protected async Task<T> SendAsync<T>(string s, int timeout)
+           where T : XmppXElement
+        {            
             return await xmppStanzaHandler.SendAsync<T>(s, timeout);
         }
 
-        protected async Task<XmppXElement> SendAsync<T1, T2>(string s, int timeout = XmppStanzaHandler.DefaultTimeout)
+        protected async Task<T> SendAsync<T>(string s, CancellationToken cancellationToken)
+           where T : XmppXElement
+        {
+            return await SendAsync<T>(s, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+        }
+
+        protected async Task<T> SendAsync<T>(string s, int timeout , CancellationToken cancellationToken)
+           where T : XmppXElement
+        {
+
+            return await xmppStanzaHandler.SendAsync<T>(s, timeout, cancellationToken);
+        }
+
+        protected async Task<XmppXElement> SendAsync<T1, T2>(string s)
+            where T1 : XmppXElement
+            where T2 : XmppXElement
+        {
+            return await SendAsync<T1, T2>(s, XmppStanzaHandler.DefaultTimeout);
+        }
+
+        protected async Task<XmppXElement> SendAsync<T1, T2>(string s, int timeout)
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
@@ -116,12 +140,20 @@ namespace Matrix
             return await xmppStanzaHandler.SendAsync<T1, T2>(s, timeout);
         }
 
-        protected async Task<XmppXElement> SendAsync<T1, T2>(string s, CancellationToken cancellationToken, int timeout = XmppStanzaHandler.DefaultTimeout)
+        protected async Task<XmppXElement> SendAsync<T1, T2>(string s, CancellationToken cancellationToken)
+          where T1 : XmppXElement
+          where T2 : XmppXElement
+        {
+
+            return await SendAsync<T1, T2>(s, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+        }
+
+        protected async Task<XmppXElement> SendAsync<T1, T2>(string s, int timeout, CancellationToken cancellationToken)
            where T1 : XmppXElement
            where T2 : XmppXElement
         {
 
-            return await xmppStanzaHandler.SendAsync<T1, T2>(s, cancellationToken, timeout);
+            return await xmppStanzaHandler.SendAsync<T1, T2>(s, timeout, cancellationToken);
         }
 
         public async Task SendAsync(XmppXElement el)
@@ -129,27 +161,67 @@ namespace Matrix
             await Pipeline.WriteAndFlushAsync(el.ToString(false));
         }
 
-        public async Task<T> SendAsync<T>(XmppXElement el, int timeout = XmppStanzaHandler.DefaultTimeout)
+        public async Task<T> SendAsync<T>(XmppXElement el)
+             where T : XmppXElement
+        {
+            return await SendAsync<T>(el, XmppStanzaHandler.DefaultTimeout);
+        }
+
+        public async Task<T> SendAsync<T>(XmppXElement el, int timeout)
              where T : XmppXElement
         {
             return await xmppStanzaHandler.SendAsync<T>(el, timeout);
         }
 
-        public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, int timeout = XmppStanzaHandler.DefaultTimeout)
+        public async Task<T> SendAsync<T>(XmppXElement el, CancellationToken cancellationToken)
+             where T : XmppXElement
+        {
+            return await SendAsync<T>(el, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+        }
+
+        public async Task<T> SendAsync<T>(XmppXElement el, int timeout, CancellationToken cancellationToken)
+             where T : XmppXElement
+        {
+            return await xmppStanzaHandler.SendAsync<T>(el, timeout, cancellationToken);
+        }
+
+        public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el)
+          where T1 : XmppXElement
+          where T2 : XmppXElement
+        {
+            return await SendAsync<T1, T2>(el, XmppStanzaHandler.DefaultTimeout);
+        }
+
+        public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, int timeout)
            where T1 : XmppXElement
            where T2 : XmppXElement
         {
             return await xmppStanzaHandler.SendAsync<T1, T2>(el, timeout);
         }
 
-        public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, CancellationToken cancellationToken, int timeout = XmppStanzaHandler.DefaultTimeout)
+        public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, CancellationToken cancellationToken)
+         where T1 : XmppXElement
+         where T2 : XmppXElement
+        {
+            return await SendAsync<T1, T2>(el, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+        }
+
+        public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, int timeout, CancellationToken cancellationToken)
           where T1 : XmppXElement
           where T2 : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T1, T2>(el, cancellationToken, timeout);
+            return await xmppStanzaHandler.SendAsync<T1, T2>(el, timeout, cancellationToken);
         }
 
-        public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, int timeout = XmppStanzaHandler.DefaultTimeout)
+        public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el)
+         where T1 : XmppXElement
+         where T2 : XmppXElement
+         where T3 : XmppXElement
+        {
+            return await SendAsync<T1, T2, T3>(el, XmppStanzaHandler.DefaultTimeout);
+        }
+
+        public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, int timeout)
           where T1 : XmppXElement
           where T2 : XmppXElement
           where T3 : XmppXElement
@@ -157,12 +229,20 @@ namespace Matrix
             return await xmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout);
         }
 
-        public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, CancellationToken cancellationToken, int timeout = XmppStanzaHandler.DefaultTimeout)
+        public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, CancellationToken cancellationToken)
+        where T1 : XmppXElement
+        where T2 : XmppXElement
+        where T3 : XmppXElement
+        {
+            return await SendAsync<T1, T2, T3>(el, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+        }
+
+        public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, int timeout, CancellationToken cancellationToken)
          where T1 : XmppXElement
          where T2 : XmppXElement
          where T3 : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T1, T2, T3>(el, cancellationToken, timeout);
+            return await xmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout, cancellationToken);
         }
         #endregion
 
@@ -177,6 +257,11 @@ namespace Matrix
             return await SendStreamHeaderAsync(cancellationToken);
         }
 
+        protected async Task<StreamFeatures> SendStreamHeaderAsync()
+        {
+            return await SendStreamHeaderAsync(XmppStanzaHandler.DefaultTimeout);
+        }
+
         /// <summary>
         /// Sends the XMPP stream header and awaits the reply.
         /// </summary>
@@ -184,12 +269,17 @@ namespace Matrix
         /// Throws a StreamErrorException when the server returns a stream error
         /// </exception>
         /// <returns></returns>
-        protected async Task<StreamFeatures> SendStreamHeaderAsync(int timeout = XmppStanzaHandler.DefaultTimeout)
+        protected async Task<StreamFeatures> SendStreamHeaderAsync(int timeout)
         {
-            return await SendStreamHeaderAsync(CancellationToken.None, timeout);
+            return await SendStreamHeaderAsync(timeout, CancellationToken.None);
         }
 
-        protected async Task<StreamFeatures> SendStreamHeaderAsync(CancellationToken cancellationToken, int timeout = XmppStanzaHandler.DefaultTimeout)
+        protected async Task<StreamFeatures> SendStreamHeaderAsync(CancellationToken cancellationToken)
+        {
+            return await SendStreamHeaderAsync(XmppStanzaHandler.DefaultTimeout, cancellationToken);
+        }
+
+        protected async Task<StreamFeatures> SendStreamHeaderAsync(int timeout, CancellationToken cancellationToken)
         {
             var streamHeader = new Stream
             {
@@ -197,7 +287,7 @@ namespace Matrix
                 Version = "1.0"
             };
 
-            var res = await SendAsync<StreamFeatures, Xmpp.Stream.Error>(streamHeader.StartTag(), timeout);
+            var res = await SendAsync<StreamFeatures, Xmpp.Stream.Error>(streamHeader.StartTag(), timeout, cancellationToken);
 
             if (res.OfType<StreamFeatures>())
                 return res.Cast<StreamFeatures>();

@@ -152,7 +152,7 @@ namespace Matrix
                 (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
                 new ClientTlsSettings(XmppDomain));
 
-            await SendAsync<Proceed>(new StartTls());
+            await SendAsync<Proceed>(new StartTls(), cancellationToken);
             Pipeline.AddFirst(tlsHandler);
             var streamFeatures = await ResetStreamAsync(cancellationToken);
             SessionState = SessionState.Secure;
@@ -228,16 +228,27 @@ namespace Matrix
         }
 
         #region << Send iq >>
-        public async Task<Iq> SendIqAsync(Iq iq, int timeout = XmppStanzaHandler.DefaultTimeout)
+        public async Task<Iq> SendIqAsync(Iq iq)
         {
-            return await SendIqAsync(iq, CancellationToken.None, timeout);
+            return await SendIqAsync(iq, XmppStanzaHandler.DefaultTimeout);
         }
 
-        public async Task<Iq> SendIqAsync(Iq iq, CancellationToken cancellationToken, int timeout = XmppStanzaHandler.DefaultTimeout)
+        public async Task<Iq> SendIqAsync(Iq iq, int timeout)
+        {
+            return await SendIqAsync(iq, timeout, CancellationToken.None);
+        }
+
+
+        public async Task<Iq> SendIqAsync(Iq iq, CancellationToken cancellationToken)
+        {
+            return await SendIqAsync(iq, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+        }
+
+        public async Task<Iq> SendIqAsync(Iq iq, int timeout, CancellationToken cancellationToken)
         {
             Contract.Requires<ArgumentNullException>(iq != null, $"{nameof(iq)} cannot be null");
 
-            return await SendAsync<Iq>(iq, timeout);
+            return await SendAsync<Iq>(iq, timeout, cancellationToken);
         }
         #endregion
 

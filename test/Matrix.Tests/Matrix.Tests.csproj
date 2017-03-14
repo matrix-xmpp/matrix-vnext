@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="ClientEnd2End\stream_error_host_unknown.xml" />
     <None Remove="ClientEnd2End\stream_not_authorized.xml" />
+    <None Remove="ClientEnd2End\stream_no_server_reply_to_bind.xml" />
     <None Remove="ClientEnd2End\stream_resource_conflict.xml" />
     <None Remove="Xml\stream_partial1.xml" />
     <None Remove="Xml\stream_partial2.xml" />
@@ -19,6 +20,7 @@
     <EmbeddedResource Include="ClientEnd2End\stream_not_authorized.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream1.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream2.xml" />
+    <EmbeddedResource Include="ClientEnd2End\stream_no_server_reply_to_bind.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream_resource_conflict.xml" />
     <EmbeddedResource Include="Xml\cdata1.xml" />
     <EmbeddedResource Include="Xml\stream1.xml" />
