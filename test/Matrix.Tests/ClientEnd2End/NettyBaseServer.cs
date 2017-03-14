@@ -10,7 +10,7 @@ namespace Matrix.Tests.ClientEnd2End
 {
     public class NettyBaseServer
     {
-        public static readonly  TimeSpan    ShutdownTimeout = TimeSpan.FromSeconds(10);
+        public static readonly  TimeSpan    ShutdownTimeout = TimeSpan.FromSeconds(1);
         public static readonly  int         Port            = 5222;
 
         public async Task<Func<Task>> StartServerAsync(Action<IChannel> childHandlerSetupAction, TaskCompletionSource<bool> testPromise)

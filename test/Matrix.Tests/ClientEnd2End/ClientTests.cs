@@ -6,7 +6,6 @@ using Shouldly;
 using System;
 using DotNetty.Codecs;
 using System.Threading;
-using Matrix.Network.Handlers;
 
 namespace Matrix.Tests.ClientEnd2End
 {
