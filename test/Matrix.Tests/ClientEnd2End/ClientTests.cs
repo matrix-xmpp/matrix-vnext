@@ -10,8 +10,7 @@ using System.Threading;
 namespace Matrix.Tests.ClientEnd2End
 {
     public class ClientTests : NettyBaseServer       
-    {      
-
+    {
         [Fact]
         public async Task LoginShouldFailWithAuthenticationException()
         {
@@ -149,6 +148,43 @@ namespace Matrix.Tests.ClientEnd2End
 
                 ShouldThrowExtensions.ShouldThrow<OperationCanceledException>(
                      () => xmppClient.ConnectAsync(cts.Token).GetAwaiter().GetResult());
+            }
+            finally
+            {
+                Task serverCloseTask = closeServerFunc();
+                serverCloseTask.Wait(ShutdownTimeout);
+            }
+        }
+
+
+        [Fact]
+        public async Task LoginShouldFailWithCompressionException()
+        {
+            var testPromise = new TaskCompletionSource<bool>();
+            Func<Task> closeServerFunc = await StartServerAsync(ch =>
+            {
+                ch.Pipeline.AddLast(
+                    new StringEncoder(),
+                    new StringDecoder(),
+                    new TestServerHandler("ClientEnd2End.stream_compression_failed.xml"));
+            }, testPromise);
+
+            try
+            {
+                var xmppClient = new XmppClient()
+                {
+                    Username = "alex",
+                    Password = "secret",
+                    XmppDomain = "localhost",
+                    Compression = true,
+                    HostnameResolver = new StaticNameResolver(IPAddress.Parse("127.0.0.1"), 5222)
+                };
+
+                ShouldThrowExtensions.ShouldThrow<CompressionException>(
+                    () => xmppClient.ConnectAsync().GetAwaiter().GetResult()
+                );
+
+                await xmppClient.CloseAsync();
             }
             finally
             {

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ClientEnd2End\stream_compression_failed.xml" />
     <None Remove="ClientEnd2End\stream_error_host_unknown.xml" />
     <None Remove="ClientEnd2End\stream_not_authorized.xml" />
     <None Remove="ClientEnd2End\stream_no_server_reply_to_bind.xml" />
@@ -16,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="ClientEnd2End\stream_compression_failed.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream_error_host_unknown.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream_not_authorized.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream1.xml" />

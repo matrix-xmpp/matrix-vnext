@@ -97,7 +97,8 @@ namespace Matrix
         /// <returns></returns>
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
-        /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error</exception>
+        /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
+        /// <exception cref="CompressionException">Throwws a CompressionException when establishing stream compression fails.</exception>
         public async Task<IChannel> ConnectAsync()
         {
             return await ConnectAsync(CancellationToken.None);
@@ -112,7 +113,8 @@ namespace Matrix
         /// <returns></returns>
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
-        /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error</exception>
+        /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
+        /// /// <exception cref="CompressionException">Throwws a CompressionException when establishing stream compression fails.</exception>
         public async Task<IChannel> ConnectAsync(CancellationToken cancellationToken)
         {
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
@@ -206,11 +208,17 @@ namespace Matrix
             {
                 Pipeline.Get<ZlibEncoder>().Active = true;
                 Pipeline.Get<ZlibDecoder>().Active = true;
+
+                var streamFeatures = await ResetStreamAsync(cancellationToken);
+                SessionState = SessionState.Compressed;
+                return streamFeatures;
+            }
+            else if(ret.OfType<Xmpp.Compression.Failure>())
+            {
+                throw new CompressionException(ret.Cast<Xmpp.Compression.Failure>());               
             }
 
-            var streamFeatures = await ResetStreamAsync(cancellationToken);
-            SessionState = SessionState.Compressed;
-            return streamFeatures;
+            throw new XmppException(ret);
         }
 
         public async Task<Iq> RequestRosterAsync(string version = null)
@@ -237,7 +245,6 @@ namespace Matrix
         {
             return await SendIqAsync(iq, timeout, CancellationToken.None);
         }
-
 
         public async Task<Iq> SendIqAsync(Iq iq, CancellationToken cancellationToken)
         {
