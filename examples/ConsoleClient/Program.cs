@@ -24,36 +24,35 @@ namespace ConsoleClient
             {
                 // AG-Software
                 //Username = "alex",
-                //Password = "***REMOVED***",
+                //Password = "secret",
                 //XmppDomain = "ag-software.net",
 
                 //Username = "alex",
-                //Password = "***REMOVED***",
+                //Password = "secret",
                 //XmppDomain = "jabber.org",
                 //XmppDomain = "localhost",
                 
                 // jabber.org
                 Username = "gnauck",
-                Password = "***REMOVED***",
+                Password = "secret",
                 XmppDomain = "jabber.org",
                 HostnameResolver = new SrvNameResolver(),
 
                 // local prosody
                 //Username = "alex",
-                //Password = "***REMOVED***",
+                //Password = "secret",
                 //XmppDomain = "localhost",
                 //HostnameResolver = new StaticNameResolver(IPAddress.Parse("192.168.1.151")),
                 //CertificateValidator = new AlwaysAcceptCertificateValidator(),
 
                 // Openfire Flepo
                 //Username = "admin",
-                //Password = "***REMOVED***",
+                //Password = "secret",
                 //XmppDomain = "flepo",
                 //Tls = true,
                 //Compression = false,
                 //Resource = "vnext",
                 //CertificateValidator = new AlwaysAcceptCertificateValidator(),
-
 
             };
 
@@ -112,22 +111,6 @@ namespace ConsoleClient
             var ret1 = xmppClient.CloseAsync().GetAwaiter().GetResult();
 
             Console.ReadLine();
-
-
-            xmppClient.ConnectAsync().GetAwaiter().GetResult();
-
-             roster = xmppClient.RequestRosterAsync().GetAwaiter().GetResult();
-            Console.WriteLine(roster.ToString());
-
-            xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
-
-
-            Console.WriteLine("Hello World!");
-            Console.ReadLine();
-            ret1 = xmppClient.CloseAsync().GetAwaiter().GetResult();
-            Console.WriteLine("Hello World!");
-            Console.ReadLine();
         }
     }
-
 }
