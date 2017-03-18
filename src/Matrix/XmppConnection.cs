@@ -10,7 +10,6 @@ using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Stream;
 using System.Threading;
-using System.Reactive.Subjects;
 
 namespace Matrix
 {
