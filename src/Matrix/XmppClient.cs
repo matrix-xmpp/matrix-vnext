@@ -22,6 +22,16 @@ namespace Matrix
     /// </summary>
     public class XmppClient : XmppConnection
     {
+        public XmppClient() 
+            : this(null)
+        {
+        }
+
+        public XmppClient(Action<IChannelPipeline> pipelineInitializerAction)
+            :base(pipelineInitializerAction)
+        {
+        }
+
         private int priority;
         private string resource = "MatriX";
         #region << Properties >>

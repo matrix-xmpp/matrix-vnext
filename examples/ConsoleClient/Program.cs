@@ -6,16 +6,23 @@ using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 using Matrix.Srv;
+using DotNetty.Handlers.Logging;
+using DotNetty.Transport.Channels;
 
 namespace ConsoleClient
 {
     class Program
     {
         static void Main(string[] args)
-        {           
+        {
             ExampleHelper.SetConsoleLogger();
 
-            var xmppClient = new XmppClient()
+            var pipelineInitializerAction = new Action<IChannelPipeline>(pipeline => {
+                pipeline.AddFirst(new LoggingHandler());
+            });
+
+
+            var xmppClient = new XmppClient(pipelineInitializerAction)
             {
                 // AG-Software
                 //Username = "alex",
@@ -26,7 +33,7 @@ namespace ConsoleClient
                 //Password = "***REMOVED***",
                 //XmppDomain = "jabber.org",
                 //XmppDomain = "localhost",
-
+                
                 // jabber.org
                 Username = "gnauck",
                 Password = "***REMOVED***",
