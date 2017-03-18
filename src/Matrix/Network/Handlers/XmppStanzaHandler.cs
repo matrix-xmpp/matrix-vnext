@@ -9,12 +9,14 @@ using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 using System.Threading;
+using System.Net;
 
 namespace Matrix.Network.Handlers
 {
     public class XmppStanzaHandler : SimpleChannelInboundHandler<XmppXElement>
     {
-        //public const int DefaultTimeout = TimeConstants.TwoMinutes;
+        public override bool IsSharable => true;
+        
         public static int DefaultTimeout { get; set; } = TimeConstants.TwoMinutes;
 
         private readonly Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>> handleTypes = new Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>>();
@@ -43,13 +45,32 @@ namespace Matrix.Network.Handlers
                 handleTypes.Remove(predicate);
 
             return this;
-        }            
 
-        public override void ChannelActive(IChannelHandlerContext context)
+        }
+
+        public override void ChannelRegistered(IChannelHandlerContext context)
         {
-            base.ChannelActive(context);
+            base.ChannelRegistered(context);
             channelHandlerContext = context;
         }
+
+        public override void ChannelUnregistered(IChannelHandlerContext context)
+        {
+            base.ChannelUnregistered(context);
+            channelHandlerContext = null;
+        }
+
+        public override Task ConnectAsync(IChannelHandlerContext context, EndPoint remoteAddress, EndPoint localAddress)
+        {
+            return base.ConnectAsync(context, remoteAddress, localAddress);
+        }
+        //public override void ChannelActive(IChannelHandlerContext context)
+        //{
+        //    base.ChannelActive(context);
+        //    if (context == this)
+        //        channelHandlerContext = null;
+        //}
+
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, XmppXElement msg)
         {

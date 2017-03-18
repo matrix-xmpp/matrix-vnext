@@ -5,7 +5,7 @@
         /// <summary>
         /// The socket is disconnected
         /// </summary>
-        Disconnected,
+        Disconnected = 0,
 
         /// <summary>
         /// the socket is Connected

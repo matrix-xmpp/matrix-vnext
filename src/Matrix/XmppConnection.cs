@@ -10,6 +10,7 @@ using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Stream;
 using System.Threading;
+using System.Reactive.Subjects;
 
 namespace Matrix
 {
@@ -28,7 +29,8 @@ namespace Matrix
         }      
         
         protected XmppConnection(Action<IChannelPipeline> pipelineInitializerAction)
-        {                   
+        {            
+
             Bootstrap
                 .Group(eventLoopGroup)
                 .Channel<TcpSocketChannel>()
@@ -51,12 +53,13 @@ namespace Matrix
                     Pipeline.AddLast(new XmppXElementEncoder());
                     Pipeline.AddLast(new UTF8StringEncoder());
 
+                    //Pipeline.AddLast(xmppStreamEventHandler);
                     Pipeline.AddLast(new AutoReplyToPingHandler<Iq>());
-
                     Pipeline.AddLast(xmppStreamEventHandler);
+
                     Pipeline.AddLast(new StreamFooterHandler());
                     
-                    Pipeline.AddLast(xmppStanzaHandler);
+                    Pipeline.AddLast(XmppStanzaHandler);
 
                     Pipeline.AddLast(CatchAllXmppStanzaHandler.Name, new CatchAllXmppStanzaHandler());
                     
@@ -68,7 +71,10 @@ namespace Matrix
 
         #region << Properties >>
         public IChannelPipeline Pipeline { get; protected set; } = null;
-        public SessionState SessionState { get; set; } = SessionState.Disconnected;
+        
+
+        public XmppSessionState XmppSessionState { get; } = new XmppSessionState();
+
         public string XmppDomain { get; set; }
 
         public int Port { get; set; } = 5222;
@@ -79,7 +85,7 @@ namespace Matrix
 
         private IObservable<XmlStreamEvent> XmlStreamEvent => xmppStreamEventHandler.XmlStreamEvent;
 
-        private readonly XmppStanzaHandler xmppStanzaHandler = new XmppStanzaHandler();
+        private readonly XmppStanzaHandler XmppStanzaHandler = new XmppStanzaHandler();
         
         public INameResolver HostnameResolver
         {
@@ -108,7 +114,7 @@ namespace Matrix
         protected async Task<T> SendAsync<T>(string data, int timeout)
            where T : XmppXElement
         {            
-            return await xmppStanzaHandler.SendAsync<T>(data, timeout);
+            return await XmppStanzaHandler.SendAsync<T>(data, timeout);
         }
 
         protected async Task<T> SendAsync<T>(string data, CancellationToken cancellationToken)
@@ -120,7 +126,7 @@ namespace Matrix
         protected async Task<T> SendAsync<T>(string data, int timeout , CancellationToken cancellationToken)
            where T : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T>(data, timeout, cancellationToken);
+            return await XmppStanzaHandler.SendAsync<T>(data, timeout, cancellationToken);
         }
 
         protected async Task<XmppXElement> SendAsync<T1, T2>(string data)
@@ -134,7 +140,7 @@ namespace Matrix
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T1, T2>(data, timeout);
+            return await XmppStanzaHandler.SendAsync<T1, T2>(data, timeout);
         }
 
         protected async Task<XmppXElement> SendAsync<T1, T2>(string data, CancellationToken cancellationToken)
@@ -148,7 +154,7 @@ namespace Matrix
            where T1 : XmppXElement
            where T2 : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T1, T2>(data, timeout, cancellationToken);
+            return await XmppStanzaHandler.SendAsync<T1, T2>(data, timeout, cancellationToken);
         }
         #endregion
 
@@ -167,7 +173,7 @@ namespace Matrix
         public async Task<T> SendAsync<T>(XmppXElement el, int timeout)
              where T : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T>(el, timeout);
+            return await XmppStanzaHandler.SendAsync<T>(el, timeout);
         }
 
         public async Task<T> SendAsync<T>(XmppXElement el, CancellationToken cancellationToken)
@@ -179,7 +185,7 @@ namespace Matrix
         public async Task<T> SendAsync<T>(XmppXElement el, int timeout, CancellationToken cancellationToken)
              where T : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T>(el, timeout, cancellationToken);
+            return await XmppStanzaHandler.SendAsync<T>(el, timeout, cancellationToken);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el)
@@ -193,7 +199,7 @@ namespace Matrix
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T1, T2>(el, timeout);
+            return await XmppStanzaHandler.SendAsync<T1, T2>(el, timeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, CancellationToken cancellationToken)
@@ -207,7 +213,7 @@ namespace Matrix
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T1, T2>(el, timeout, cancellationToken);
+            return await XmppStanzaHandler.SendAsync<T1, T2>(el, timeout, cancellationToken);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el)
@@ -223,7 +229,7 @@ namespace Matrix
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout);
+            return await XmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, CancellationToken cancellationToken)
@@ -239,7 +245,7 @@ namespace Matrix
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            return await xmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout, cancellationToken);
+            return await XmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout, cancellationToken);
         }
         #endregion
 
@@ -306,19 +312,31 @@ namespace Matrix
                     ////if (Pipeline.Channel.Open)
                     ////    await Pipeline.CloseAsync();
                     resultCompletionSource.SetResult(true);
+                    
                 });
 
            
             if (resultCompletionSource.Task ==
                 await Task.WhenAny(resultCompletionSource.Task, Task.Delay(timeout)))
+            {
+                await TryCloseAsync();
                 return await resultCompletionSource.Task;
+            }
+                
 
             // timed out
             anonymousSubscription.Dispose();
+            await TryCloseAsync();
+
+            return true;
+        }
+
+        private async Task TryCloseAsync()
+        {
             if (Pipeline.Channel.Active)
                 await Pipeline.CloseAsync();
 
-            return true;
+            XmppSessionState.Value = SessionState.Disconnected;
         }
     }
 }

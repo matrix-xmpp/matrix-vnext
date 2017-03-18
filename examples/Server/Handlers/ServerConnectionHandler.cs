@@ -28,11 +28,6 @@ namespace Server.Handlers
             ResetStream(context.Channel.Pipeline);
         }
 
-        //public async Task SendAsync(XmppXElement el)
-        //{
-        //    await context.WriteAndFlushAsync(el.ToString(false));
-        //}
-
         protected override async void ChannelRead0(IChannelHandlerContext ctx, XmlStreamEvent xmlStreamEvent)
         {
             context = ctx;

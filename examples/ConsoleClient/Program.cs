@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
 using Matrix;
-using Matrix.Network.Handlers;
-using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 using Matrix.Srv;
@@ -62,7 +60,7 @@ namespace ConsoleClient
             //xmppClient.AddHandler(new AutoReplyToPingHandler<Iq>());
 
 
-
+            
             //xmppClient
             //   .XmppXElementStream
             //   .Where(el => el is Presence)
@@ -71,7 +69,9 @@ namespace ConsoleClient
             //       System.Diagnostics.Debug.WriteLine(el.ToString());                   
             //   });
 
-
+            xmppClient.XmppSessionState.ValueChanged.Subscribe(v => {
+                System.Diagnostics.Debug.WriteLine($"State changed: {v}");
+            });
           
 
             xmppClient
@@ -111,6 +111,21 @@ namespace ConsoleClient
 
             var ret1 = xmppClient.CloseAsync().GetAwaiter().GetResult();
 
+            Console.ReadLine();
+
+
+            xmppClient.ConnectAsync().GetAwaiter().GetResult();
+
+             roster = xmppClient.RequestRosterAsync().GetAwaiter().GetResult();
+            Console.WriteLine(roster.ToString());
+
+            xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
+
+
+            Console.WriteLine("Hello World!");
+            Console.ReadLine();
+            ret1 = xmppClient.CloseAsync().GetAwaiter().GetResult();
+            Console.WriteLine("Hello World!");
             Console.ReadLine();
         }
     }

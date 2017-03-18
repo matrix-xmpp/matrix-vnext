@@ -8,6 +8,8 @@ namespace Matrix.Network.Handlers
 {
     public class XmppStreamEventHandler : SimpleChannelInboundHandler<XmlStreamEvent>
     {
+        public override bool IsSharable => true;
+
         readonly ISubject<XmppXElement>     xmppXElementStreamSubject   = new Subject<XmppXElement>();
         readonly ISubject<XmlStreamEvent>   xmlStreamEventSubject       = new Subject<XmlStreamEvent>();
 
