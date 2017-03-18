@@ -10,6 +10,7 @@
     <TargetFrameworks>netstandard1.3;net451</TargetFrameworks>
     <AssemblyName>Matrix</AssemblyName>
     <PackageId>Matrix</PackageId>
+    <PackageTags>xmpp;jabber;im;instant messaging</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
