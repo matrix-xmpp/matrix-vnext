@@ -69,13 +69,13 @@ namespace ConsoleClient
             //       System.Diagnostics.Debug.WriteLine(el.ToString());                   
             //   });
 
-            xmppClient.XmppSessionState.ValueChanged.Subscribe(v => {
+            xmppClient.WhenXmppSessionStateChanged.Subscribe(v => {
                 System.Diagnostics.Debug.WriteLine($"State changed: {v}");
             });
           
 
             xmppClient
-                .XmppXElementStream
+                .XmppXElementStreamObserver
                 .Where(el => el is Presence)
                 .Subscribe(el =>
                 {
@@ -83,7 +83,7 @@ namespace ConsoleClient
                 });
 
             xmppClient
-                .XmppXElementStream
+                .XmppXElementStreamObserver
                 .Where(el => el is Message)
                 .Subscribe(el =>
                 {
@@ -91,7 +91,7 @@ namespace ConsoleClient
                 });
 
             xmppClient
-                .XmppXElementStream
+                .XmppXElementStreamObserver
                 .Where(el => el is Iq)
                 .Subscribe(el =>
                 {

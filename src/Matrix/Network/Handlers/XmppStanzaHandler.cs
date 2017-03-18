@@ -64,14 +64,7 @@ namespace Matrix.Network.Handlers
         {
             return base.ConnectAsync(context, remoteAddress, localAddress);
         }
-        //public override void ChannelActive(IChannelHandlerContext context)
-        //{
-        //    base.ChannelActive(context);
-        //    if (context == this)
-        //        channelHandlerContext = null;
-        //}
-
-
+      
         protected override void ChannelRead0(IChannelHandlerContext ctx, XmppXElement msg)
         {
             var it = handleTypes.Keys.ToList();

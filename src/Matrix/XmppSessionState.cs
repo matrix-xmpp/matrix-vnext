@@ -3,10 +3,15 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
 namespace Matrix
-{
+{   
     public class XmppSessionState
     {
         private readonly BehaviorSubject<SessionState> valueSubject;
+
+        public XmppSessionState()
+        {
+            valueSubject = new BehaviorSubject<SessionState>(SessionState.Disconnected);
+        }        
 
         public SessionState Value
         {
@@ -14,11 +19,9 @@ namespace Matrix
             set { valueSubject.OnNext(value); }
         }
 
-        public IObservable<SessionState> ValueChanged => valueSubject.DistinctUntilChanged();
-
-        public XmppSessionState()
-        {
-            valueSubject = new BehaviorSubject<SessionState>(SessionState.Disconnected);
-        }
+        /// <summary>
+        /// When the SessionState changed
+        /// </summary>
+        public IObservable<SessionState> ValueChanged => valueSubject.DistinctUntilChanged();       
     }
 }

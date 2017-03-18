@@ -71,9 +71,10 @@ namespace Matrix
 
         #region << Properties >>
         public IChannelPipeline Pipeline { get; protected set; } = null;
-        
 
-        public XmppSessionState XmppSessionState { get; } = new XmppSessionState();
+        protected XmppSessionState XmppSessionState { get; } = new XmppSessionState();
+
+        
 
         public string XmppDomain { get; set; }
 
@@ -81,11 +82,13 @@ namespace Matrix
 
         public ICertificateValidator CertificateValidator { get; set; } = new DefaultCertificateValidator();
 
-        public IObservable<XmppXElement> XmppXElementStream => xmppStreamEventHandler.XmppXElementStream;
-
-        private IObservable<XmlStreamEvent> XmlStreamEvent => xmppStreamEventHandler.XmlStreamEvent;
-
         private readonly XmppStanzaHandler XmppStanzaHandler = new XmppStanzaHandler();
+
+        // Observers
+        public  IObservable<XmppXElement>   XmppXElementStreamObserver      => xmppStreamEventHandler.XmppXElementStream;
+        private IObservable<XmlStreamEvent> XmlStreamEventObserver          => xmppStreamEventHandler.XmlStreamEvent;
+        public  IObservable<SessionState>   WhenXmppSessionStateChanged     => XmppSessionState.ValueChanged;
+                
         
         public INameResolver HostnameResolver
         {
@@ -303,7 +306,7 @@ namespace Matrix
             
             await SendAsync(new Stream().EndTag());
 
-            anonymousSubscription = XmppXElementStream.Subscribe(
+            anonymousSubscription = XmppXElementStreamObserver.Subscribe(
                 v => { },
 
                 () =>
