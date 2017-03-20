@@ -8,3 +8,5 @@ packages
 temp
 .lock.json
 *.lock.json
+/tools/lh
+/license_header.txt
