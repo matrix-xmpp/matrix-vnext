@@ -119,15 +119,17 @@ foreach ($file in $AllProjectFiles)
         Write-Verbose "Found Minor is $v2" -Verbose         
 
     
-        $assemblyVersion     = "$v1.$v2.$julianDate.$buildIncrementalNumber"
-        $assemblyFileVersion = "$v1.$v2.$julianDate.$buildIncrementalNumber"
+        $assemblyVersion        = "$v1.$v2.$julianDate.$buildIncrementalNumber"
+        $assemblyFileVersion    = "$v1.$v2.$julianDate.$buildIncrementalNumber"
+        $Version                = "$v1.$v2.$julianDate.$buildIncrementalNumber"
 
         Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.AssemblyVersion" -TextValue $assemblyVersion
         Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.FileVersion" -TextValue $assemblyFileVersion
-        Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.Version" -TextValue $assemblyFileVersion
+        Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.Version" -TextValue $Version
 
         Write-Verbose "Transformed Assembly Version is $assemblyVersion" -Verbose
-        Write-Verbose "Transformed Assembly File Version is $assemblyFileVersion" -Verbose 
+        Write-Verbose "Transformed Assembly File Version is $assemblyFileVersion" -Verbose
+        Write-Verbose "Transformed Version is $Version" -Verbose 
 
         $xml.Save($file.FullName )  
     }
