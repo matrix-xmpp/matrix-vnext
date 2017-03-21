@@ -124,6 +124,7 @@ foreach ($file in $AllProjectFiles)
 
         Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.AssemblyVersion" -TextValue $assemblyVersion
         Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.FileVersion" -TextValue $assemblyFileVersion
+        Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.Version" -TextValue $assemblyFileVersion
 
         Write-Verbose "Transformed Assembly Version is $assemblyVersion" -Verbose
         Write-Verbose "Transformed Assembly File Version is $assemblyFileVersion" -Verbose 
