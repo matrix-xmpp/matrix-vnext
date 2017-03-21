@@ -58,6 +58,15 @@ function Set-XmlElementsTextValue([ xml ]$XmlDocument, [string]$ElementPath, [st
     }
 }
 
+function Get-XmlElementsTextValue([ xml ]$XmlDocument, [string]$ElementPath, [string]$NamespaceURI = "", [string]$NodeSeparatorCharacter = '.')
+{
+    # Try and get the node. 
+    $node = Get-XmlNode -XmlDocument $XmlDocument -NodePath $ElementPath -NamespaceURI $NamespaceURI -NodeSeparatorCharacter $NodeSeparatorCharacter
+     
+    # If the node already exists, return its value, otherwise return null.
+    if ($node) { return $node.InnerText } else { return $null }
+}
+
 
 $buildNumber = $env:BUILD_BUILDNUMBER
 if ($buildNumber -eq $null)
@@ -94,26 +103,31 @@ foreach ($file in $AllProjectFiles)
     # Read in the file contents, update the version node's value, and save the file.
     [xml] $xml = Get-Content -Path $file.FullName    
    
-    $origVersion = $xml.Project.PropertyGroup.AssemblyVersion
+    $origVersion = Get-XmlElementsTextValue -XmlDocument $xml -ElementPath  "Project.PropertyGroup.AssemblyVersion"
     
-    $segments=$origVersion.Split(".")            
+    if ($origVersion)
+    {        
+        $segments=$origVersion.Split(".")            
+        
+        #assign them based on what was found
+        if ($segments.Length -gt 0) { $v1=$segments[0] }
+        if ($segments.Length -gt 1) { $v2=$segments[1] } 
+        if ($segments.Length -gt 2) { $v3=$segments[2] } 
+        if ($segments.Length -gt 3) { $v4=$segments[3] }      
+        
+        Write-Verbose "Found Major is $v1" -Verbose
+        Write-Verbose "Found Minor is $v2" -Verbose         
+
     
-    #assign them based on what was found
-    if ($segments.Length -gt 0) { $v1=$segments[0] }
-    if ($segments.Length -gt 1) { $v2=$segments[1] } 
-    if ($segments.Length -gt 2) { $v3=$segments[2] } 
-    if ($segments.Length -gt 3) { $v4=$segments[3] }      
-    
-    Write-Verbose "Found Major is $v1" -Verbose
-    Write-Verbose "Found Minor is $v2" -Verbose         
+        $assemblyVersion     = "$v1.$v2.$julianDate.$buildIncrementalNumber"
+        $assemblyFileVersion = "$v1.$v2.$julianDate.$buildIncrementalNumber"
 
-   
-    $assemblyVersion     = "$v1.$v2.$julianDate.$buildIncrementalNumber"
-    $assemblyFileVersion = "$v1.$v2.$julianDate.$buildIncrementalNumber"
+        Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.AssemblyVersion" -TextValue $assemblyVersion
+        Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.FileVersion" -TextValue $assemblyFileVersion
 
-	Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.AssemblyVersion" -TextValue $assemblyVersion
-    Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.FileVersion" -TextValue $assemblyFileVersion
+        Write-Verbose "Transformed Assembly Version is $assemblyVersion" -Verbose
+        Write-Verbose "Transformed Assembly File Version is $assemblyFileVersion" -Verbose 
 
-    Write-Verbose "Transformed Assembly Version is $assemblyVersion" -Verbose
-    Write-Verbose "Transformed Assembly File Version is $assemblyFileVersion" -Verbose   
+        $xml.Save($file.FullName )  
+    }
 }
