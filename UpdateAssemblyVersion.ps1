@@ -111,7 +111,7 @@ foreach ($file in $AllProjectFiles)
     $assemblyVersion     = "$v1.$v2.$julianDate.$buildIncrementalNumber"
     $assemblyFileVersion = "$v1.$v2.$julianDate.$buildIncrementalNumber"
 
-	Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.AssemblyVersion" -TextValue "1.0.0.1" $assemblyVersion
+	Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.AssemblyVersion" -TextValue $assemblyVersion
     Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.FileVersion" -TextValue $assemblyFileVersion
 
     Write-Verbose "Transformed Assembly Version is $assemblyVersion" -Verbose
