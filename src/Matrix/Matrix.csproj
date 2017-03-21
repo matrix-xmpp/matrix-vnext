@@ -23,8 +23,8 @@
     <DefineConstants>$(DefineConstants);STRINGPREP</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.3|AnyCPU'">
-    <DefineConstants>TRACE;STRINGPREP;RELEASE;NETSTANDARD1_3</DefineConstants>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>$(DefineConstants);STRINGPREP</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
