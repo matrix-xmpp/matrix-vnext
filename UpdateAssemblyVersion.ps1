@@ -92,7 +92,7 @@ foreach ($file in $AllProjectFiles)
 
     #load the file and process the lines
     # Read in the file contents, update the version node's value, and save the file.
-    [xml] $xml = Get-Content -Path $filename    
+    [xml] $xml = Get-Content -Path $file.FullName    
    
     $origVersion = $xml.Project.PropertyGroup.AssemblyVersion
     
