@@ -54,7 +54,7 @@ namespace ConsoleClient
                 
                 // jabber.org
                 Username = "gnauck",
-                Password = "***REMOVED***",
+                Password = "secret",
                 XmppDomain = "jabber.org",
                 HostnameResolver = new SrvNameResolver(),
 
