@@ -8,14 +8,17 @@
     <Authors>AG-Software</Authors>
     <TargetFrameworks>netstandard1.3;net451</TargetFrameworks>
     <AssemblyName>Matrix.Srv</AssemblyName>
-    <PackageId>Matrix.Srv</PackageId>
-    <Version>1.0.0</Version>
+    <PackageId>Matrix.Srv</PackageId>    
     <PackageTags>xmpp;jabber;srv</PackageTags>
+    <AssemblyVersion>0.3.0.0</AssemblyVersion>
+    <FileVersion>0.3.0.0</FileVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>0.3.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DnsClient" Version="1.0.5" />
-    <PackageReference Include="DotNetty.Transport" Version="0.4.2" />
+    <PackageReference Include="DotNetty.Transport" Version="0.4.3" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">

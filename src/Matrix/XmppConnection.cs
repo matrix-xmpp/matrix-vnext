@@ -82,7 +82,7 @@ namespace Matrix
 
                     Pipeline.AddLast(CatchAllXmppStanzaHandler.Name, new CatchAllXmppStanzaHandler());
                     
-                    Pipeline.AddLast(new DisconnectHandler());
+                    Pipeline.AddLast(new DisconnectHandler(this));
 
                     pipelineInitializerAction?.Invoke(Pipeline);                    
                 }));
@@ -91,7 +91,7 @@ namespace Matrix
         #region << Properties >>
         public IChannelPipeline Pipeline { get; protected set; } = null;
 
-        protected XmppSessionState XmppSessionState { get; } = new XmppSessionState();
+        internal XmppSessionState XmppSessionState { get; } = new XmppSessionState();
 
         
 
@@ -358,7 +358,7 @@ namespace Matrix
             if (Pipeline.Channel.Active)
                 await Pipeline.CloseAsync();
 
-            XmppSessionState.Value = SessionState.Disconnected;
+            //XmppSessionState.Value = SessionState.Disconnected;
         }
     }
 }
