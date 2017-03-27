@@ -119,8 +119,8 @@ foreach ($file in $AllProjectFiles)
         Write-Verbose "Found Minor is $v2" -Verbose         
 
     
-        $assemblyVersion        = "$v1.$v2.$v3-ci-$julianDate-$buildIncrementalNumber"
-        $assemblyFileVersion    = "$v1.$v2.$v3-ci-$julianDate-$buildIncrementalNumber"
+        $assemblyVersion        = "$v1.$v2.$v3"
+        $assemblyFileVersion    = "$v1.$v2.$v3"
         $Version                = "$v1.$v2.$v3-ci-$julianDate-$buildIncrementalNumber"
 
         Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.AssemblyVersion" -TextValue $assemblyVersion
