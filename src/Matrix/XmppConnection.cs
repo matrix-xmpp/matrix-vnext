@@ -48,8 +48,7 @@ namespace Matrix
         }      
         
         protected XmppConnection(Action<IChannelPipeline> pipelineInitializerAction)
-        {            
-
+        {
             Bootstrap
                 .Group(eventLoopGroup)
                 .Channel<TcpSocketChannel>()
@@ -73,7 +72,7 @@ namespace Matrix
                     Pipeline.AddLast(new UTF8StringEncoder());
 
                     //Pipeline.AddLast(xmppStreamEventHandler);
-                    Pipeline.AddLast(new AutoReplyToPingHandler<Iq>());
+                    Pipeline.AddLast(new XmppPingHandler<Iq>());
                     Pipeline.AddLast(xmppStreamEventHandler);
 
                     Pipeline.AddLast(new StreamFooterHandler());

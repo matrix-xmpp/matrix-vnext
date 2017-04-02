@@ -25,9 +25,13 @@ using Matrix.Xmpp.Ping;
 
 namespace Matrix.Network.Handlers
 {
-    public class AutoReplyToPingHandler<T> : XmppStanzaHandler where T : Iq
+    /// <summary>
+    /// This handler automatically replies to incoming XMPP Pings from clients or servers.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class XmppPingHandler<T> : XmppStanzaHandler where T : Iq
     {
-        public AutoReplyToPingHandler()
+        public XmppPingHandler()
         {
             Handle(
                 el =>

@@ -116,16 +116,16 @@ foreach ($file in $AllProjectFiles)
         if ($segments.Length -gt 3) { $v4=$segments[3] }      
         
         Write-Verbose "Found Major is $v1" -Verbose
-        Write-Verbose "Found Minor is $v2" -Verbose         
-
+        Write-Verbose "Found Minor is $v2" -Verbose
+        Write-Verbose "Found Patch is $v3" -Verbose
     
-        $assemblyVersion        = "$v1.$v2.$julianDate.$buildIncrementalNumber"
-        $assemblyFileVersion    = "$v1.$v2.$julianDate.$buildIncrementalNumber"
-        $Version                = "$v1.$v2.$julianDate.$buildIncrementalNumber"
+        $assemblyVersion    = "$v1.$v2.$v3"
+        $fileVersion        = "$v1.$v2.$v3"
+        $version            = "$v1.$v2.$v3-ci-$julianDate-$buildIncrementalNumber"
 
         Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.AssemblyVersion" -TextValue $assemblyVersion
-        Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.FileVersion" -TextValue $assemblyFileVersion
-        Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.Version" -TextValue $Version
+        Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.FileVersion" -TextValue $fileVersion
+        Set-XmlElementsTextValue -XmlDocument $xml -ElementPath "Project.PropertyGroup.Version" -TextValue $version
 
         Write-Verbose "Transformed Assembly Version is $assemblyVersion" -Verbose
         Write-Verbose "Transformed Assembly File Version is $assemblyFileVersion" -Verbose
