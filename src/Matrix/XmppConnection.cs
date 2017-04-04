@@ -57,31 +57,29 @@ namespace Matrix
                 .Resolver(HostnameResolver)
                 .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
-                    Pipeline = channel.Pipeline;
+                    Pipeline = channel.Pipeline;                    
                     
-                    
-                    Pipeline.AddLast(new ZlibDecoder());
+                    Pipeline.AddLast(ChannelHandlerNames.ZlibDecoder, new ZlibDecoder());
                    
-                    Pipeline.AddLast(new KeepAliveHandler());                   
-
+                    Pipeline.AddLast(ChannelHandlerNames.KeepAliveHandler, new KeepAliveHandler());
                     
-                    Pipeline.AddLast(new XmlStreamDecoder());
+                    Pipeline.AddLast(ChannelHandlerNames.XmlStreamDecoder, new XmlStreamDecoder());
                                         
-                    Pipeline.AddLast(new ZlibEncoder());
-                    Pipeline.AddLast(new XmppXElementEncoder());
-                    Pipeline.AddLast(new UTF8StringEncoder());
+                    Pipeline.AddLast(ChannelHandlerNames.ZlibEncoder, new ZlibEncoder());
+                    Pipeline.AddLast(ChannelHandlerNames.XmppXElementEncoder, new XmppXElementEncoder());
+                    Pipeline.AddLast(ChannelHandlerNames.UTF8StringEncoder, new UTF8StringEncoder());
 
                     //Pipeline.AddLast(xmppStreamEventHandler);
-                    Pipeline.AddLast(new XmppPingHandler<Iq>());
-                    Pipeline.AddLast(xmppStreamEventHandler);
+                    Pipeline.AddLast(ChannelHandlerNames.XmppPingHandler, new XmppPingHandler<Iq>());
+                    Pipeline.AddLast(ChannelHandlerNames.XmppStreamEventHandler, xmppStreamEventHandler);
 
-                    Pipeline.AddLast(new StreamFooterHandler());
+                    Pipeline.AddLast(ChannelHandlerNames.StreamFooterHandler, new StreamFooterHandler());
                     
-                    Pipeline.AddLast(XmppStanzaHandler);
+                    Pipeline.AddLast(ChannelHandlerNames.XmppStanzaHandler, XmppStanzaHandler);
 
                     Pipeline.AddLast(CatchAllXmppStanzaHandler.Name, new CatchAllXmppStanzaHandler());
                     
-                    Pipeline.AddLast(new DisconnectHandler(this));
+                    Pipeline.AddLast(ChannelHandlerNames.DisconnetHandler, new DisconnectHandler(this));
 
                     pipelineInitializerAction?.Invoke(Pipeline);                    
                 }));
