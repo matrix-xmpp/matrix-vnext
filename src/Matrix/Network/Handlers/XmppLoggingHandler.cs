@@ -26,9 +26,11 @@ using DotNetty.Buffers;
 using DotNetty.Common.Internal.Logging;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Handlers
 {
+    [Name("XmppLogging-Handler")]
     public class XmppLoggingHandler : ChannelHandlerAdapter
     {
         const LogLevel DefaultLevel = LogLevel.DEBUG;

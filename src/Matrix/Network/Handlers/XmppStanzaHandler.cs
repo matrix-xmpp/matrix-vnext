@@ -30,9 +30,11 @@ using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 using System.Threading;
 using System.Net;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Handlers
 {
+    [Name("XmppStanza-Handler")]
     public class XmppStanzaHandler : SimpleChannelInboundHandler<XmppXElement>
     {
         public override bool IsSharable => true;
@@ -65,7 +67,6 @@ namespace Matrix.Network.Handlers
                 handleTypes.Remove(predicate);
 
             return this;
-
         }
 
         public override void ChannelRegistered(IChannelHandlerContext context)

@@ -22,9 +22,11 @@ using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
 using Matrix.Network.Codecs;
 using Matrix.Xmpp.Base;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Handlers
 {
+    [Name("StreamFooter-Handler")]
     public class StreamFooterHandler : SimpleChannelInboundHandler<XmlStreamEvent>
     {
         private readonly string streamFooter = new Stream().EndTag();

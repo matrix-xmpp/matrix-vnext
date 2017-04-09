@@ -2,9 +2,11 @@
 using DotNetty.Transport.Channels;
 using Matrix.Xml;
 using Matrix.Xmpp.Client;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Handlers
 {
+    [Name("StreamManagement-Handler")]
     public class StreamManagementHandler : XmppStanzaHandler
     {
         private int countStanzasIn;

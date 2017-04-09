@@ -19,10 +19,12 @@
  */
 
 using DotNetty.Transport.Channels;
+using Matrix.Attributes;
 using Matrix.Xml;
 
 namespace Matrix.Network.Handlers
 {
+    [Name("CatchAllXmppStanza-Handler")]
     public class CatchAllXmppStanzaHandler : XmppStanzaHandler
     {
         public override bool IsSharable => true;

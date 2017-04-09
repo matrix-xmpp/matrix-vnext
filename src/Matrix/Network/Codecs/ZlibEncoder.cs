@@ -23,12 +23,14 @@ using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 using Matrix.IO.Compression;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Codecs
 {
     /// <summary>
     /// Encoder which implements zlib compression
     /// </summary>
+    [Name("Zlib-Encoder")]
     public class ZlibEncoder : MessageToMessageEncoder<IByteBuffer>, IActive
     {
         /// <summary>

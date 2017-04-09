@@ -18,6 +18,7 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
+using Matrix.Attributes;
 using Matrix.Xml;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
@@ -29,6 +30,7 @@ namespace Matrix.Network.Handlers
     /// This handler automatically replies to incoming XMPP Pings from clients or servers.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Name("XmppPing-Handler")]
     public class XmppPingHandler<T> : XmppStanzaHandler where T : Iq
     {
         public XmppPingHandler()
