@@ -54,8 +54,8 @@ namespace Matrix
 
         private int priority;
         private string resource = "MatriX";
+        
         #region << Properties >>
-
         public string Username { get; set; }
 
         public string Password { get; set; }
@@ -253,7 +253,38 @@ namespace Matrix
             throw new XmppException(ret);
         }
 
+        #region << Request Roster >>
         public async Task<Iq> RequestRosterAsync(string version = null)
+        {
+            return await RequestRosterAsync(version, XmppStanzaHandler.DefaultTimeout, CancellationToken.None);
+        }
+
+        public async Task<Iq> RequestRosterAsync(int timeout, CancellationToken cancellationToken)
+        {
+            return await RequestRosterAsync(null, XmppStanzaHandler.DefaultTimeout, CancellationToken.None);
+        }
+
+        public async Task<Iq> RequestRosterAsync(int timeout)
+        {
+            return await RequestRosterAsync(null, timeout, CancellationToken.None);
+        }
+
+        public async Task<Iq> RequestRosterAsync(string version, int timeout)
+        {
+            return await RequestRosterAsync(version, timeout, CancellationToken.None);
+        }
+
+        public async Task<Iq> RequestRosterAsync(CancellationToken cancellationToken)
+        {
+            return await RequestRosterAsync(null, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+        }
+
+        public async Task<Iq> RequestRosterAsync(string version, CancellationToken cancellationToken)
+        {
+            return await RequestRosterAsync(version, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+        }
+
+        public async Task<Iq> RequestRosterAsync(string version, int timeout, CancellationToken cancellationToken)
         {
             var riq = new RosterIq()
             {
@@ -263,10 +294,11 @@ namespace Matrix
             if (version != null)
                 riq.Roster.Version = version;
 
-            var resIq = await SendIqAsync(riq);
+            var resIq = await SendIqAsync(riq, timeout, cancellationToken);
             return resIq as Iq;
         }
-
+        #endregion
+        
         #region << Send iq >>
         public async Task<Iq> SendIqAsync(Iq iq)
         {

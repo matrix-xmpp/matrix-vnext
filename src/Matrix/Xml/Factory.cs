@@ -49,6 +49,11 @@ namespace Matrix.Xml
             return "{" + ns + "}" + localName;
         }
 
+        /// <summary>
+        /// Creates an instance of an XmppXElement of the given type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T GetElement<T>() where T : XmppXElement
         {
             return Activator.CreateInstance<T>();
@@ -79,7 +84,7 @@ namespace Matrix.Xml
             return ret;
         }
 
-        #region << register over methods >>
+        #region << register methods >>
         public static void RegisterElement<T>(string localName) where T : XmppXElement
         {
             RegisterElement<T>("", localName);
@@ -99,6 +104,15 @@ namespace Matrix.Xml
             RegisterElement(typeof(T), ns, localName);           
         }
 
+        /// <summary>
+        /// Adds new Element Types to the Hashtable
+        /// Use this function also to register your own created Elements.
+        /// If a element is already registered it gets overwritten. This behaviour is also useful if you you want to overwrite
+        /// classes and add your own derived classes to the factory.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="ns"></param>
+        /// <param name="localName"></param>
         private static void RegisterElement(Type type, string ns, string localName)
         {
             string key = BuildKey(ns, localName);
@@ -114,7 +128,7 @@ namespace Matrix.Xml
         }
         #endregion
 
-        #region register over attributes
+        #region << register over attributes >>
         /// <summary>
         /// Looks in a complete assembly for all XmppXElements and registered them using the XmppTag attribute.
         /// The XmppTag attribute must be present on the classes to register
@@ -152,12 +166,6 @@ namespace Matrix.Xml
                 RegisterElement<T>(att.Namespace, att.Name);
         }
 
-        /*
-        private static void RegisterFromAttributes()
-        {
-            RegisterElementsFromAssembly(typeof(Factory).GetTypeInfo().Assembly);
-        }
-        */
         private static IEnumerable<TypeInfo> GetTypesWithAttribueFromAssembly<TAttribute>(Assembly assembly) where TAttribute : Attribute
         {
             return assembly

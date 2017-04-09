@@ -88,7 +88,7 @@ namespace ConsoleClient
             //       System.Diagnostics.Debug.WriteLine(el.ToString());                   
             //   });
 
-            xmppClient.WhenXmppSessionStateChanged.Subscribe(v => {
+            xmppClient.XmppSessionStateObserver.Subscribe(v => {
                 System.Diagnostics.Debug.WriteLine($"State changed: {v}");
             });
           
