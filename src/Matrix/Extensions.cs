@@ -25,6 +25,7 @@ using Matrix.Attributes;
 using Matrix.Crypt;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetty.Transport.Channels;
 
 namespace Matrix
 {
@@ -123,6 +124,22 @@ namespace Matrix
             var tcs = new TaskCompletionSource<bool>();
             cancellationToken.Register(s => ((TaskCompletionSource<bool>)s).SetResult(true), tcs);
             return tcs.Task;
+        }
+        #endregion
+
+        #region << DotNetty extensions >>
+        /// <summary>
+        /// Appends a ChannelHandler at the last position of this pipeline. 
+        //  The name of the handler to append is taken from the NameAttribute of the handler class.
+        /// </summary>
+        /// <param name="channelPipeline"></param>
+        /// <param name="name"></param>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public static IChannelPipeline AddLast2(this IChannelPipeline channelPipeline, IChannelHandler handler)
+        {
+            var nameAttribute = handler.GetType().GetTypeInfo().GetCustomAttribute<NameAttribute>(false);
+            return channelPipeline.AddLast(nameAttribute.Name, handler);            
         }
         #endregion
     }
