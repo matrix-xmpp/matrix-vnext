@@ -63,6 +63,16 @@ namespace Matrix
         Compressed,
 
         /// <summary>
+        /// Trying to resume the previous stream
+        /// </summary>
+        Resume,
+
+        /// <summary>
+        /// Stream was resumed
+        /// </summary>
+        Resumed,
+
+        /// <summary>
         /// Resource binding is in progress
         /// </summary>
         Binding,
