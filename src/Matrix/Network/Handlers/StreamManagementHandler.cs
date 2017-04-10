@@ -34,6 +34,7 @@ namespace Matrix.Network.Handlers
         Func<XmppXElement, bool> predicateIncomingStanzas   = el => el.OfType<Iq>() || el.OfType<Presence>() || el.OfType<Message>();
         Func<XmppXElement, bool> predicateRequest           = el => el.OfType<Request>();
 
+        #region << EnableAsync >>
         /// <summary>
         /// Enables Streammanagement on the current XMPP stream
         /// </summary>
@@ -42,7 +43,7 @@ namespace Matrix.Network.Handlers
         /// <param name="cancellationToken"></param>        
         /// <exception cref="StreamManagementException">Throws a StreamManagementException on failure.</exception>
         /// <returns></returns>
-        public async Task EnableAsync(bool streamResumption, int timeout, CancellationToken cancellationToken)
+        public async Task<Enabled> EnableAsync(bool streamResumption, int timeout, CancellationToken cancellationToken)
         {            
             var res = await SendAsync<Enabled, Failed>(new Enable() { Resume = streamResumption }, timeout, cancellationToken);
 
@@ -51,6 +52,7 @@ namespace Matrix.Network.Handlers
                 var enabled = res.Cast<Enabled>();
                 Resume = enabled.Resume;
                 await DoEnable();
+                return enabled;
             }
             else
             {
@@ -109,6 +111,43 @@ namespace Matrix.Network.Handlers
         {
             await EnableAsync(true, DefaultTimeout, cancellationToken);
         }
+        #endregion
+
+        #region << ResumeAsync >>
+        public async Task<Resumed> ResumeAsync(string previousStreamId, int sequenceNumber)
+        {
+            return await ResumeAsync(previousStreamId, sequenceNumber, DefaultTimeout, CancellationToken.None);
+        }
+
+
+        public async Task<Resumed> ResumeAsync(string previousStreamId, int sequenceNumber, CancellationToken cancellationToken)
+        {
+            return await ResumeAsync(previousStreamId, sequenceNumber, DefaultTimeout, cancellationToken);
+        }
+
+        public async Task<Resumed> ResumeAsync(string previousStreamId, int sequenceNumber, int timeout)
+        {
+            return await ResumeAsync(previousStreamId, sequenceNumber, timeout, CancellationToken.None);
+        }
+
+        public async Task<Resumed> ResumeAsync(string previousStreamId, int sequenceNumber, int timeout, CancellationToken cancellationToken)
+        {
+            var res = await SendAsync<Resumed, Failed>(
+                        new Resume() { PreviousId = previousStreamId, LastHandledStanza = sequenceNumber },
+                        timeout,
+                        cancellationToken);
+
+            if (res.OfType<Resumed>())
+            {
+                var resumed = res.Cast<Resumed>();
+                return resumed;
+            }
+            else
+            {
+                throw new StreamManagementException(res);
+            }
+        }
+        #endregion
 
         #region << RequestAckAsync >>
         /// <summary>
