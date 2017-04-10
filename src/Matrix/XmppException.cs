@@ -45,6 +45,12 @@ namespace Matrix
             Stanza = el;
         }
 
+        public XmppException(XmppXElement el, string message)
+            : this(message)
+        {
+            Stanza = el;
+        }
+
         /// <summary>
         /// the Stanza which raised this exception
         /// </summary>
