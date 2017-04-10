@@ -68,23 +68,23 @@ namespace Matrix
                     Pipeline.AddLast2(new ZlibEncoder());
                     
                     Pipeline.AddLast2(new XmppXElementEncoder());
-                    //Pipeline.AddLast("foo", new StreamManagementHandler());
+                    
+                    
                     Pipeline.AddLast2(new UTF8StringEncoder());
 
-                    //Pipeline.AddLast("foo", new StreamManagementHandler());
-                    //Pipeline.AddLast(xmppStreamEventHandler);
-                    Pipeline.AddLast(new XmppPingHandler<Iq>());
-                    Pipeline.AddLast(xmppStreamEventHandler);
+                    
+                    Pipeline.AddLast2(new XmppPingHandler<Iq>());
+                    Pipeline.AddLast2(xmppStreamEventHandler);
 
                     Pipeline.AddLast2(new StreamManagementHandler());
 
-                    Pipeline.AddLast(new StreamFooterHandler());
+                    Pipeline.AddLast2(new StreamFooterHandler());
                     
-                    Pipeline.AddLast(XmppStanzaHandler);
+                    Pipeline.AddLast2(XmppStanzaHandler);
 
-                    Pipeline.AddLast(new CatchAllXmppStanzaHandler());
+                    Pipeline.AddLast2(new CatchAllXmppStanzaHandler());
                     
-                    Pipeline.AddLast(new DisconnectHandler(this));
+                    Pipeline.AddLast2(new DisconnectHandler(this));
 
                     pipelineInitializerAction?.Invoke(Pipeline);                    
                 }));
@@ -181,8 +181,8 @@ namespace Matrix
 
         #region << SendAsync XmppXElement members >>
         public async Task SendAsync(XmppXElement el)
-        {
-            await SendAsync(el.ToString(false));
+        {            
+            await Pipeline.WriteAndFlushAsync(el);
         }
 
         public async Task<T> SendAsync<T>(XmppXElement el)

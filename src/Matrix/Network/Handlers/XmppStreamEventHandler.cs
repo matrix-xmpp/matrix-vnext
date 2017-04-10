@@ -23,9 +23,11 @@ using System.Reactive.Subjects;
 using DotNetty.Transport.Channels;
 using Matrix.Network.Codecs;
 using Matrix.Xml;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Handlers
 {
+    [Name("XmppStreamEvent-Handler")]
     public class XmppStreamEventHandler : SimpleChannelInboundHandler<XmlStreamEvent>
     {
         public override bool IsSharable => true;
