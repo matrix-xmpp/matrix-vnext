@@ -76,7 +76,7 @@ namespace Matrix
                     Pipeline.AddLast2(new XmppPingHandler<Iq>());
                     Pipeline.AddLast2(xmppStreamEventHandler);
 
-                    Pipeline.AddLast2(new StreamManagementHandler());
+                    //Pipeline.AddLast2(new StreamManagementHandler());
 
                     Pipeline.AddLast2(new StreamFooterHandler());
                     
