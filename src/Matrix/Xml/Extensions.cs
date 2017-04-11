@@ -24,19 +24,37 @@ namespace Matrix.Xml
 {
     public static class Extensions
     {
-        public static bool IsMatch(this XmppXElement source, Func<XmppXElement, bool> predicate)
+        /// <summary>
+        /// Validates if a XmppXElement matches the given prerdicate
+        /// </summary>
+        /// <param name="xmppXElement"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static bool IsMatch(this XmppXElement xmppXElement, Func<XmppXElement, bool> predicate)
         {
-            return predicate(source);
+            return predicate(xmppXElement);
         }
 
-        public static bool OfType<T>(this XmppXElement source) where T : XmppXElement
+        /// <summary>
+        /// Check if a XmppXElement is of a given type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmppXElement"></param>
+        /// <returns></returns>
+        public static bool OfType<T>(this XmppXElement xmppXElement) where T : XmppXElement
         {
-            return source is T;
+            return xmppXElement is T;
         }
 
-        public static T Cast<T>(this XmppXElement source) where T: XmppXElement
+        /// <summary>
+        /// Cast a XmppXElement to the given type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmppXElement"></param>
+        /// <returns></returns>
+        public static T Cast<T>(this XmppXElement xmppXElement) where T: XmppXElement
         {
-            return (T) source;
+            return (T) xmppXElement;
         }
     }
 }

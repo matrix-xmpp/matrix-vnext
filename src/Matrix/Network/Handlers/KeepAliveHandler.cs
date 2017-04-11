@@ -21,12 +21,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Handlers
 {
     /// <summary>
     /// a Handler to keep the socket conenction alive by sending a space character every 2 minutes over the existing socket
     /// </summary>
+    [Name("KeepAlive-Handler")]
     public class KeepAliveHandler : ChannelHandlerAdapter
     {
         private const string Whitespace = " ";

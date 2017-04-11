@@ -10,9 +10,9 @@
     <PackageId>Matrix.vNext</PackageId>
     <PackageTags>xmpp;jabber;im;instant messaging</PackageTags>    
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>0.3.4</AssemblyVersion>
-    <FileVersion>0.3.4</FileVersion>
-    <Version>0.3.4</Version>
+    <AssemblyVersion>0.3.5</AssemblyVersion>
+    <FileVersion>0.3.5</FileVersion>
+    <Version>0.3.5</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetty.Handlers" Version="0.4.3" />

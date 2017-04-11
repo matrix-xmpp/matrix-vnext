@@ -26,6 +26,11 @@ using Matrix.Xmpp.Base;
 using Matrix.Srv;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
+using Matrix.Network.Handlers;
+using System.Threading;
+using Matrix.Network.Resolver;
+using Matrix.Network;
+using System.Net;
 
 namespace ConsoleClient
 {
@@ -43,20 +48,21 @@ namespace ConsoleClient
             var xmppClient = new XmppClient(pipelineInitializerAction)
             {
                 // AG-Software
-                //Username = "alex",
-                //Password = "secret",
-                //XmppDomain = "ag-software.net",
+                Username = "alex",
+                Password = "secret",
+                XmppDomain = "ag-software.net",
+                HostnameResolver = new SrvNameResolver(),
 
                 //Username = "alex",
                 //Password = "secret",
                 //XmppDomain = "jabber.org",
                 //XmppDomain = "localhost",
-                
+
                 // jabber.org
-                Username = "gnauck",
-                Password = "secret",
-                XmppDomain = "jabber.org",
-                HostnameResolver = new SrvNameResolver(),
+                //Username = "gnauck",
+                //Password = "secret",
+                //XmppDomain = "jabber.org",
+                //HostnameResolver = new SrvNameResolver(),
 
                 // local prosody
                 //Username = "alex",
@@ -88,7 +94,7 @@ namespace ConsoleClient
             //       System.Diagnostics.Debug.WriteLine(el.ToString());                   
             //   });
 
-            xmppClient.WhenXmppSessionStateChanged.Subscribe(v => {
+            xmppClient.XmppSessionStateObserver.Subscribe(v => {
                 System.Diagnostics.Debug.WriteLine($"State changed: {v}");
             });
           
@@ -100,6 +106,14 @@ namespace ConsoleClient
                 {
                     System.Diagnostics.Debug.WriteLine(el.ToString());
                 });
+
+            xmppClient
+               .XmppXElementStreamObserver
+               .Where(el => el is Matrix.Xmpp.StreamManagement.Ack.Request)
+               .Subscribe(el =>
+               {
+                   System.Diagnostics.Debug.WriteLine(el.ToString());
+               });
 
             xmppClient
                 .XmppXElementStreamObserver
@@ -123,7 +137,21 @@ namespace ConsoleClient
             Console.WriteLine(roster.ToString());
 
             xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
-            
+
+            //xmppClient.Pipeline.Get<StreamManagementHandler>().EnableAsync().GetAwaiter().GetResult();
+
+            //xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
+            //xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
+
+            //xmppClient.Pipeline.Get<StreamManagementHandler>().RequestAckAsync(10000, CancellationToken.None).GetAwaiter().GetResult();
+
+            //xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
+            //xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
+
+            //var ret = xmppClient.Pipeline.Get<StreamManagementHandler>().RequestAckAsync().GetAwaiter().GetResult();
+            //System.Diagnostics.Debug.WriteLine("counter:" + ret.LastHandledStanza);
+
+            //xmppClient.Pipeline.Get<StreamManagementHandler>().RequestAckAsync(10000, CancellationToken.None).GetAwaiter().GetResult();
 
             Console.WriteLine("Hello World!");
             Console.ReadLine();

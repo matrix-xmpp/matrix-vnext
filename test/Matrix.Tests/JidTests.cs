@@ -25,7 +25,6 @@ namespace Matrix.Tests
 {
     public class JidTests
     {
-
         [Fact]
         public void FullJidTestTest()
         {

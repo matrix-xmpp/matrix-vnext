@@ -25,9 +25,11 @@ using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 
 using Matrix.Xml;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Codecs
 {
+    [Name("XmppXElement-Encoder")]
     public class XmppXElementEncoder : MessageToMessageEncoder<XmppXElement>
     {
         public override bool IsSharable => true;

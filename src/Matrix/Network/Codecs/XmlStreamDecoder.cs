@@ -23,9 +23,11 @@ using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 using Matrix.Xml.Parser;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Codecs
 {
+    [Name("XmlStream-Decoder")]
     public class XmlStreamDecoder : MessageToMessageDecoder<IByteBuffer>
     {
         readonly StreamParser parser = new StreamParser();

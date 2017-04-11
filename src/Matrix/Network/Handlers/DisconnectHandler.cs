@@ -19,9 +19,11 @@
  */
 
 using DotNetty.Transport.Channels;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Handlers
 {
+    [Name("Disconnect-Handler")]
     public class DisconnectHandler : ChannelHandlerAdapter
     {
         private XmppConnection xmppCon;

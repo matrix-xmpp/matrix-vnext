@@ -59,27 +59,32 @@ namespace Matrix
                 {
                     Pipeline = channel.Pipeline;                    
                     
-                    Pipeline.AddLast(ChannelHandlerNames.ZlibDecoder, new ZlibDecoder());
+                    Pipeline.AddLast2(new ZlibDecoder());
                    
-                    Pipeline.AddLast(ChannelHandlerNames.KeepAliveHandler, new KeepAliveHandler());
+                    Pipeline.AddLast2(new KeepAliveHandler());
                     
-                    Pipeline.AddLast(ChannelHandlerNames.XmlStreamDecoder, new XmlStreamDecoder());
+                    Pipeline.AddLast2(new XmlStreamDecoder());
                                         
-                    Pipeline.AddLast(ChannelHandlerNames.ZlibEncoder, new ZlibEncoder());
-                    Pipeline.AddLast(ChannelHandlerNames.XmppXElementEncoder, new XmppXElementEncoder());
-                    Pipeline.AddLast(ChannelHandlerNames.UTF8StringEncoder, new UTF8StringEncoder());
-
-                    //Pipeline.AddLast(xmppStreamEventHandler);
-                    Pipeline.AddLast(ChannelHandlerNames.XmppPingHandler, new XmppPingHandler<Iq>());
-                    Pipeline.AddLast(ChannelHandlerNames.XmppStreamEventHandler, xmppStreamEventHandler);
-
-                    Pipeline.AddLast(ChannelHandlerNames.StreamFooterHandler, new StreamFooterHandler());
+                    Pipeline.AddLast2(new ZlibEncoder());
                     
-                    Pipeline.AddLast(ChannelHandlerNames.XmppStanzaHandler, XmppStanzaHandler);
-
-                    Pipeline.AddLast(CatchAllXmppStanzaHandler.Name, new CatchAllXmppStanzaHandler());
+                    Pipeline.AddLast2(new XmppXElementEncoder());
                     
-                    Pipeline.AddLast(ChannelHandlerNames.DisconnetHandler, new DisconnectHandler(this));
+                    
+                    Pipeline.AddLast2(new UTF8StringEncoder());
+
+                    
+                    Pipeline.AddLast2(new XmppPingHandler<Iq>());
+                    Pipeline.AddLast2(xmppStreamEventHandler);
+
+                    //Pipeline.AddLast2(new StreamManagementHandler());
+
+                    Pipeline.AddLast2(new StreamFooterHandler());
+                    
+                    Pipeline.AddLast2(XmppStanzaHandler);
+
+                    Pipeline.AddLast2(new CatchAllXmppStanzaHandler());
+                    
+                    Pipeline.AddLast2(new DisconnectHandler(this));
 
                     pipelineInitializerAction?.Invoke(Pipeline);                    
                 }));
@@ -90,8 +95,6 @@ namespace Matrix
 
         internal XmppSessionState XmppSessionState { get; } = new XmppSessionState();
 
-        
-
         public string XmppDomain { get; set; }
 
         public int Port { get; set; } = 5222;
@@ -101,11 +104,10 @@ namespace Matrix
         private readonly XmppStanzaHandler XmppStanzaHandler = new XmppStanzaHandler();
 
         // Observers
-        public  IObservable<XmppXElement>   XmppXElementStreamObserver      => xmppStreamEventHandler.XmppXElementStream;
         private IObservable<XmlStreamEvent> XmlStreamEventObserver          => xmppStreamEventHandler.XmlStreamEvent;
-        public  IObservable<SessionState>   WhenXmppSessionStateChanged     => XmppSessionState.ValueChanged;
-                
-        
+        public  IObservable<XmppXElement>   XmppXElementStreamObserver      => xmppStreamEventHandler.XmppXElementStream;        
+        public  IObservable<SessionState>   XmppSessionStateObserver        => XmppSessionState.ValueChanged;
+
         public INameResolver HostnameResolver
         {
             get { return resolver; }
@@ -179,8 +181,8 @@ namespace Matrix
 
         #region << SendAsync XmppXElement members >>
         public async Task SendAsync(XmppXElement el)
-        {
-            await SendAsync(el.ToString(false));
+        {            
+            await Pipeline.WriteAndFlushAsync(el);
         }
 
         public async Task<T> SendAsync<T>(XmppXElement el)
@@ -314,13 +316,24 @@ namespace Matrix
                 throw new StreamErrorException(res.Cast<Xmpp.Stream.Error>());
         }
 
-
-        public async Task<bool> CloseAsync(int timeout = 2000)
+        /// <summary>
+        /// Close the XMPP connection
+        /// </summary>
+        /// <param name="sendStreamFooter">
+        /// Sends the stream footer to the server when set to true.
+        /// Usually a stream footer should be sent to the server when closing the connection.
+        /// But there are cases where we may not want to sent one. For example with 
+        /// stream management when we want to resume the stream later.
+        /// </param>
+        /// <param name="timeout">the timeout</param>
+        /// <returns></returns>
+        public async Task<bool> CloseAsync(bool sendStreamFooter = true, int timeout = 2000)
         {
             IDisposable anonymousSubscription = null;
             var resultCompletionSource = new TaskCompletionSource<bool>();
-            
-            await SendAsync(new Stream().EndTag());
+
+            if (sendStreamFooter)
+                await SendAsync(new Stream().EndTag());
 
             anonymousSubscription = XmppXElementStreamObserver.Subscribe(
                 v => { },
@@ -328,20 +341,15 @@ namespace Matrix
                 () =>
                 {
                     anonymousSubscription?.Dispose();
-                    ////if (Pipeline.Channel.Open)
-                    ////    await Pipeline.CloseAsync();
                     resultCompletionSource.SetResult(true);
-                    
                 });
 
-           
             if (resultCompletionSource.Task ==
                 await Task.WhenAny(resultCompletionSource.Task, Task.Delay(timeout)))
             {
                 await TryCloseAsync();
                 return await resultCompletionSource.Task;
             }
-                
 
             // timed out
             anonymousSubscription.Dispose();
@@ -353,9 +361,7 @@ namespace Matrix
         private async Task TryCloseAsync()
         {
             if (Pipeline.Channel.Active)
-                await Pipeline.CloseAsync();
-
-            //XmppSessionState.Value = SessionState.Disconnected;
+                await Pipeline.CloseAsync();            
         }
     }
 }

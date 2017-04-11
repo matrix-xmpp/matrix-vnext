@@ -23,9 +23,11 @@ using System.Collections.Generic;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Codecs
 {
+    [Name("UTF8String-Encoder")]
     public class UTF8StringEncoder : MessageToMessageEncoder<string>
     {
         public override bool IsSharable => true;

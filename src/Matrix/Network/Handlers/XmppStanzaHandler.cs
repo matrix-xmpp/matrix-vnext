@@ -30,9 +30,11 @@ using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 using System.Threading;
 using System.Net;
+using Matrix.Attributes;
 
 namespace Matrix.Network.Handlers
 {
+    [Name("XmppStanza-Handler")]
     public class XmppStanzaHandler : SimpleChannelInboundHandler<XmppXElement>
     {
         public override bool IsSharable => true;
@@ -65,7 +67,6 @@ namespace Matrix.Network.Handlers
                 handleTypes.Remove(predicate);
 
             return this;
-
         }
 
         public override void ChannelRegistered(IChannelHandlerContext context)
@@ -86,7 +87,7 @@ namespace Matrix.Network.Handlers
         }
       
         protected override void ChannelRead0(IChannelHandlerContext ctx, XmppXElement msg)
-        {
+        {           
             var it = handleTypes.Keys.ToList();
             foreach (var predicate in it)
             {
@@ -403,7 +404,7 @@ namespace Matrix.Network.Handlers
         /// <exception cref="TimeoutException">Throws a TimeoutException when no response gets received within the given timeout.</exception>
         /// <exception cref="TaskCanceledException"></exception>
         /// <returns></returns>
-        private async Task<T> SendAsync<T>(
+        public async Task<T> SendAsync<T>(
             Func<Task> sendTask,
             Func<XmppXElement, bool> predicate,
             int timeout,
