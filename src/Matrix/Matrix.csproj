@@ -8,6 +8,8 @@
     <TargetFrameworks>netstandard1.3;net451</TargetFrameworks>
     <AssemblyName>Matrix</AssemblyName>
     <PackageId>Matrix.vNext</PackageId>
+    <PackageLicenseUrl>https://www.ag-software.net/matrix-vnext/license</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>xmpp;jabber;im;instant messaging</PackageTags>    
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AssemblyVersion>0.3.5</AssemblyVersion>

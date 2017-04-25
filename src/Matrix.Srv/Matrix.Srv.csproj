@@ -7,7 +7,9 @@
     <Authors>AG-Software</Authors>
     <TargetFrameworks>netstandard1.3;net451</TargetFrameworks>
     <AssemblyName>Matrix.Srv</AssemblyName>
-    <PackageId>Matrix.vNext.Srv</PackageId>    
+    <PackageId>Matrix.vNext.Srv</PackageId>
+    <PackageLicenseUrl>https://www.ag-software.net/matrix-vnext/license</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>xmpp;jabber;srv</PackageTags>    
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AssemblyVersion>0.3.3</AssemblyVersion>
