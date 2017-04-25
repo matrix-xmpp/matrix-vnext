@@ -2,6 +2,7 @@
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
+ * See the COPYING file for more information.
  *
  * This file is part of the MatriX project.
  *
