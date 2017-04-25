@@ -14,8 +14,8 @@
 //    [Name("StreamManagement-Handler")]
 //    public class StreamManagementHandler : XmppStanzaHandler
 //    {
-//        private readonly StanzaCounter incomingStanzaCounter    = new StanzaCounter();
-//        private readonly StanzaCounter outgoingStanzaCounter    = new StanzaCounter();
+//        private readonly StanzaCounter incomingStanzaCounter = new StanzaCounter();
+//        private readonly StanzaCounter outgoingStanzaCounter = new StanzaCounter();
 
 //        /// <summary>
 //        /// Observable for the incoming stanza counter
@@ -31,8 +31,8 @@
 //        public bool IsEnabled { get; set; } = false;
 //        public bool Resume { get; set; } = false;
 
-//        Func<XmppXElement, bool> predicateIncomingStanzas   = el => el.OfType<Iq>() || el.OfType<Presence>() || el.OfType<Message>();
-//        Func<XmppXElement, bool> predicateRequest           = el => el.OfType<Request>();
+//        Func<XmppXElement, bool> predicateIncomingStanzas = el => el.OfType<Iq>() || el.OfType<Presence>() || el.OfType<Message>();
+//        Func<XmppXElement, bool> predicateRequest = el => el.OfType<Request>();
 
 //        #region << EnableAsync >>
 //        /// <summary>
@@ -44,7 +44,7 @@
 //        /// <exception cref="StreamManagementException">Throws a StreamManagementException on failure.</exception>
 //        /// <returns></returns>
 //        public async Task<Enabled> EnableAsync(bool streamResumption, int timeout, CancellationToken cancellationToken)
-//        {            
+//        {
 //            var res = await SendAsync<Enabled, Failed>(new Enable() { Resume = streamResumption }, timeout, cancellationToken);
 
 //            if (res.OfType<Enabled>())
@@ -57,7 +57,7 @@
 //            else
 //            {
 //                throw new StreamManagementException(res);
-//            }            
+//            }
 //        }
 
 //        /// <summary>
@@ -68,7 +68,7 @@
 //        public async Task EnableAsync(bool streamResumption = true)
 //        {
 //            await EnableAsync(streamResumption, DefaultTimeout, CancellationToken.None);
-//        }        
+//        }
 
 //        /// <summary>
 //        /// Enables Streammanagement on the current XMPP stream
@@ -216,7 +216,7 @@
 //                   (context, xmppXElement) =>
 //                   {
 //                       // increase incoming stanza counter
-//                       incomingStanzaCounter.Value ++;
+//                       incomingStanzaCounter.Value++;
 //                   });
 
 
@@ -227,7 +227,7 @@
 //                  {
 //                      await SendAsync(new Answer { LastHandledStanza = incomingStanzaCounter.Value });
 //                  });
-                
+
 //                IsEnabled = true;
 //            });
 //        }
@@ -241,7 +241,7 @@
 //                IsEnabled = false;
 //                Resume = false;
 //            });
-//        }                
+//        }
 
 //        public override Task WriteAsync(IChannelHandlerContext context, object message)
 //        {
@@ -255,7 +255,7 @@
 //                    )
 //                {
 //                    // increase outgoing stanza counter
-//                    outgoingStanzaCounter.Value ++;
+//                    outgoingStanzaCounter.Value++;
 //                }
 //            }
 //            return base.WriteAsync(context, message);
