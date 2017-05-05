@@ -2,6 +2,7 @@
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
+ * See the COPYING file for more information.
  *
  * This file is part of the MatriX project.
  *
@@ -78,7 +79,7 @@ namespace Matrix.Network.Handlers
         public override void ChannelUnregistered(IChannelHandlerContext context)
         {
             base.ChannelUnregistered(context);
-            channelHandlerContext = null;
+            //channelHandlerContext = null;
         }
 
         public override Task ConnectAsync(IChannelHandlerContext context, EndPoint remoteAddress, EndPoint localAddress)
@@ -104,8 +105,12 @@ namespace Matrix.Network.Handlers
         #region << SendAsync members >>
 
         #region << SendAsync string members >>
+        private static readonly ManualResetEvent s_sleepEvent = new ManualResetEvent(false);
         protected async Task SendAsync(string s)
         {
+            while (channelHandlerContext == null)
+                s_sleepEvent.WaitOne(100);
+
             await channelHandlerContext.WriteAndFlushAsync(s);
         }
 
