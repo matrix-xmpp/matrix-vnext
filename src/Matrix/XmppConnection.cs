@@ -31,6 +31,8 @@ using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Stream;
 using System.Threading;
+using DotNetty.Buffers;
+using DotNetty.Handlers.Tls;
 
 namespace Matrix
 {
@@ -56,6 +58,7 @@ namespace Matrix
                 .Option(ChannelOption.TcpNodelay, true)
                 .Option(ChannelOption.SoKeepalive, true)
                 .Resolver(HostnameResolver)
+                .Option(ChannelOption.Allocator, UnpooledByteBufferAllocator.Default)
                 .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
                     Pipeline = channel.Pipeline;                    
@@ -354,7 +357,7 @@ namespace Matrix
 
             // timed out
             anonymousSubscription.Dispose();
-            await TryCloseAsync();
+            await TryCloseAsync();           
 
             return true;
         }
@@ -362,7 +365,7 @@ namespace Matrix
         private async Task TryCloseAsync()
         {
             if (Pipeline.Channel.Active)
-                await Pipeline.CloseAsync();            
+                await Pipeline.CloseAsync();
         }
     }
 }
