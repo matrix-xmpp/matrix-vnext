@@ -142,6 +142,11 @@ namespace Matrix
             var nameAttribute = handler.GetType().GetTypeInfo().GetCustomAttribute<NameAttribute>(false);
             return channelPipeline.AddLast(nameAttribute.Name, handler);            
         }
+
+        public static bool Contains<T>(this IChannelPipeline channelPipeline) where T : class, IChannelHandler
+        {
+            return channelPipeline.Get<T>() != null;            
+        }
         #endregion
     }
 }
