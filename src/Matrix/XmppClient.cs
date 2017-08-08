@@ -320,9 +320,9 @@ namespace Matrix
         {
             Contract.Requires<ArgumentNullException>(iq != null, $"{nameof(iq)} cannot be null");
 
-            return await SendAsync<Iq>(iq, timeout, cancellationToken);
+            return await SendIqAsync<Iq>(iq, timeout, cancellationToken);
         }
-        #endregion
+        #endregion      
 
         #region << SendPresence >>
         public async Task SendPresenceAsync(Presence pres)
