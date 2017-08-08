@@ -272,6 +272,19 @@ namespace Matrix
         {
             return await XmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout, cancellationToken);
         }
+
+        public async Task<XmppXElement> SendAsync(XmppXElement el, Func<XmppXElement, bool> predicate, int timeout, CancellationToken cancellationToken)         
+        {
+            return await XmppStanzaHandler.SendAsync<XmppXElement>(el, predicate, timeout, cancellationToken);
+        }
+        #endregion
+
+        #region << SendIqAsync members >>
+        public async Task<T> SendIqAsync<T>(Xmpp.Base.Iq iq, int timeout, CancellationToken cancellationToken)
+          where T : Xmpp.Base.Iq
+        {
+            return await XmppStanzaHandler.SendIqAsync<T>(iq, timeout, cancellationToken);
+        }
         #endregion
 
         #endregion

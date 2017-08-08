@@ -292,6 +292,12 @@ namespace Matrix.Network.Handlers
             return await SendAsync<T>(() => SendAsync(el), predicate, timeout, cancellationToken);
         }
 
+        public async Task<T> SendAsync<T>(XmppXElement el, Func<XmppXElement, bool> predicate, int timeout, CancellationToken cancellationToken)
+          where T : XmppXElement
+        {            
+            return await SendAsync<T>(() => SendAsync(el), predicate, timeout, cancellationToken);
+        }
+
         public async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el)
            where T1 : XmppXElement
            where T2 : XmppXElement
@@ -376,8 +382,7 @@ namespace Matrix.Network.Handlers
         {
             Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>() || e.OfType<T5>();
             return await SendAsync<XmppXElement>( ()=>SendAsync(el.ToString(false)), predicate, timeout);
-        }
-        
+        }        
         #endregion
        
         /// <summary>
