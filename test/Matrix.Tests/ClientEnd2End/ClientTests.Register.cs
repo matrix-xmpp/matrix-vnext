@@ -57,8 +57,7 @@ namespace Matrix.Tests.ClientEnd2End
                 {
                     Username = "alex",
                     Password = "secret",
-                    XmppDomain = "localhost",
-                    Compression = true,
+                    XmppDomain = "localhost",                    
                     HostnameResolver = new StaticNameResolver(IPAddress.Parse("127.0.0.1"), 5222)
                 };
 
@@ -95,8 +94,7 @@ namespace Matrix.Tests.ClientEnd2End
                 {
                     Username = "alex",
                     Password = "secret",
-                    XmppDomain = "localhost",
-                    Compression = true,
+                    XmppDomain = "localhost",                    
                     HostnameResolver = new StaticNameResolver(IPAddress.Parse("127.0.0.1"), 5222)
                 };
 
@@ -133,8 +131,7 @@ namespace Matrix.Tests.ClientEnd2End
                 {
                     Username = "alex",
                     Password = "secret",
-                    XmppDomain = "localhost",
-                    Compression = true,
+                    XmppDomain = "localhost",                    
                     HostnameResolver = new StaticNameResolver(IPAddress.Parse("127.0.0.1"), 5222)
                 };
 
