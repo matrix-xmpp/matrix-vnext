@@ -1,0 +1,61 @@
+﻿<stream>
+  <stanza type="client" id="1">
+    <![CDATA[<stream:stream xmlns:stream="http://etherx.jabber.org/streams" version="1.0" xmlns="jabber:client" to="localhost" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">]]>
+  </stanza>
+  <stanza type="server" id="1">
+    <![CDATA[<stream:stream xmlns:stream='http://etherx.jabber.org/streams' version='1.0' from='localhost' id='71a4bc43-3e09-44f3-9430-81ee7bf6b392' xml:lang='en' xmlns='jabber:client'>
+            <stream:features>
+                <mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
+                    <mechanism>PLAIN</mechanism>
+                </mechanisms>
+                <register xmlns='http://jabber.org/features/iq-register'/>
+            </stream:features>]]>
+  </stanza>
+
+  <stanza type="client" id="2">
+    <![CDATA[<iq type='get' id='reg1' to='shakespeare.lit'><query xmlns='jabber:iq:register'/></iq>]]>
+  </stanza>
+  <stanza type="server" id="2">
+    <![CDATA[<iq type='result' id='{id}'>
+  <query xmlns='jabber:iq:register'>
+    <instructions>
+      Choose a username and password for use with this service.
+      Please also provide your email address.
+    </instructions>
+    <username/>
+    <password/>
+    <email/>
+  </query>
+</iq>]]>
+  </stanza>
+
+  <stanza type="client" id="3">
+    <![CDATA[<iq type='result' id='reg2'>
+  <query xmlns='jabber:iq:register'>
+    <registered/>
+    <username>juliet</username>
+    <password>R0m30</password>
+    <email>juliet@capulet.com</email>
+  </query>
+</iq>]]>
+  </stanza>
+  <stanza type="server" id="3">
+    <![CDATA[<iq type='error' id='{id}'>
+  <query xmlns='jabber:iq:register'>
+    <username>juliet</username>
+    <password>R0m30</password>
+    <email>juliet@capulet.com</email>
+  </query>
+  <error code='409' type='cancel'>
+    <conflict xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+  </error>
+</iq>]]>
+  </stanza>
+
+  <stanza type="client" id="4">
+    <![CDATA[</stream:stream>]]>
+  </stanza>
+  <stanza type="server" id="4">
+    <![CDATA[</stream:stream>]]>
+  </stanza>
+</stream>
