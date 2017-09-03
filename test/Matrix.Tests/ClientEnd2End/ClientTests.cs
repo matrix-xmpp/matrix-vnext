@@ -30,7 +30,7 @@ using System.Threading;
 
 namespace Matrix.Tests.ClientEnd2End
 {
-    public class ClientTests : NettyBaseServer       
+    public partial class ClientTests : NettyBaseServer       
     {
         [Fact]
         public async Task LoginShouldFailWithAuthenticationException()

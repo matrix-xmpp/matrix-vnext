@@ -42,7 +42,17 @@ namespace Matrix
         /// The socket was updates to TLS successful
         /// </summary>
         Secure,
-        
+
+        /// <summary>
+        /// Register new Account in progress
+        /// </summary>
+        Registering,
+
+        /// <summary>
+        /// New account ws greistered
+        /// </summary>
+        Registered,
+
         /// <summary>
         /// Authentication is in progress
         /// </summary>
@@ -81,6 +91,6 @@ namespace Matrix
         /// <summary>
         /// Resource binding finsihed with success
         /// </summary>
-        Binded,
+        Binded        
     }
 }

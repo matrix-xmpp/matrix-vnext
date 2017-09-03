@@ -35,6 +35,7 @@ using Matrix.Xmpp.Sasl;
 using Matrix.Xmpp.Stream;
 using Matrix.Xmpp.Tls;
 using System.Threading;
+using Matrix.Xmpp.Register;
 
 namespace Matrix
 {
@@ -118,11 +119,13 @@ namespace Matrix
         }
 
         public IAuthenticate SalsHandler { get; set; } = new DefaultSaslHandler();
+
+        public IRegister RegistrationHandler { get; set; } = null;
         #endregion
 
         /// <summary>
         /// Connect to the XMPP server.
-        /// This establishes the connection to teh server, including TLS, authentication, resource binding and
+        /// This establishes the connection to the server, including TLS, authentication, resource binding and
         /// compression.
         /// </summary>
         /// <returns></returns>
@@ -130,6 +133,7 @@ namespace Matrix
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
         /// <exception cref="CompressionException">Throwws a CompressionException when establishing stream compression fails.</exception>
+        /// <exception cref="RegisterException">Throwws aRegisterException when new account registration fails.</exception>
         public async Task<IChannel> ConnectAsync()
         {
             return await ConnectAsync(CancellationToken.None);
@@ -145,7 +149,8 @@ namespace Matrix
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
-        /// /// <exception cref="CompressionException">Throwws a CompressionException when establishing stream compression fails.</exception>
+        /// <exception cref="CompressionException">Throwws a CompressionException when establishing stream compression fails.</exception>
+        /// <exception cref="RegisterException">Throwws aRegisterException when new account registration fails.</exception>
         public async Task<IChannel> ConnectAsync(CancellationToken cancellationToken)
         {
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
@@ -161,6 +166,11 @@ namespace Matrix
             if (XmppSessionState.Value < SessionState.Securing && features.SupportsStartTls && Tls)
             {
                 await HandleStreamFeaturesAsync(await DoStartTlsAsync(cancellationToken), cancellationToken);
+            }
+            else if (XmppSessionState.Value < SessionState.Registering && features.SupportsRegistration && RegistrationHandler?.RegisterNewAccount == true )
+            {
+                await DoRegisterAsync(cancellationToken);
+                await HandleStreamFeaturesAsync(features, cancellationToken);
             }
             else if (XmppSessionState.Value < SessionState.Authenticating)
             {
@@ -230,6 +240,38 @@ namespace Matrix
             XmppSessionState.Value = SessionState.Binded;
 
             return resBindIq;
+        }
+
+        /// <summary>
+        /// Registers a new account on the XMPP server.
+        /// compression.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="RegisterException">Thrown when the registration fails.</exception>
+        private async Task DoRegisterAsync(CancellationToken cancellationToken)
+        {
+            XmppSessionState.Value = SessionState.Registering;
+            var regInfoIqResult = 
+                await SendIqAsync(
+                    new RegisterIq { Type = IqType.Get, To = XmppDomain }, 
+                    cancellationToken);
+
+            if (regInfoIqResult.Type == IqType.Result && regInfoIqResult.Query is Register)
+            {              
+                var regIq = new Iq { Type = IqType.Set, To = new Jid(XmppDomain) };
+                regIq.GenerateId();
+                regIq.Query = await RegistrationHandler?.RegisterAsync(regInfoIqResult.Query as Register);
+
+                var regResult = await SendIqAsync(regIq, cancellationToken);
+                if (regResult.Type == IqType.Result)
+                {
+                    XmppSessionState.Value = SessionState.Registered;
+                    return;
+                }                    
+                else
+                    throw new RegisterException(regResult);                
+            }
+            throw new RegisterException(regInfoIqResult);
         }
 
         private async Task<StreamFeatures> DoEnableCompressionAsync(CancellationToken cancellationToken)
