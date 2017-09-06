@@ -26,7 +26,7 @@ namespace Matrix.Sasl.Digest
     /// <summary>
     /// Implementation od Digest-Md5 step 1
     /// </summary>
-    internal class Step1
+    public class Step1
     {
         #region Xml sample
         /*
@@ -44,7 +44,7 @@ namespace Matrix.Sasl.Digest
         #endregion
 
         #region << Constructors >>
-        internal Step1(string message)
+        public Step1(string message)
         {
             Parse(message);
         }
@@ -52,20 +52,20 @@ namespace Matrix.Sasl.Digest
 
         #region << Properties >>
 
-        internal string Realm { get; set; }
+        public string Realm { get; set; }
 
-        internal string Nonce { get; set; }
+        public string Nonce { get; set; }
 
         /// <summary>
         /// default Qop to "auth" when not present as documented in rfc2831
         /// </summary>
-        internal string Qop { get; set; }       = "auth";
+        public string Qop { get; set; }       = "auth";
 
-        internal string Charset { get; set; }   = "utf-8";
+        public string Charset { get; set; }   = "utf-8";
 
-        internal string Algorithm { get; set; }
+        public string Algorithm { get; set; }
 
-        internal string Rspauth { get; set; }
+        public string Rspauth { get; set; }
 
         #endregion
 
