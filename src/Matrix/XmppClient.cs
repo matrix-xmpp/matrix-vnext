@@ -132,8 +132,8 @@ namespace Matrix
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
-        /// <exception cref="CompressionException">Throwws a CompressionException when establishing stream compression fails.</exception>
-        /// <exception cref="RegisterException">Throwws aRegisterException when new account registration fails.</exception>
+        /// <exception cref="CompressionException">Throws a CompressionException when establishing stream compression fails.</exception>
+        /// <exception cref="RegisterException">Throws a RegisterException when new account registration fails.</exception>
         public async Task<IChannel> ConnectAsync()
         {
             return await ConnectAsync(CancellationToken.None);
@@ -149,8 +149,8 @@ namespace Matrix
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
-        /// <exception cref="CompressionException">Throwws a CompressionException when establishing stream compression fails.</exception>
-        /// <exception cref="RegisterException">Throwws aRegisterException when new account registration fails.</exception>
+        /// <exception cref="CompressionException">Throws a CompressionException when establishing stream compression fails.</exception>
+        /// <exception cref="RegisterException">Throws aRegisterException when new account registration fails.</exception>
         public async Task<IChannel> ConnectAsync(CancellationToken cancellationToken)
         {
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
