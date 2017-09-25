@@ -29,7 +29,7 @@ namespace Matrix.Sasl.Digest
     /// <summary>
     /// Implementation od Digest-Md5 step 2
     /// </summary>
-    internal class Step2
+    public class Step2
     {
         readonly Step1 step1;
         readonly XmppClient xmppClient;
@@ -39,7 +39,7 @@ namespace Matrix.Sasl.Digest
         /// </summary>
         /// <param name="step1">The step1.</param>
         /// <param name="xmppClient">The xmppClient.</param>
-        internal Step2(Step1 step1, XmppClient xmppClient)
+        public Step2(Step1 step1, XmppClient xmppClient)
         {
             this.step1 = step1;
             this.xmppClient = xmppClient;
@@ -65,7 +65,7 @@ namespace Matrix.Sasl.Digest
         #endregion
 
 
-        internal string GetMessage()
+        public string GetMessage()
         {
             return GenerateMessage();
         }
@@ -238,7 +238,7 @@ namespace Matrix.Sasl.Digest
             sb.Append(AddQuotes(xmppClient.Username));
             sb.Append(",");
             sb.Append("realm=");
-            sb.Append(AddQuotes(step1.Realm));
+            sb.Append(AddQuotes(step1.Realm ?? xmppClient.XmppDomain));
             sb.Append(",");
             sb.Append("nonce=");
             sb.Append(AddQuotes(step1.Nonce));

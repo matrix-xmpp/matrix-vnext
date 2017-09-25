@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,22 +19,22 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using DotNetty.Handlers.Tls;
 
 namespace Matrix.Network
 {
     /// <summary>
-    /// Implementation of <see cref="ICertificateValidator"/> which considers all
-    /// certificates as valid.
-    /// This should be used for testing purposes only. Eg. for self signed certs.
+    /// A default implementaion of a <see cref="ITlsSettingsProvider"/>.
     /// </summary>
-    public class AlwaysAcceptCertificateValidator : ICertificateValidator
+    public class DefaultClientTlsSettingsProvider : ITlsSettingsProvider
     {
-        public bool RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain,
-           SslPolicyErrors sslPolicyErrors)
+        public async Task<TlsSettings> ProvideAsync(XmppConnection xmppConnection)
         {
-            return true;
+            return await Task<TlsSettings>.Factory.StartNew(() =>
+            {
+                return new ClientTlsSettings(xmppConnection.XmppDomain);
+            });
         }
     }
 }

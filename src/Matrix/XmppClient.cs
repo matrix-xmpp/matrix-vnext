@@ -36,6 +36,7 @@ using Matrix.Xmpp.Stream;
 using Matrix.Xmpp.Tls;
 using System.Threading;
 using Matrix.Xmpp.Register;
+using Matrix.Network;
 
 namespace Matrix
 {
@@ -44,22 +45,29 @@ namespace Matrix
     /// </summary>
     public class XmppClient : XmppConnection
     {
-        public XmppClient() 
+        public XmppClient()
             : this(null)
         {
         }
 
         public XmppClient(Action<IChannelPipeline> pipelineInitializerAction)
-            :base(pipelineInitializerAction)
+            : base(pipelineInitializerAction)
         {
         }
 
         private int priority;
         private string resource = "MatriX";
-        
+
         #region << Properties >>
+        /// <summary>
+        /// Gets or sets the username for the XMPP connection.
+        /// </summary>
         public string Username { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the password for the XMPP connection.
+        /// </summary>
         public string Password { get; set; }
 
         /// <summary>
@@ -75,7 +83,21 @@ namespace Matrix
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the stream should be secured over TLS or not when supported and advertised by the server.
+        /// </summary>
         public bool Tls { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets weather legacy old jabber style ssl should be used.
+        /// </summary>
+        public bool LegacySsl { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets the <see cref="ITlsSettingsProvider"/>.
+        /// By setting a custom provider default settings can be customized.
+        /// </summary>
+        public ITlsSettingsProvider TlsSettingsProvider { get; set; } = new DefaultClientTlsSettingsProvider();
 
         /// <summary>
         /// Gets or sets a value indicating whether <see href="https://xmpp.org/extensions/xep-0138.html">XEP-0138: Stream Compression</see> should be used
@@ -132,8 +154,8 @@ namespace Matrix
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
-        /// <exception cref="CompressionException">Throwws a CompressionException when establishing stream compression fails.</exception>
-        /// <exception cref="RegisterException">Throwws aRegisterException when new account registration fails.</exception>
+        /// <exception cref="CompressionException">Throws a CompressionException when establishing stream compression fails.</exception>
+        /// <exception cref="RegisterException">Throws a RegisterException when new account registration fails.</exception>
         public async Task<IChannel> ConnectAsync()
         {
             return await ConnectAsync(CancellationToken.None);
@@ -149,13 +171,18 @@ namespace Matrix
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
-        /// <exception cref="CompressionException">Throwws a CompressionException when establishing stream compression fails.</exception>
-        /// <exception cref="RegisterException">Throwws aRegisterException when new account registration fails.</exception>
+        /// <exception cref="CompressionException">Throws a CompressionException when establishing stream compression fails.</exception>
+        /// <exception cref="RegisterException">Throws aRegisterException when new account registration fails.</exception>
         public async Task<IChannel> ConnectAsync(CancellationToken cancellationToken)
         {
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
             XmppSessionState.Value = SessionState.Connected;
-            
+
+            if (LegacySsl)
+            {
+                await DoSslAsync(cancellationToken);
+            }
+
             var feat = await SendStreamHeaderAsync(cancellationToken);
             await HandleStreamFeaturesAsync(feat, cancellationToken);
             return iChannel;
@@ -167,7 +194,7 @@ namespace Matrix
             {
                 await HandleStreamFeaturesAsync(await DoStartTlsAsync(cancellationToken), cancellationToken);
             }
-            else if (XmppSessionState.Value < SessionState.Registering && features.SupportsRegistration && RegistrationHandler?.RegisterNewAccount == true )
+            else if (XmppSessionState.Value < SessionState.Registering && features.SupportsRegistration && RegistrationHandler?.RegisterNewAccount == true)
             {
                 await DoRegisterAsync(cancellationToken);
                 await HandleStreamFeaturesAsync(features, cancellationToken);
@@ -187,15 +214,22 @@ namespace Matrix
             }
         }
 
+        /// <summary>
+        /// Handle StartTls asynchronous
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private async Task<StreamFeatures> DoStartTlsAsync(CancellationToken cancellationToken)
         {
             XmppSessionState.Value = SessionState.Securing;
+
+            var tlsSettingsProvider = TlsSettingsProvider.ProvideAsync(this).GetAwaiter().GetResult();
             var tlsHandler =
                 new TlsHandler(stream
                 => new SslStream(stream,
                 true,
                 (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
-                new ClientTlsSettings(XmppDomain));
+                tlsSettingsProvider);
 
             await SendAsync<Proceed>(new StartTls(), cancellationToken);
             Pipeline.AddFirst(tlsHandler);
@@ -203,6 +237,29 @@ namespace Matrix
             XmppSessionState.Value = SessionState.Secure;
 
             return streamFeatures;
+        }
+
+        /// <summary>
+        /// Starts SSL/TLS on a connection. This can be used for old Jabber style SSL.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private async Task DoSslAsync(CancellationToken cancellationToken)
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                var tlsSettingsProvider = TlsSettingsProvider.ProvideAsync(this).GetAwaiter().GetResult();
+                XmppSessionState.Value = SessionState.Securing;
+                var tlsHandler =
+                    new TlsHandler(stream
+                    => new SslStream(stream,
+                    true,
+                    (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
+                    tlsSettingsProvider);
+
+                Pipeline.AddFirst(tlsHandler);
+                XmppSessionState.Value = SessionState.Secure;
+            }, cancellationToken);
         }
 
         private async Task<StreamFeatures> DoAuthenicateAsync(Mechanisms mechanisms, CancellationToken cancellationToken)
@@ -251,13 +308,13 @@ namespace Matrix
         private async Task DoRegisterAsync(CancellationToken cancellationToken)
         {
             XmppSessionState.Value = SessionState.Registering;
-            var regInfoIqResult = 
+            var regInfoIqResult =
                 await SendIqAsync(
-                    new RegisterIq { Type = IqType.Get, To = XmppDomain }, 
+                    new RegisterIq { Type = IqType.Get, To = XmppDomain },
                     cancellationToken);
 
             if (regInfoIqResult.Type == IqType.Result && regInfoIqResult.Query is Register)
-            {              
+            {
                 var regIq = new Iq { Type = IqType.Set, To = new Jid(XmppDomain) };
                 regIq.GenerateId();
                 regIq.Query = await RegistrationHandler?.RegisterAsync(regInfoIqResult.Query as Register);
@@ -267,9 +324,9 @@ namespace Matrix
                 {
                     XmppSessionState.Value = SessionState.Registered;
                     return;
-                }                    
+                }
                 else
-                    throw new RegisterException(regResult);                
+                    throw new RegisterException(regResult);
             }
             throw new RegisterException(regInfoIqResult);
         }
@@ -288,45 +345,85 @@ namespace Matrix
                 XmppSessionState.Value = SessionState.Compressed;
                 return streamFeatures;
             }
-            else if(ret.OfType<Xmpp.Compression.Failure>())
+            else if (ret.OfType<Xmpp.Compression.Failure>())
             {
-                throw new CompressionException(ret.Cast<Xmpp.Compression.Failure>());               
+                throw new CompressionException(ret.Cast<Xmpp.Compression.Failure>());
             }
 
             throw new XmppException(ret);
         }
 
         #region << Request Roster >>
+        /// <summary>
+        /// Request the roster (contact list) asynchronous from the server.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public async Task<Iq> RequestRosterAsync(string version = null)
         {
             return await RequestRosterAsync(version, XmppStanzaHandler.DefaultTimeout, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Request the roster (contact list) asynchronous from the server.
+        /// </summary>
+        /// <param name="timeout"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<Iq> RequestRosterAsync(int timeout, CancellationToken cancellationToken)
         {
             return await RequestRosterAsync(null, XmppStanzaHandler.DefaultTimeout, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Request the roster (contact list) asynchronous from the server.
+        /// </summary>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
         public async Task<Iq> RequestRosterAsync(int timeout)
         {
             return await RequestRosterAsync(null, timeout, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Request the roster (contact list) asynchronous from the server.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
         public async Task<Iq> RequestRosterAsync(string version, int timeout)
         {
             return await RequestRosterAsync(version, timeout, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Request the roster (contact list) asynchronous from the server.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<Iq> RequestRosterAsync(CancellationToken cancellationToken)
         {
             return await RequestRosterAsync(null, XmppStanzaHandler.DefaultTimeout, cancellationToken);
         }
 
+        /// <summary>
+        /// Request the roster (contact list) asynchronous from the server.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<Iq> RequestRosterAsync(string version, CancellationToken cancellationToken)
         {
             return await RequestRosterAsync(version, XmppStanzaHandler.DefaultTimeout, cancellationToken);
         }
 
+        /// <summary>
+        /// Request the roster (contact list) asynchronous from the server.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="timeout"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<Iq> RequestRosterAsync(string version, int timeout, CancellationToken cancellationToken)
         {
             var riq = new RosterIq()
@@ -341,23 +438,47 @@ namespace Matrix
             return resIq as Iq;
         }
         #endregion
-        
+
         #region << Send iq >>
+        /// <summary>
+        /// Send an Iq asynchronous to the server
+        /// </summary>
+        /// <param name="iq"></param>
+        /// <returns>The server response Iq</returns>
         public async Task<Iq> SendIqAsync(Iq iq)
         {
             return await SendIqAsync(iq, XmppStanzaHandler.DefaultTimeout);
         }
 
+        /// <summary>
+        /// Send an Iq asynchronous to the server
+        /// </summary>
+        /// <param name="iq"></param>
+        /// <param name="timeout"></param>
+        /// <returns>The server response Iq</returns>
         public async Task<Iq> SendIqAsync(Iq iq, int timeout)
         {
             return await SendIqAsync(iq, timeout, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Send an Iq asynchronous to the server
+        /// </summary>
+        /// <param name="iq"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The server response Iq</returns>
         public async Task<Iq> SendIqAsync(Iq iq, CancellationToken cancellationToken)
         {
             return await SendIqAsync(iq, XmppStanzaHandler.DefaultTimeout, cancellationToken);
         }
 
+        /// <summary>
+        /// Send an Iq asynchronous to the server
+        /// </summary>
+        /// <param name="iq"></param>
+        /// <param name="timeout"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The server response Iq</returns>
         public async Task<Iq> SendIqAsync(Iq iq, int timeout, CancellationToken cancellationToken)
         {
             Contract.Requires<ArgumentNullException>(iq != null, $"{nameof(iq)} cannot be null");
@@ -367,6 +488,11 @@ namespace Matrix
         #endregion      
 
         #region << SendPresence >>
+        /// <summary>
+        /// Send a presence update to the server.
+        /// </summary>
+        /// <param name="pres">The presence stanza which gets sent to the server.</param>
+        /// <returns></returns>
         public async Task SendPresenceAsync(Presence pres)
         {
             Contract.Requires<ArgumentNullException>(pres != null, $"{nameof(pres)} cannot be null");
@@ -374,12 +500,23 @@ namespace Matrix
             await SendAsync(pres);
         }
 
+        /// <summary>
+        /// Send a presence update to the server. Use the properies Show, Status and priority to update presence information
+        /// </summary>
+        /// <param name="show"></param>
+        /// <returns></returns>
         public async Task SendPresenceAsync(Show show)
         {
             Show = show;
             await SendPresenceAsync();
         }
 
+        /// <summary>
+        /// Send a presence update to the server. Use the properies Show, Status and priority to update presence information
+        /// </summary>
+        /// <param name="show"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public async Task SendPresenceAsync(Show show, string status)
         {
             Show = show;
@@ -388,6 +525,13 @@ namespace Matrix
             await SendPresenceAsync();
         }
 
+        /// <summary>
+        /// Send a presence update to the server. Use the properies Show, Status and priority to update presence information
+        /// </summary>
+        /// <param name="show"></param>
+        /// <param name="status"></param>
+        /// <param name="priority"></param>
+        /// <returns></returns>
         public async Task SendPresenceAsync(Show show, string status, int priority)
         {
             Show = show;
@@ -397,6 +541,10 @@ namespace Matrix
             await SendPresenceAsync();
         }
 
+        /// <summary>
+        /// Send a presence update to the server. Use the properies Show, Status and priority to update presence information
+        /// </summary>
+        /// <returns></returns>
         public async Task SendPresenceAsync()
         {
             await SendAsync(new Presence

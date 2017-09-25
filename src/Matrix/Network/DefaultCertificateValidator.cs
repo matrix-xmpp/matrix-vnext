@@ -24,6 +24,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Matrix.Network
 {
+    /// <summary>
+    /// Default implementation of <see cref="ICertificateValidator"/>.
+    /// </summary>
     public class DefaultCertificateValidator : ICertificateValidator
     {
         public bool RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain,
