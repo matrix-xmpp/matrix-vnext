@@ -26,7 +26,10 @@ using Matrix.Attributes;
 using Matrix.Crypt;
 using System.Threading;
 using System.Threading.Tasks;
+
+using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
+using DotNetty.Common.Utilities;
 
 namespace Matrix
 {
@@ -146,6 +149,22 @@ namespace Matrix
         public static bool Contains<T>(this IChannelPipeline channelPipeline) where T : class, IChannelHandler
         {
             return channelPipeline.Get<T>() != null;            
+        }
+
+        /// <summary>
+        /// Extensions method for the ToArray() method was removed in DotNetty 0.4.7
+        /// </summary>
+        /// <param name="buffer">The <see cref="IByteBuffer"/></param>
+        /// <returns>The readable bytes of the buffer as array.</returns>
+        public static byte[] ToArray(this IByteBuffer buffer)
+        {
+            if (!buffer.IsReadable())
+            {
+                return ArrayExtensions.ZeroBytes;
+            }
+            byte[] result = new byte[buffer.ReadableBytes];
+            buffer.ReadBytes(result, 0, result.Length);
+            return result;
         }
         #endregion
     }

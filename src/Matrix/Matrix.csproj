@@ -17,8 +17,7 @@
     <Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetty.Handlers" Version="0.4.6" />
-    <PackageReference Include="DotNetty.Transport" Version="0.4.6" />
+    <PackageReference Include="DotNetty.Handlers" Version="0.4.7" />
     <PackageReference Include="System.Reactive" Version="3.1.1" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
