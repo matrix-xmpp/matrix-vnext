@@ -398,7 +398,7 @@ namespace Matrix
         /// </param>
         /// <param name="timeout">the timeout</param>
         /// <returns></returns>
-        public async Task<bool> CloseAsync(bool sendStreamFooter = true, int timeout = 2000)
+        public async Task<bool> DisconnectAsync(bool sendStreamFooter = true, int timeout = 2000)
         {
             IDisposable anonymousSubscription = null;
             var resultCompletionSource = new TaskCompletionSource<bool>();
@@ -424,9 +424,26 @@ namespace Matrix
 
             // timed out
             anonymousSubscription.Dispose();
-            await TryCloseAsync();           
+            await TryCloseAsync();
 
             return true;
+        }
+
+        /// <summary>
+        /// Close the XMPP connection
+        /// </summary>
+        /// <param name="sendStreamFooter">
+        /// Sends the stream footer to the server when set to true.
+        /// Usually a stream footer should be sent to the server when closing the connection.
+        /// But there are cases where we may not want to sent one. For example with 
+        /// stream management when we want to resume the stream later.
+        /// </param>
+        /// <param name="timeout">the timeout</param>
+        /// <returns></returns>
+        [Obsolete("Use DisconnectAsync instead")]
+        public async Task<bool> CloseAsync(bool sendStreamFooter = true, int timeout = 2000)
+        {
+            return await DisconnectAsync(sendStreamFooter, timeout);
         }
 
         private async Task TryCloseAsync()
