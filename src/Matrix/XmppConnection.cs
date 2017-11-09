@@ -399,7 +399,7 @@ namespace Matrix
         /// </param>
         /// <param name="timeout">the timeout</param>
         /// <returns></returns>
-        public async Task<bool> DisconncetAsync(bool sendStreamFooter = true, int timeout = 2000)
+        public async Task<bool> DisconnectAsync(bool sendStreamFooter = true, int timeout = 2000)
         {
             IDisposable anonymousSubscription = null;
             var resultCompletionSource = new TaskCompletionSource<bool>();
@@ -444,7 +444,7 @@ namespace Matrix
         [Obsolete("Use  DisconncetAsync instead, this was renamed to match naming convention to ConnectAsync")]
         public async Task<bool> CloseAsync(bool sendStreamFooter = true, int timeout = 2000)
         {
-            return await DisconncetAsync(sendStreamFooter, timeout);
+            return await DisconnectAsync(sendStreamFooter, timeout);
         }
 
         private async Task TryCloseAsync()

@@ -92,7 +92,7 @@ namespace ConsoleClient
             Console.ReadLine();
 
             // Disconnect the XMPP connection
-            xmppClient.DisconncetAsync().GetAwaiter().GetResult();
+            xmppClient.DisconnectAsync().GetAwaiter().GetResult();
 
             Console.ReadLine();
         }
