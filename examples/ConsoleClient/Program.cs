@@ -27,11 +27,7 @@ using Matrix.Xmpp.Base;
 using Matrix.Srv;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
-using Matrix.Network.Handlers;
-using System.Threading;
-using Matrix.Network.Resolver;
-using Matrix.Network;
-using System.Net;
+using System.Diagnostics;
 
 namespace ConsoleClient
 {
@@ -49,79 +45,30 @@ namespace ConsoleClient
             var xmppClient = new XmppClient(pipelineInitializerAction)
             {
                 // AG-Software
-                Username = "alex",
+                Username = "username",
                 Password = "secret",
-                XmppDomain = "ag-software.net",
-                HostnameResolver = new SrvNameResolver(),
-
-                //Username = "alex",
-                //Password = "secret",
-                //XmppDomain = "jabber.org",
-                //XmppDomain = "localhost",
-
-                // jabber.org
-                //Username = "gnauck",
-                //Password = "secret",
-                //XmppDomain = "jabber.org",
-                //HostnameResolver = new SrvNameResolver(),
-
-                // local prosody
-                //Username = "alex",
-                //Password = "secret",
-                //XmppDomain = "localhost",
-                //HostnameResolver = new StaticNameResolver(IPAddress.Parse("192.168.1.151")),
-                //CertificateValidator = new AlwaysAcceptCertificateValidator(),
-
-                // Openfire Flepo
-                //Username = "admin",
-                //Password = "secret",
-                //XmppDomain = "flepo",
-                //Tls = true,
-                //Compression = false,
-                //Resource = "vnext",
-                //CertificateValidator = new AlwaysAcceptCertificateValidator(),
-
-            };
-
-            //xmppClient.AddHandler(new AutoReplyToPingHandler<Iq>());
-
-
-            
-            //xmppClient
-            //   .XmppXElementStream
-            //   .Where(el => el is Presence)
-            //   .Subscribe(el =>
-            //   {
-            //       System.Diagnostics.Debug.WriteLine(el.ToString());                   
-            //   });
+                XmppDomain = "jabber.org",
+                HostnameResolver = new SrvNameResolver()
+            };            
 
             xmppClient.XmppSessionStateObserver.Subscribe(v => {
-                System.Diagnostics.Debug.WriteLine($"State changed: {v}");
+                Debug.WriteLine($"State changed: {v}");
             });
           
-
             xmppClient
                 .XmppXElementStreamObserver
                 .Where(el => el is Presence)
                 .Subscribe(el =>
                 {
-                    System.Diagnostics.Debug.WriteLine(el.ToString());
+                    Debug.WriteLine(el.ToString());
                 });
-
-            xmppClient
-               .XmppXElementStreamObserver
-               .Where(el => el is Matrix.Xmpp.StreamManagement.Ack.Request)
-               .Subscribe(el =>
-               {
-                   System.Diagnostics.Debug.WriteLine(el.ToString());
-               });
-
+           
             xmppClient
                 .XmppXElementStreamObserver
                 .Where(el => el is Message)
                 .Subscribe(el =>
                 {
-                    System.Diagnostics.Debug.WriteLine(el.ToString());
+                    Debug.WriteLine(el.ToString());
                 });
 
             xmppClient
@@ -129,35 +76,23 @@ namespace ConsoleClient
                 .Where(el => el is Iq)
                 .Subscribe(el =>
                 {
-                    System.Diagnostics.Debug.WriteLine(el.ToString());
+                    Debug.WriteLine(el.ToString());
                 });
 
+            // Connect the XMPP connection
             xmppClient.ConnectAsync().GetAwaiter().GetResult();
 
+            // request the roster (aka contact list)
             var roster = xmppClient.RequestRosterAsync().GetAwaiter().GetResult();
             Console.WriteLine(roster.ToString());
 
+            // Send our presence to the server
             xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
-
-            //xmppClient.Pipeline.Get<StreamManagementHandler>().EnableAsync().GetAwaiter().GetResult();
-
-            //xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
-            //xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
-
-            //xmppClient.Pipeline.Get<StreamManagementHandler>().RequestAckAsync(10000, CancellationToken.None).GetAwaiter().GetResult();
-
-            //xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
-            //xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
-
-            //var ret = xmppClient.Pipeline.Get<StreamManagementHandler>().RequestAckAsync().GetAwaiter().GetResult();
-            //System.Diagnostics.Debug.WriteLine("counter:" + ret.LastHandledStanza);
-
-            //xmppClient.Pipeline.Get<StreamManagementHandler>().RequestAckAsync(10000, CancellationToken.None).GetAwaiter().GetResult();
-
-            Console.WriteLine("Hello World!");
+            
             Console.ReadLine();
 
-            var ret1 = xmppClient.CloseAsync().GetAwaiter().GetResult();
+            // Disconnect the XMPP connection
+            xmppClient.DisconncetAsync().GetAwaiter().GetResult();
 
             Console.ReadLine();
         }
