@@ -1,1 +1,16 @@
-TODO...
+# SharpZipLib
+https://github.com/icsharpcode/SharpZipLib
+License: MIT License
+
+# DotNetty
+https://github.com/Azure/DotNetty
+License: MIT License
+
+# DnsClient.NET
+http://dnsclient.michaco.net/
+License: Apache License
+
+# XPNet
+https://github.com/agnauck/XpNet
+License: http://www.jclark.com/xml/xp/copying.txt
+XpNet is a port of James Clark's Java XP parser/tokenizer to c#/.net
