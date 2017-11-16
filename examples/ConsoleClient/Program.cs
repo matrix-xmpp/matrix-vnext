@@ -25,9 +25,10 @@ using Matrix;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 using Matrix.Srv;
-using DotNetty.Handlers.Logging;
+
 using DotNetty.Transport.Channels;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace ConsoleClient
 {
@@ -35,16 +36,25 @@ namespace ConsoleClient
     {
         static void Main(string[] args)
         {
-            ExampleHelper.SetConsoleLogger();
+            // log with DotNetty's internal logger
+            //DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
+            //var pipelineInitializerAction = new Action<IChannelPipeline>(pipeline =>
+            //{
+            //    pipeline.AddFirst(new DotNetty.Handlers.Logging.LoggingHandler());
+            //});
 
-            var pipelineInitializerAction = new Action<IChannelPipeline>(pipeline => {
-                pipeline.AddFirst(new LoggingHandler());
+            // log with custom DotNetty handler to standard netCore logger
+            LoggerFactory loggerFactory = new LoggerFactory();
+            loggerFactory.AddConsole();
+            var logger = loggerFactory.CreateLogger<Program>();
+
+            var pipelineInitializerAction = new Action<IChannelPipeline>(pipeline =>
+            {
+                pipeline.AddFirst(new MyLoggingHandler(logger));
             });
 
-
             var xmppClient = new XmppClient(pipelineInitializerAction)
-            {
-                // AG-Software
+            {                
                 Username = "username",
                 Password = "secret",
                 XmppDomain = "jabber.org",
