@@ -8,7 +8,7 @@
     "tasks": [
         {
             "taskName": "build",
-            "args": [ "src/Matrix", "src/Matrix.Srv", "examples/ConsoleClient"],
+            "args": [ "MatriX-vnext.sln"],
             "isBuildCommand": true,
             "showOutput": "silent",
             "problemMatcher": "$msCompile"
