@@ -63,7 +63,7 @@ namespace Matrix.Network.Codecs
         {
             if (Active)
             {
-                var decompressBuf = CompressionHelper.Decompress(inflater, message.ToArray());
+                var decompressBuf = CompressionHelper.Decompress(inflater, message.ReadReadableBytes());
                 var buf = context.Allocator.Buffer(decompressBuf.Length).WriteBytes(decompressBuf);
                 output.Add(buf);
             }

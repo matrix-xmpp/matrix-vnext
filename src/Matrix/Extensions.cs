@@ -156,7 +156,7 @@ namespace Matrix
         /// </summary>
         /// <param name="buffer">The <see cref="IByteBuffer"/></param>
         /// <returns>The readable bytes of the buffer as array.</returns>
-        public static byte[] ToArray(this IByteBuffer buffer)
+        public static byte[] ReadReadableBytes(this IByteBuffer buffer)
         {
             if (!buffer.IsReadable())
             {

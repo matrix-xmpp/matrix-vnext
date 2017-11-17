@@ -60,7 +60,7 @@ namespace Matrix.Network.Codecs
         protected override void Decode(IChannelHandlerContext context, IByteBuffer message, List<object> output)
         {
             this.output = output;
-            parser.Write(message.ToArray());
+            parser.Write(message.ReadReadableBytes());
             this.output = null;
         }
     }

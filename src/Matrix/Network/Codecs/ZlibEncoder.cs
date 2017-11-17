@@ -55,7 +55,7 @@ namespace Matrix.Network.Codecs
         {
             if (Active)
             {
-                var buf = CompressionHelper.Compress(deflater, message.ToArray());
+                var buf = CompressionHelper.Compress(deflater, message.ReadReadableBytes());
                 output.Add(context.Allocator.Buffer(buf.Length).WriteBytes(buf));
             }
             else
