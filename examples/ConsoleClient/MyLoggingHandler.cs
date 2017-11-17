@@ -91,8 +91,7 @@
 
                 byte[] resBuf = new byte[msg.ReadableBytes];
                 msg.GetBytes(0, resBuf, 0, msg.ReadableBytes);
-
-                var utf8String = Encoding.UTF8.GetString(resBuf);
+                var utf8String = Encoding.UTF8.GetString(resBuf);                
                 buf.Append(eventName).Append(": ").Append(utf8String);
 
                 return buf.ToString();
