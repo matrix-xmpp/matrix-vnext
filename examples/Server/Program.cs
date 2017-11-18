@@ -20,41 +20,21 @@
  */
 
 using System;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
-using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Matrix;
-using Matrix.Network;
 using Matrix.Network.Codecs;
 using Matrix.Network.Handlers;
-using Matrix.Network.Resolver;
-using Matrix.Xml;
-using Matrix.Xmpp;
-using Matrix.Xmpp.Base;
-using Matrix.Xmpp.Stream;
-
-using System.Reflection;
 using Server.Handlers;
 
 namespace Server
 {
     class Program
     {
-        
-        //static readonly XmppStreamEventHandler  xmppStreamEventHandler  = new XmppStreamEventHandler();
-        //static readonly XmppStanzaHandler       xmppStanzaHandler       = new XmppStanzaHandler();
-
-        //private static IObservable<XmlStreamEvent> XmlStreamEvent => xmppStreamEventHandler.XmlStreamEvent;
-
         private static readonly SaslPlainHandler salsPlainHandler = new SaslPlainHandler();
 
         private static IChannelPipeline pipeline;
@@ -80,17 +60,11 @@ namespace Server
 
                         pipeline.AddLast(new XmlStreamDecoder());
 
-
-                        //Pipeline.AddLast(new StringEncoder());
-                        //pipeline.AddLast(new ZlibEncoder());
                         pipeline.AddLast(new XmppXElementEncoder());
-                        pipeline.AddLast(new UTF8StringEncoder());
-
-                        
+                        pipeline.AddLast(new UTF8StringEncoder());                        
 
                         pipeline.AddLast(new ServerConnectionHandler());
                        
-                        //pipeline.AddLast(new StreamFooterHandler());
                         pipeline.AddLast(new XmppStreamEventHandler());
 
                         pipeline.AddLast(new StartTlsHandler(new PfxCertificateProvider()));
@@ -98,17 +72,10 @@ namespace Server
                         pipeline.AddLast(new SaslScramHandler());
                         pipeline.AddLast(new BindHandler());
                         pipeline.AddLast(new SessionHandler());
+                        pipeline.AddLast(new RosterHandler());
 
                         pipeline.AddLast(new XmppStanzaHandler());
-
-
-                        //pipeline.AddLast(salsPlainHandler);
-
-
-                    }));
-
-
-             
+                    }));             
 
                 IChannel boundChannel = await bootstrap.BindAsync(IPAddress.Any, ServerSettings.Port);
 

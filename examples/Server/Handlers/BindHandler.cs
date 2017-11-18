@@ -81,16 +81,7 @@ namespace Server.Handlers
             await SendAsync(resIq);
 
             serverSession.Resource = res;
-            serverSession.SessionState = SessionState.Binded;
-
-            // check if there is another session with this Jid already
-            //if (Sessions.Exists(jid))
-            //{
-            //    Sessions.End(jid,
-            //                      new Matrix.Xmpp.Stream.Error(Matrix.Xmpp.Stream.ErrorCondition.Conflict));
-            //}
-
-            //Sessions.Add(new ServerStream { Jid = jid, ServerSession = serverSession });
+            serverSession.SessionState = SessionState.Binded;          
         }
     }
 }
