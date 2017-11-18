@@ -19,39 +19,40 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Matrix.Network.Handlers;
 using Matrix.Xml;
 using Matrix.Xmpp;
-using Matrix.Xmpp.Base;
-using Matrix.Xmpp.Ping;
+using Matrix.Xmpp.Client;
+using Matrix.Xmpp.Roster;
 
 namespace Server.Handlers
 {
-    public class RosterHandler<T> : XmppStanzaHandler where T : Iq
+    public class RosterHandler : XmppStanzaHandler
     {
         public RosterHandler()
         {
-            //Handle(
-            //    el =>
-            //        el.OfType<T>()
-            //        && el.Cast<T>().Type == IqType.Get
-            //        && el.Cast<T>().Query.OfType<Ping>(),
+            Handle(
+                el =>
+                    el.OfType<Iq>()
+                    && el.Cast<Iq>().Type == IqType.Get
+                    && el.Cast<Iq>().Query.OfType<Roster>(),
 
-            //    async (context, xmppXElement) =>
-            //    {
-            //        var iq = xmppXElement.Cast<T>();
+                async (context, xmppXElement) =>
+                {
+                    var iq = xmppXElement.Cast<Iq>();
 
-            //        var resIq = Factory.GetElement<T>();
-            //        resIq.Id = iq.Id;
-            //        resIq.To = iq.From;
-            //        resIq.Type = IqType.Result;
+                    var resIq = new RosterIq();
+                    resIq.Id = iq.Id;
+                    resIq.To = iq.From;
+                    resIq.Type = IqType.Result;
 
-            //        await SendAsync(resIq);
-            //    });
+                    // TODO populate/store the roster from a database
+                    for (int i = 0; i < 10; i++)                    
+                        resIq.Roster.AddRosterItem(new RosterItem($"user{i}@localhost", $"user {i}"));                 
+
+                    await SendAsync(resIq);
+                });
         }
     }
 }
