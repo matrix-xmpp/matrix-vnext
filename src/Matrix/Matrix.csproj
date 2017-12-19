@@ -12,6 +12,9 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>xmpp;jabber;im;instant messaging</PackageTags>    
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <AssemblyOriginatorKeyFile>../../matrix.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <AssemblyVersion>1.0.2</AssemblyVersion>
     <FileVersion>1.0.2</FileVersion>
     <Version>1.0.2</Version>
