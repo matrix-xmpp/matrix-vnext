@@ -5,7 +5,7 @@
     <AssemblyTitle>Matrix vNext</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>AG-Software</Authors>
-    <TargetFrameworks>netstandard1.3;net451</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;netstandard2.0;net451</TargetFrameworks>
     <AssemblyName>Matrix</AssemblyName>
     <PackageId>Matrix.vNext</PackageId>
     <PackageLicenseUrl>https://www.ag-software.net/matrix-vnext/license</PackageLicenseUrl>
@@ -15,9 +15,9 @@
     <AssemblyOriginatorKeyFile>../../matrix.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
-    <FileVersion>1.0.3</FileVersion>
-    <Version>1.0.3</Version>
+    <AssemblyVersion>1.0.4</AssemblyVersion>
+    <FileVersion>1.0.4</FileVersion>
+    <Version>1.0.4</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetty.Handlers" Version="0.4.7" />

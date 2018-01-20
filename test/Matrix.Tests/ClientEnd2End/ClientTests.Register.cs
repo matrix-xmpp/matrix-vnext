@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Matrix.Tests.ClientEnd2End
 {
-    partial class ClientTests : NettyBaseServer
+    public partial class ClientTests : NettyBaseServer
     {
         public class RegisterAccountHandler : IRegister
         {
