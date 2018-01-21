@@ -28,7 +28,7 @@ namespace Matrix.Tests.ClientEnd2End
 
             public async Task<Register> RegisterAsync(Register register)
             {
-                return await Task<Register>.Factory.StartNew(() =>
+                return await Task<Register>.Run(() =>
                 {
                     register.RemoveAll<Data>();
                     register.Username = xmppClient.Username;

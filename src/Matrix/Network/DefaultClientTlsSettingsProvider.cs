@@ -31,7 +31,7 @@ namespace Matrix.Network
     {
         public async Task<TlsSettings> ProvideAsync(XmppConnection xmppConnection)
         {
-            return await Task<TlsSettings>.Factory.StartNew(() =>
+            return await Task<TlsSettings>.Run(() =>
             {
                 return new ClientTlsSettings(xmppConnection.XmppDomain);
             });

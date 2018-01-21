@@ -246,7 +246,7 @@ namespace Matrix
         /// <returns></returns>
         private async Task DoSslAsync(CancellationToken cancellationToken)
         {
-            await Task.Factory.StartNew(() =>
+            await Task.Run(() =>
             {
                 var tlsSettingsProvider = TlsSettingsProvider.ProvideAsync(this).GetAwaiter().GetResult();
                 XmppSessionState.Value = SessionState.Securing;

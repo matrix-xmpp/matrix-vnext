@@ -162,7 +162,7 @@ namespace Matrix.Tests.ClientEnd2End
                 CancellationTokenSource cts = new CancellationTokenSource();
                 cts.Token.ThrowIfCancellationRequested();
 
-                await Task.Factory.StartNew(async() => {
+                await Task.Run(async() => {
                     await Task.Delay(5000);
                     cts.Cancel();
                 });

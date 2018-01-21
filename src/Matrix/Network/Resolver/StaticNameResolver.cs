@@ -41,7 +41,7 @@ namespace Matrix.Network.Resolver
 
         public async Task<EndPoint> ResolveAsync(EndPoint address)
         {
-            return await Task<EndPoint>.Factory.StartNew(() =>
+            return await Task<EndPoint>.Run(() =>
             {
                 var asDns = address as DnsEndPoint;
                 if (asDns != null)
