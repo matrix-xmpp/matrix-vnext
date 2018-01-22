@@ -28,29 +28,66 @@ namespace Matrix.Network.Resolver
 {
     public class StaticNameResolver : INameResolver
     {
+        /// <summary>
+        /// Ititialize a new <see cref="StaticNameResolver"/> with a given ip address and port number
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
         public StaticNameResolver(IPAddress ip, int port = 5222)
         {
             Ip = ip;
             Port = port;
         }
 
-        public bool IsResolved(EndPoint address) => !(address is DnsEndPoint);
+        /// <summary>
+        /// Ititialize a new <see cref="DnsNameResolver"/> with a given hostname and port number
+        /// </summary>
+        /// <param name="hostname">The hostname</param>
+        /// <param name="port">The port number</param>
+        public StaticNameResolver(string hostname, int port = 5222)
+        {
+            Hostname = hostname;
+            Port = port;
+        }
 
-        public int Port { get; set; }
+        /// <inheritdoc />        
+        public bool IsResolved(EndPoint address) => !(address is DnsEndPoint);
+        
         public IPAddress Ip { get; set; }
 
+        /// <summary>
+        /// Gets or sets the hostname
+        /// </summary>
+        public string Hostname { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the port
+        /// </summary>
+        public int Port { get; set; }
+
+        /// <inheritdoc />
         public async Task<EndPoint> ResolveAsync(EndPoint address)
         {
-            return await Task<EndPoint>.Run(() =>
+            return await Task<EndPoint>.Run(async () =>
             {
                 var asDns = address as DnsEndPoint;
                 if (asDns != null)
                 {
+                    if (Ip == null)
+                        await ResolveIpFromHostnameAsync();
+
                     return new IPEndPoint(Ip, Port);
                 }
 
                 return address;
             });
+        }
+
+        private async Task ResolveIpFromHostnameAsync()
+        {
+            var addresses = await Dns.GetHostAddressesAsync(Hostname);
+            if (addresses.Length > 0)
+                Ip = addresses[0];
         }
     }
 }

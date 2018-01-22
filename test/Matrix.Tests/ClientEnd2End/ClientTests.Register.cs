@@ -67,7 +67,7 @@ namespace Matrix.Tests.ClientEnd2End
                     () => xmppClient.ConnectAsync().GetAwaiter().GetResult()
                 );
 
-                await xmppClient.CloseAsync();
+                await xmppClient.DisconnectAsync();
             }
             finally
             {
@@ -104,7 +104,7 @@ namespace Matrix.Tests.ClientEnd2End
                     () => xmppClient.ConnectAsync().GetAwaiter().GetResult()
                 );
 
-                await xmppClient.CloseAsync();
+                await xmppClient.DisconnectAsync();
             }
             finally
             {
@@ -141,7 +141,7 @@ namespace Matrix.Tests.ClientEnd2End
                     () => xmppClient.ConnectAsync().GetAwaiter().GetResult()
                 );
 
-                await xmppClient.CloseAsync();
+                await xmppClient.DisconnectAsync();
             }
             finally
             {
