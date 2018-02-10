@@ -16,6 +16,9 @@
     <None Remove="ClientEnd2End\stream_resource_conflict.xml" />
     <None Remove="Xml\stream_partial1.xml" />
     <None Remove="Xml\stream_partial2.xml" />
+    <None Remove="Xmpp\Avatar\data.xml" />
+    <None Remove="Xmpp\Avatar\info.xml" />
+    <None Remove="Xmpp\Avatar\metadata.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +49,9 @@
     <EmbeddedResource Include="Xmpp\Archiving\list.xml" />
     <EmbeddedResource Include="Xmpp\Archiving\pref.xml" />
     <EmbeddedResource Include="Xmpp\Auth\query.xml" />
+    <EmbeddedResource Include="Xmpp\Avatar\data.xml" />
+    <EmbeddedResource Include="Xmpp\Avatar\info.xml" />
+    <EmbeddedResource Include="Xmpp\Avatar\metadata.xml" />
     <EmbeddedResource Include="Xmpp\Base\mucuser1.xml" />
     <EmbeddedResource Include="Xmpp\Base\mucuser2.xml" />
     <EmbeddedResource Include="Xmpp\Bookmarks\conference1.xml" />

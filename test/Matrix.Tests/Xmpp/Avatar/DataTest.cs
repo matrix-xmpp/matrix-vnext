@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,12 +19,32 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-namespace Matrix.Xmpp.Base
+using Xunit;
+
+using Matrix.Xml;
+using Shouldly;
+using Matrix.Xmpp.Avatar;
+using System.Text;
+
+namespace Matrix.Tests.Xmpp.Avatar
 {
-    public abstract class Sasl : XmppXElementWithBased64Value
+
+    public class DataTests
     {
-        protected Sasl(string tag) : base(Namespaces.Sasl, tag)
+        [Fact]
+        public void TestFactory()
         {
+            XmppXElement.LoadXml(Resource.Get("Xmpp.Avatar.data.xml"))
+                .ShouldBeOfType<Data>();
         }
+
+        [Fact]
+        public void TestReadAttributes()
+        {
+            var data = XmppXElement.LoadXml(Resource.Get("Xmpp.Avatar.data.xml")).Cast<Data>();
+
+            data.Bytes.ShouldBe(Encoding.UTF8.GetBytes("Hello World"));
+            
+        }        
     }
 }

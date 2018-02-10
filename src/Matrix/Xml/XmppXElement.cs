@@ -330,6 +330,34 @@ namespace Matrix.Xml
 
         #endregion
 
+        #region GetTag Uri
+        /// <summary>
+        /// Gets the value of the given tag as <seealso cref="System.Uri"/>
+        /// </summary>
+        /// <param name="tagname"></param>
+        /// <returns></returns>
+        public Uri GetTagUri(string tagname)
+        {
+            return (GetTagUri(Name.NamespaceName, tagname));
+        }
+
+        /// <summary>
+        /// Gets the value of the given tag as <seealso cref="System.Uri"/>
+        /// </summary>
+        /// <param name="ns"></param>
+        /// <param name="tagname"></param>
+        /// <returns></returns>
+        public Uri GetTagUri(string ns, string tagname)
+        {
+            if (HasTag(ns, tagname))
+            {
+                return new Uri(GetTag(ns, tagname));
+            }
+
+            return null;
+        }
+        #endregion
+
         #region GetTag bool
 
         public bool GetTagBool(string tagname)
@@ -687,6 +715,31 @@ namespace Matrix.Xml
         }
         #endregion
 
+        #region SetTag Uri
+        /// <summary>
+        /// Sets or creates the given tag and sets the value to the uri
+        /// </summary>
+        /// <param name="tagname"></param>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public XElement SetTagUri(string tagname, Uri uri)
+        {
+            return SetTag(Name.NamespaceName, tagname, uri.ToString());
+        }
+
+        /// <summary>
+        /// /// Sets or creates the given tag and sets the value to the uri
+        /// </summary>
+        /// <param name="ns"></param>
+        /// <param name="tagname"></param>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public XElement SetTagUri(string ns, string tagname, Uri uri)
+        {
+            return SetTag(ns, tagname, uri.ToString());
+        }
+        #endregion
+
         #region SetTag bool
         public XElement SetTag(string tagname, bool content)
         {
@@ -724,17 +777,6 @@ namespace Matrix.Xml
             SetTag(tagname, dbl, nfi);
         }
         #endregion
-
-        //public XElement SetTag(string ns, string tagname, Jid content)
-        //{
-        //    return SetTag(ns, tagname, content.ToString());
-        //}
-
-        //public XElement SetTag(string tagname, Jid content)
-        //{
-        //    return SetTag(tagname, content.ToString());
-        //}
-
 
         public virtual string ToString(bool indented)
         {
@@ -1004,6 +1046,48 @@ namespace Matrix.Xml
         }
 
         /// <summary>
+        /// /// Gets an attribute and convert it to a Uri.
+        /// Returns null when the attribute does not exit
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Uri GetAttributeUri(string name)
+        {
+            if (HasAttribute(name))
+                return new Uri(GetAttribute(name));
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets an attribute and convert it to a Uri.
+        /// Returns null when the attribute does not exit
+        /// </summary>
+        /// <param name="xname"></param>
+        /// <returns></returns>
+        public Uri GetAttributeUri(XName xname)
+        {
+            if (HasAttribute(xname))
+            {
+                return new Uri(GetAttribute(xname));                  
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets an attribute and convert it to a Uri.
+        /// Returns null when the attribute does not exit
+        /// </summary>
+        /// <param name="ns"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Uri GetAttributeUri(string ns, string name)
+        {
+            return GetAttributeUri("{" + ns + "}" + name);
+        }
+
+        /// <summary>
         /// Get a boolean attribute. Returns false if the attribute does not exist.
         /// </summary>
         /// <param name="name">attribute name to lookup</param>
@@ -1161,11 +1245,23 @@ namespace Matrix.Xml
         }
 
         /// <summary>
-        /// Sets a "integer" attribute
+        /// Sets an attribute form an integer"
         /// </summary>
         /// <param name="name">attribute name</param>
         /// <param name="value">attribute value as integer</param>
         public XmppXElement SetAttribute(string name, int value)
+        {
+            SetAttribute(name, value.ToString());
+            return this;
+        }
+
+        /// <summary>
+        /// Sets an attribute from a Uri
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public XmppXElement SetAttribute(string name, Uri value)
         {
             SetAttribute(name, value.ToString());
             return this;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,11 +19,19 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-namespace Matrix.Xmpp.Base
+namespace Matrix.Xmpp.Avatar
 {
-    public abstract class Sasl : XmppXElementWithBased64Value
+    using Matrix.Attributes;
+    using Matrix.Xmpp.Base;
+
+    /// <summary>
+    /// Represents the avatar metadata element
+    /// </summary>
+    [XmppTag(Name = "data", Namespace = Namespaces.AvatarData)]
+    public class Data : XmppXElementWithBased64Value
     {
-        protected Sasl(string tag) : base(Namespaces.Sasl, tag)
+        public Data()
+            : base(Namespaces.AvatarData, "data")
         {
         }
     }

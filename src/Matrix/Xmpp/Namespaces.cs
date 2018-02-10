@@ -245,11 +245,7 @@ namespace Matrix.Xmpp
         public const string AMP = "http://jabber.org/protocol/amp";
 
         /// <summary>XEP-0153: vCard-Based Avatars (vcard-temp:x:update)</summary>
-        public const string VcardUpdate = "vcard-temp:x:update";
-
-        internal const string AgsCache = "ag-software:cache";
-        internal const string AgsLicense = "ag-software:license";
-
+        public const string VcardUpdate = "vcard-temp:x:update";       
 
         /// <summary>Jingle</summary>
         public const string Jingle = "urn:xmpp:jingle:1";
@@ -316,5 +312,18 @@ namespace Matrix.Xmpp
 
          /* websocket framing urn:ietf:params:xml:ns:xmpp-framing */
         public const string Framing = "urn:ietf:params:xml:ns:xmpp-framing";
+
+        /// <summary>
+        /// urn:xmpp:avatar:metadata (XEP-0084: User Avatar)
+        /// </summary>
+        public const string AvatarMetadata = "urn:xmpp:avatar:metadata";
+        /// <summary>
+        /// urn:xmpp:avatar:data  (XEP-0084: User Avatar)
+        /// </summary>
+        public const string AvatarData = "urn:xmpp:avatar:data";
+        /// <summary>
+        /// urn:xmpp:avatar:metadata+notify ("urn:xmpp:avatar:metadata)
+        /// </summary>
+        public const string AvatarMetadataNotify = "urn:xmpp:avatar:metadata+notify";
     }
 }

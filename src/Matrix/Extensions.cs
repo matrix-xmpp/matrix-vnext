@@ -146,6 +146,38 @@ namespace Matrix
             return channelPipeline.AddLast(nameAttribute.Name, handler);            
         }
 
+        /// <summary>
+        /// Inserts a  ChannelHandler after an existing handler of this pipeline.
+        //  The name of the handlers is taken from the NameAttribute of the handler class.        
+        /// </summary>
+        /// <typeparam name="TAfter"></typeparam>
+        /// <param name="channelPipeline"></param>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public static IChannelPipeline AddAfter<TAfter>(this IChannelPipeline channelPipeline, IChannelHandler handler)
+        {
+            var name = handler.GetType().GetTypeInfo().GetCustomAttribute<NameAttribute>(false).Name;
+            var baseName = typeof(TAfter).GetTypeInfo().GetCustomAttribute<NameAttribute>(false).Name;
+
+            return channelPipeline.AddAfter(baseName, name, handler);
+        }
+
+        /// <summary>
+        /// Inserts a  ChannelHandler before an existing handler of this pipeline.
+        //  The name of the handlers is taken from the NameAttribute of the handler class.        
+        /// </summary>
+        /// <typeparam name="TBefore"></typeparam>
+        /// <param name="channelPipeline"></param>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public static IChannelPipeline AddBefore<TBefore>(this IChannelPipeline channelPipeline, IChannelHandler handler)
+        {
+            var name = handler.GetType().GetTypeInfo().GetCustomAttribute<NameAttribute>(false).Name;
+            var baseName = typeof(TBefore).GetTypeInfo().GetCustomAttribute<NameAttribute>(false).Name;
+
+            return channelPipeline.AddBefore(baseName, name, handler);
+        }
+
         public static bool Contains<T>(this IChannelPipeline channelPipeline) where T : class, IChannelHandler
         {
             return channelPipeline.Get<T>() != null;            
