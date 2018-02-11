@@ -62,6 +62,24 @@ namespace Matrix.Tests.Xml
         }
 
         [Fact]
+        public void DescendantsShouldReturnNull()
+        {
+            var msg = XmppXElement.LoadXml(Resource.Get("Xml.message.xml")).Cast<Message>();
+            var desc = msg.Descendants<Iq>();
+            
+            desc.ShouldBeEmpty();
+            desc.Count().ShouldBe(0);
+        }
+
+        [Fact]
+        public void HasDescendantsTest()
+        {
+            var msg = XmppXElement.LoadXml(Resource.Get("Xml.message.xml")).Cast<Message>();
+            msg.HasDescendants<Iq>().ShouldBe(false);
+            msg.HasDescendants<Matrix.Xmpp.XData.Field>().ShouldBe(true);
+        }
+
+        [Fact]
         public void FindElementTest()
         {
             var msg = XmppXElement.LoadXml(Resource.Get("Xml.message.xml")).Cast<Message>();

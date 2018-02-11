@@ -793,6 +793,17 @@ namespace Matrix.Xml
         }
 
         /// <summary>
+        /// Checks if we have Descendants of the given type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool HasDescendants<T>() where T : XmppXElement
+        {
+            var descendants =base.Descendants(Factory.GetXName<T>()).OfType<T>();
+            return descendants != null && descendants.Any();
+        }
+
+        /// <summary>
         /// Returns a filtered collection of the child elements of this element or document, in document order.
         /// Only elements of the matching Type are included in the collection.
         /// </summary>
