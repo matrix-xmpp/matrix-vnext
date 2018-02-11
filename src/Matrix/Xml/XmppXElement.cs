@@ -787,8 +787,8 @@ namespace Matrix.Xml
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IEnumerable<XmppXElement> Descendants<T>() where T : XmppXElement
-        {           
+        public IEnumerable<T> Descendants<T>() where T : XmppXElement
+        {
             return base.Descendants(Factory.GetXName<T>()).OfType<T>();          
         }
 

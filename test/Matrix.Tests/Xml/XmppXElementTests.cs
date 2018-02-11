@@ -48,13 +48,16 @@ namespace Matrix.Tests.Xml
         }
 
         [Fact]
-        public void DecendantTest()
+        public void DescendantsTest()
         {
             var msg = XmppXElement.LoadXml(Resource.Get("Xml.message.xml")).Cast<Message>();
             var elements = msg.Descendants<Matrix.Xmpp.XData.Data>();
 
             elements.ShouldNotBeNull();
             elements.Count().ShouldBe(1);
+
+            var firstResult = elements.First();
+            firstResult.ShouldBeOfType<Matrix.Xmpp.XData.Data>();
 
             var elements2 = msg.Descendants<Matrix.Xmpp.XData.Field>();
             elements2.ShouldNotBeNull();
