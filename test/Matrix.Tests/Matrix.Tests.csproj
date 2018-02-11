@@ -14,6 +14,7 @@
     <None Remove="ClientEnd2End\stream_registeraccount_failed2.xml" />
     <None Remove="ClientEnd2End\stream_registeraccount_success.xml" />
     <None Remove="ClientEnd2End\stream_resource_conflict.xml" />
+    <None Remove="Xml\message.xml" />
     <None Remove="Xml\stream_partial1.xml" />
     <None Remove="Xml\stream_partial2.xml" />
     <None Remove="Xmpp\Avatar\data.xml" />
@@ -33,6 +34,7 @@
     <EmbeddedResource Include="ClientEnd2End\stream_registeraccount_success.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream_resource_conflict.xml" />
     <EmbeddedResource Include="Xml\cdata1.xml" />
+    <EmbeddedResource Include="Xml\message.xml" />
     <EmbeddedResource Include="Xml\stream1.xml" />
     <EmbeddedResource Include="Xml\stream_partial1.xml" />
     <EmbeddedResource Include="Xml\stream_partial2.xml" />

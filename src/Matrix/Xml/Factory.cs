@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using Matrix.Attributes;
 
 namespace Matrix.Xml
@@ -58,6 +59,21 @@ namespace Matrix.Xml
         public static T GetElement<T>() where T : XmppXElement
         {
             return Activator.CreateInstance<T>();
+        }
+
+        /// <summary>
+        /// Gets the <see cref="XName"/> of a given <see cref="XmppXElement"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static XName GetXName<T>() where T : XmppXElement
+        {           
+            var att = typeof(T)
+                         .GetTypeInfo()
+                         .GetCustomAttributes<XmppTagAttribute>(false)
+                             .FirstOrDefault();
+
+           return "{" + att.Namespace + "}" + att.Name;
         }
 
         public static XmppXElement GetElement(string prefix, string localName, string ns)

@@ -416,8 +416,7 @@ namespace Matrix.Xml
             return Enum.ParseUsingNameAttrib<T>(tag);
         }
         #endregion
-
-
+        
         #region GetTag date
         internal DateTime GetTagDate(string tagname)
         {
@@ -441,8 +440,7 @@ namespace Matrix.Xml
             return DateTime.MinValue;
         }        
         #endregion
-
-
+        
         #region << Fluent stuff >>
         /// <summary>
         /// Goes up one node in the tree to the parent for (fluent API).
@@ -781,6 +779,17 @@ namespace Matrix.Xml
         public virtual string ToString(bool indented)
         {
             return ToString(indented ? SaveOptions.None : SaveOptions.DisableFormatting);
+        }
+      
+        /// <summary>
+        /// Returns a collection of the descendant elements for this document or element
+        /// in document order.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IEnumerable<XmppXElement> Descendants<T>() where T : XmppXElement
+        {           
+            return base.Descendants(Factory.GetXName<T>()).OfType<T>();          
         }
 
         /// <summary>

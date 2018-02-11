@@ -20,7 +20,9 @@
  */
 
 using Matrix.Xml;
+using Matrix.Xmpp.Client;
 using Shouldly;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Xunit;
 
@@ -43,6 +45,31 @@ namespace Matrix.Tests.Xml
 
             var xml = el.ToString(false);
             Regex.Matches(xml, "CDATA").Count.ShouldBe(1);
+        }
+
+        [Fact]
+        public void DecendantTest()
+        {
+            var msg = XmppXElement.LoadXml(Resource.Get("Xml.message.xml")).Cast<Message>();
+            var elements = msg.Descendants<Matrix.Xmpp.XData.Data>();
+
+            elements.ShouldNotBeNull();
+            elements.Count().ShouldBe(1);
+
+            var elements2 = msg.Descendants<Matrix.Xmpp.XData.Field>();
+            elements2.ShouldNotBeNull();
+            elements2.Count().ShouldBeGreaterThan(1);
+        }
+
+        [Fact]
+        public void FindElementTest()
+        {
+            var msg = XmppXElement.LoadXml(Resource.Get("Xml.message.xml")).Cast<Message>();
+            var elements = msg.Element<Matrix.Xmpp.XData.Data>(true);
+            elements.ShouldNotBeNull();
+            
+            var elements2 = msg.Element<Matrix.Xmpp.XData.Field>(true);
+            elements2.ShouldNotBeNull();            
         }
     }
 }
