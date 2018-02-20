@@ -19,14 +19,14 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using Xunit;
-
-using Matrix.Xml;
-using Shouldly;
-using Matrix.Xmpp.Avatar;
-
 namespace Matrix.Tests.Xmpp.Avatar
 {
+
+    using Xunit;
+
+    using Matrix.Xml;
+    using Shouldly;
+    using Matrix.Xmpp.Avatar;
 
     public class MetadataTests
     {

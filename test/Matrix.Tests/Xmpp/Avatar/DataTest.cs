@@ -28,7 +28,6 @@ using System.Text;
 
 namespace Matrix.Tests.Xmpp.Avatar
 {
-
     public class DataTests
     {
         [Fact]

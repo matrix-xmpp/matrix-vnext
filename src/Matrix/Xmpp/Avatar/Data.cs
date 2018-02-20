@@ -25,7 +25,7 @@ namespace Matrix.Xmpp.Avatar
     using Matrix.Xmpp.Base;
 
     /// <summary>
-    /// Represents the avatar metadata element
+    /// Represents the avatar data element
     /// </summary>
     [XmppTag(Name = "data", Namespace = Namespaces.AvatarData)]
     public class Data : XmppXElementWithBased64Value
