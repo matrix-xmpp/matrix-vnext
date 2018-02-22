@@ -173,8 +173,6 @@ namespace Matrix.Xmpp
 
         /// <summary>XEP-0172: User nickname (http://jabber.org/protocol/nick)</summary>
         public const string Nick = "http://jabber.org/protocol/nick";
-        /// <summary>XEP-0172: User nickname (http://jabber.org/protocol/nick+notify)</summary>
-        public const string NickNotify = "http://jabber.org/protocol/nick+notify";
 
         /// <summary>XEP-0085 Chat State Notifications (http://jabber.org/protocol/chatstates)</summary>
         public const string Chatstates = "http://jabber.org/protocol/chatstates";
@@ -323,9 +321,5 @@ namespace Matrix.Xmpp
         /// urn:xmpp:avatar:data  (XEP-0084: User Avatar)
         /// </summary>
         public const string AvatarData = "urn:xmpp:avatar:data";
-        /// <summary>
-        /// urn:xmpp:avatar:metadata+notify ("urn:xmpp:avatar:metadata)
-        /// </summary>
-        public const string AvatarMetadataNotify = "urn:xmpp:avatar:metadata+notify";
     }
 }
