@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Description>MatriX vNext</Description>
     <Copyright>Copyright © Alexander Gnauck, AG-Software</Copyright>
-    <AssemblyTitle>Matrix vNext Srv Resolver</AssemblyTitle>
+    <AssemblyTitle>Matrix vNext Extensions</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>AG-Software</Authors>
     <TargetFrameworks>netstandard1.3;netstandard2.0;net451</TargetFrameworks>
-    <AssemblyName>Matrix.Srv</AssemblyName>
-    <PackageId>Matrix.vNext.Srv</PackageId>
+    <AssemblyName>Matrix.Extensions</AssemblyName>
+    <PackageId>Matrix.vNext.Extensions</PackageId>
     <PackageLicenseUrl>https://www.ag-software.net/matrix-vnext/license</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageTags>xmpp;jabber;srv</PackageTags>    
+    <PackageTags>xmpp;jabber;srv</PackageTags>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AssemblyOriginatorKeyFile>../../matrix.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
@@ -20,14 +20,25 @@
     <Version>2.0.0</Version>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DnsClient" Version="1.0.7" />
-    <PackageReference Include="DotNetty.Transport" Version="0.4.7" />
-  </ItemGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <Reference Include="System.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+    <PackageReference Include="System.Globalization.Extensions">
+      <Version>4.3.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Matrix\Matrix.csproj" />
+  </ItemGroup>
 </Project>

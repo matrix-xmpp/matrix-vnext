@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Matrix.Extensions\Matrix.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Matrix.Srv\Matrix.Srv.csproj" />
     <ProjectReference Include="..\..\src\Matrix\Matrix.csproj" />
   </ItemGroup>

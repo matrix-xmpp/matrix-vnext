@@ -35,7 +35,7 @@ using DotNetty.Buffers;
 
 namespace Matrix
 {
-    public abstract class XmppConnection
+    public abstract class XmppConnection : IStanzaSender
     {
         protected   Bootstrap                   Bootstrap              = new Bootstrap();        
         readonly    MultithreadEventLoopGroup   eventLoopGroup         = new MultithreadEventLoopGroup();

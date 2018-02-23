@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,19 +19,20 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
-using Xunit;
-using Shouldly;
-
-namespace Matrix.Tests
+namespace Matrix
 {
-    public class XmppClientTests
+    using System;
+
+    public static class ByteExtensions
     {
-        [Fact]
-        public void ResourceCannotBeNull()
+        /// <summary>
+        /// Converts all bytes in the array to a HEX string representation.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>string representation</returns>
+        public static string ToHex(this byte[] data)
         {
-            ShouldThrowExtensions.ShouldThrow<ArgumentNullException>(() => new XmppClient { Resource = null });
-            ShouldThrowExtensions.ShouldNotThrow(() => new XmppClient { Resource = "Foo" });
+            return BitConverter.ToString(data).Replace("-", string.Empty).ToLower();
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Matrix
     /// <summary>
     /// Handles XMPP client connections
     /// </summary>
-    public class XmppClient : XmppConnection
+    public class XmppClient : XmppConnection, IClientIqSender
     {
         public XmppClient()
             : this(null)
@@ -106,39 +106,7 @@ namespace Matrix
         /// <value>
         /// <c>true</c> if compression; otherwise, <c>false</c>.
         /// </value>
-        public bool Compression { get; set; } = true;
-
-        /// <summary>
-        /// The OPTIONAL show element contains non-human-readable XML character data that specifies the particular availability
-        /// status of an entity or specific resource.
-        /// </summary>    
-        public Show Show { get; set; } = Show.None;
-
-        /// <summary>
-        /// The OPTIONAL status contains a natural-language description of availability status. 
-        /// It is normally used in conjunction with the show element to provide a detailed description of an availability state 
-        /// (e.g., "In a meeting").
-        /// </summary>
-        public string Status { get; set; } = "online";
-
-        /// <summary>
-        /// The priority level of the resource. The value MUST be an integer between -128 and +127. 
-        /// If no priority is provided, a server SHOULD consider the priority to be zero.         
-        /// </summary>
-        /// <remarks>
-        /// For information regarding the semantics of priority values in stanza routing 
-        /// within instant messaging and presence applications, refer to Server Rules 
-        /// for Handling XML StanzasServer Rules for Handling XML Stanzas.
-        /// </remarks>
-        public int Priority
-        {
-            get { return priority; }
-            set
-            {
-                Contract.Requires<ArgumentException>(value.IsInRange(-127, 127), "The value must be an integer between - 128 and + 127.");
-                priority = value;
-            }
-        }
+        public bool Compression { get; set; } = true;      
 
         public IAuthenticate SalsHandler { get; set; } = new DefaultSaslHandler();
 
@@ -353,92 +321,6 @@ namespace Matrix
             throw new XmppException(ret);
         }
 
-        #region << Request Roster >>
-        /// <summary>
-        /// Request the roster (contact list) asynchronous from the server.
-        /// </summary>
-        /// <param name="version"></param>
-        /// <returns></returns>
-        public async Task<Iq> RequestRosterAsync(string version = null)
-        {
-            return await RequestRosterAsync(version, XmppStanzaHandler.DefaultTimeout, CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Request the roster (contact list) asynchronous from the server.
-        /// </summary>
-        /// <param name="timeout"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<Iq> RequestRosterAsync(int timeout, CancellationToken cancellationToken)
-        {
-            return await RequestRosterAsync(null, XmppStanzaHandler.DefaultTimeout, CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Request the roster (contact list) asynchronous from the server.
-        /// </summary>
-        /// <param name="timeout"></param>
-        /// <returns></returns>
-        public async Task<Iq> RequestRosterAsync(int timeout)
-        {
-            return await RequestRosterAsync(null, timeout, CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Request the roster (contact list) asynchronous from the server.
-        /// </summary>
-        /// <param name="version"></param>
-        /// <param name="timeout"></param>
-        /// <returns></returns>
-        public async Task<Iq> RequestRosterAsync(string version, int timeout)
-        {
-            return await RequestRosterAsync(version, timeout, CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Request the roster (contact list) asynchronous from the server.
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<Iq> RequestRosterAsync(CancellationToken cancellationToken)
-        {
-            return await RequestRosterAsync(null, XmppStanzaHandler.DefaultTimeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// Request the roster (contact list) asynchronous from the server.
-        /// </summary>
-        /// <param name="version"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<Iq> RequestRosterAsync(string version, CancellationToken cancellationToken)
-        {
-            return await RequestRosterAsync(version, XmppStanzaHandler.DefaultTimeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// Request the roster (contact list) asynchronous from the server.
-        /// </summary>
-        /// <param name="version"></param>
-        /// <param name="timeout"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<Iq> RequestRosterAsync(string version, int timeout, CancellationToken cancellationToken)
-        {
-            var riq = new RosterIq()
-            {
-                Type = IqType.Get
-            };
-
-            if (version != null)
-                riq.Roster.Version = version;
-
-            var resIq = await SendIqAsync(riq, timeout, cancellationToken);
-            return resIq as Iq;
-        }
-        #endregion
-
         #region << Send iq >>
         /// <summary>
         /// Send an Iq asynchronous to the server
@@ -486,74 +368,6 @@ namespace Matrix
             return await SendIqAsync<Iq>(iq, timeout, cancellationToken);
         }
         #endregion      
-
-        #region << SendPresence >>
-        /// <summary>
-        /// Send a presence update to the server.
-        /// </summary>
-        /// <param name="pres">The presence stanza which gets sent to the server.</param>
-        /// <returns></returns>
-        public async Task SendPresenceAsync(Presence pres)
-        {
-            Contract.Requires<ArgumentNullException>(pres != null, $"{nameof(pres)} cannot be null");
-
-            await SendAsync(pres);
-        }
-
-        /// <summary>
-        /// Send a presence update to the server. Use the properies Show, Status and priority to update presence information
-        /// </summary>
-        /// <param name="show"></param>
-        /// <returns></returns>
-        public async Task SendPresenceAsync(Show show)
-        {
-            Show = show;
-            await SendPresenceAsync();
-        }
-
-        /// <summary>
-        /// Send a presence update to the server. Use the properies Show, Status and priority to update presence information
-        /// </summary>
-        /// <param name="show"></param>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        public async Task SendPresenceAsync(Show show, string status)
-        {
-            Show = show;
-            Status = status;
-
-            await SendPresenceAsync();
-        }
-
-        /// <summary>
-        /// Send a presence update to the server. Use the properies Show, Status and priority to update presence information
-        /// </summary>
-        /// <param name="show"></param>
-        /// <param name="status"></param>
-        /// <param name="priority"></param>
-        /// <returns></returns>
-        public async Task SendPresenceAsync(Show show, string status, int priority)
-        {
-            Show = show;
-            Status = status;
-            Priority = priority;
-
-            await SendPresenceAsync();
-        }
-
-        /// <summary>
-        /// Send a presence update to the server. Use the properies Show, Status and priority to update presence information
-        /// </summary>
-        /// <returns></returns>
-        public async Task SendPresenceAsync()
-        {
-            await SendAsync(new Presence
-            {
-                Show = Show,
-                Status = Status,
-                Priority = Priority
-            });
-        }
-        #endregion
+   
     }
 }

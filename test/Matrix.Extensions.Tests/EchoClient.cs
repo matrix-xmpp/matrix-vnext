@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,19 +19,35 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
-using Xunit;
-using Shouldly;
+namespace Matrix.Extensions.Tests
+{   
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Matrix.Xmpp.Client;
 
-namespace Matrix.Tests
-{
-    public class XmppClientTests
+    /// <summary>
+    /// simple echo client for unit testing purposes
+    /// </summary>
+    class EchoClient : IClientIqSender
     {
-        [Fact]
-        public void ResourceCannotBeNull()
+        public Task<Iq> SendIqAsync(Iq iq)
         {
-            ShouldThrowExtensions.ShouldThrow<ArgumentNullException>(() => new XmppClient { Resource = null });
-            ShouldThrowExtensions.ShouldNotThrow(() => new XmppClient { Resource = "Foo" });
+            return Task.FromResult(iq);
+        }
+
+        public Task<Iq> SendIqAsync(Iq iq, int timeout)
+        {
+            return Task.FromResult(iq);
+        }
+
+        public Task<Iq> SendIqAsync(Iq iq, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(iq);
+        }
+
+        public Task<Iq> SendIqAsync(Iq iq, int timeout, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(iq);
         }
     }
 }

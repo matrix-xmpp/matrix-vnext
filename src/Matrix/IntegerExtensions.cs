@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,19 +19,20 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
-using Xunit;
-using Shouldly;
-
-namespace Matrix.Tests
+namespace Matrix
 {
-    public class XmppClientTests
+    public static class IntegerExtensions
     {
-        [Fact]
-        public void ResourceCannotBeNull()
+        /// <summary>
+        /// Determines whether an integer value is in the given range between min and max values.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The allowed minimum.</param>
+        /// <param name="max">The allowed maximum.</param>
+        /// <returns></returns>
+        public static bool IsInRange(this int value, int min, int max)
         {
-            ShouldThrowExtensions.ShouldThrow<ArgumentNullException>(() => new XmppClient { Resource = null });
-            ShouldThrowExtensions.ShouldNotThrow(() => new XmppClient { Resource = "Foo" });
+            return (value >= min && value <= max);
         }
     }
 }

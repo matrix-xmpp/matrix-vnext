@@ -22,6 +22,8 @@
 using System;
 using System.Reactive.Linq;
 using Matrix;
+using Matrix.Extensions.Client.Roster;
+using Matrix.Extensions.Client.Presence;
 using Matrix.Xmpp;
 using Matrix.Xmpp.Base;
 using Matrix.Srv;

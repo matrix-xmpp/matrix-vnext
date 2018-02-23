@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,19 +19,18 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
-using Xunit;
-using Shouldly;
-
-namespace Matrix.Tests
+namespace Matrix
 {
-    public class XmppClientTests
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public static class TaskExtensions
     {
-        [Fact]
-        public void ResourceCannotBeNull()
+        public static Task WhenCanceled(this CancellationToken cancellationToken)
         {
-            ShouldThrowExtensions.ShouldThrow<ArgumentNullException>(() => new XmppClient { Resource = null });
-            ShouldThrowExtensions.ShouldNotThrow(() => new XmppClient { Resource = "Foo" });
+            var tcs = new TaskCompletionSource<bool>();
+            cancellationToken.Register(s => ((TaskCompletionSource<bool>)s).SetResult(true), tcs);
+            return tcs.Task;
         }
     }
 }

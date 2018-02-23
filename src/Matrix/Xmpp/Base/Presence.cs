@@ -20,6 +20,7 @@
  */
 
 using Matrix.Xmpp.Delay;
+using System;
 
 namespace Matrix.Xmpp.Base
 {
@@ -107,7 +108,11 @@ namespace Matrix.Xmpp.Base
                     return 0;
                 }
             }
-            set { SetTag("priority", value.ToString()); }
+            set
+            {
+                Contract.Requires<ArgumentException>(value.IsInRange(-127, 127), "The value must be an integer between - 128 and + 127.");
+                SetTag("priority", value.ToString());
+            }
         }
         #endregion
 

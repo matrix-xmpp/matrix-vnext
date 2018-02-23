@@ -36,7 +36,8 @@ namespace ConsoleClient
     /// <summary>
     /// Small helper class for group chat (aka MUC)
     /// </summary>
-    public class MucManager    {
+    public class MucManager
+    {
 
         public MucManager(XmppClient xmppClient)
         {
