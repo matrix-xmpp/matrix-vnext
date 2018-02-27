@@ -26,17 +26,19 @@ using DotNetty.Transport.Bootstrapping;
 
 namespace Matrix.Network.Resolver
 {
-    public class StaticNameResolver : INameResolver
+    public class StaticNameResolver : INameResolver, IDirectTls
     {
         /// <summary>
         /// Ititialize a new <see cref="StaticNameResolver"/> with a given ip address and port number
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="port"></param>
-        public StaticNameResolver(IPAddress ip, int port = 5222)
+        /// <param name="directTls">direct Tls usage vs StartTls</param>
+        public StaticNameResolver(IPAddress ip, int port = 5222, bool directTls = false)
         {
             Ip = ip;
             Port = port;
+            DirectTls = directTls;
         }
 
         /// <summary>
@@ -44,10 +46,12 @@ namespace Matrix.Network.Resolver
         /// </summary>
         /// <param name="hostname">The hostname</param>
         /// <param name="port">The port number</param>
-        public StaticNameResolver(string hostname, int port = 5222)
+        /// <param name="directTls">direct Tls usage vs StartTls</param>
+        public StaticNameResolver(string hostname, int port = 5222, bool directTls = false)
         {
             Hostname = hostname;
             Port = port;
+            DirectTls = directTls;
         }
 
         /// <inheritdoc />        
@@ -64,6 +68,11 @@ namespace Matrix.Network.Resolver
         /// Gets or sets the port
         /// </summary>
         public int Port { get; set; }
+
+        /// <summary>
+        /// Gets whether direct Tls should be used, versus StartTls
+        /// </summary>
+        public bool DirectTls { get; private set; }
 
         /// <inheritdoc />
         public async Task<EndPoint> ResolveAsync(EndPoint address)

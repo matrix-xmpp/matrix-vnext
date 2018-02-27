@@ -23,6 +23,7 @@ namespace Matrix
 {
     using DotNetty.Buffers;
     using DotNetty.Common.Utilities;
+    using DotNetty.Transport.Bootstrapping;
     using DotNetty.Transport.Channels;
     using Matrix.Attributes;
     using System.Reflection;
@@ -94,6 +95,17 @@ namespace Matrix
             byte[] result = new byte[buffer.ReadableBytes];
             buffer.ReadBytes(result, 0, result.Length);
             return result;
-        }        
+        }
+
+        /// <summary>
+        /// Cast a <seealso cref="INameResolver"/> to a given type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nameResolver"></param>
+        /// <returns></returns>
+        public static T Cast<T>(this INameResolver nameResolver)
+        {
+            return (T)nameResolver;
+        }
     }
 }

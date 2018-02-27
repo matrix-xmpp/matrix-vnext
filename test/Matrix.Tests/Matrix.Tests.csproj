@@ -20,6 +20,7 @@
     <None Remove="Xmpp\Avatar\data.xml" />
     <None Remove="Xmpp\Avatar\info.xml" />
     <None Remove="Xmpp\Avatar\metadata.xml" />
+    <None Remove="Xmpp\Client\timeiq.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -96,6 +97,7 @@
     <EmbeddedResource Include="Xmpp\Client\rosteriq2.xml" />
     <EmbeddedResource Include="Xmpp\Client\rosteriq3.xml" />
     <EmbeddedResource Include="Xmpp\Client\rosteriq4.xml" />
+    <EmbeddedResource Include="Xmpp\Client\timeiq.xml" />
     <EmbeddedResource Include="Xmpp\Compression\compress1.xml" />
     <EmbeddedResource Include="Xmpp\Compression\compress2.xml" />
     <EmbeddedResource Include="Xmpp\Compression\compression1.xml" />

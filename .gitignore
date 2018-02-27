@@ -8,5 +8,6 @@ packages
 temp
 .lock.json
 *.lock.json
-/tools/lh
+/tools/Cake
+TestResults
 /license_header.txt

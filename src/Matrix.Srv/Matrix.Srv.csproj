@@ -21,13 +21,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DnsClient" Version="1.0.7" />
-    <PackageReference Include="DotNetty.Transport" Version="0.4.7" />
+    <PackageReference Include="DnsClient" Version="1.0.7" />    
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Matrix\Matrix.csproj" />
   </ItemGroup>
 
 </Project>

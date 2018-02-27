@@ -54,8 +54,7 @@ namespace Matrix
             : base(pipelineInitializerAction)
         {
         }
-
-        private int priority;
+               
         private string resource = "MatriX";
 
         #region << Properties >>
@@ -63,7 +62,6 @@ namespace Matrix
         /// Gets or sets the username for the XMPP connection.
         /// </summary>
         public string Username { get; set; }
-
 
         /// <summary>
         /// Gets or sets the password for the XMPP connection.
@@ -86,12 +84,7 @@ namespace Matrix
         /// <summary>
         /// Gets or sets a value indicating whether the stream should be secured over TLS or not when supported and advertised by the server.
         /// </summary>
-        public bool Tls { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets weather legacy old jabber style ssl should be used.
-        /// </summary>
-        public bool LegacySsl { get; set; } = false;
+        public bool Tls { get; set; } = true;       
 
         /// <summary>
         /// Gets or sets the <see cref="ITlsSettingsProvider"/>.
@@ -146,7 +139,8 @@ namespace Matrix
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
             XmppSessionState.Value = SessionState.Connected;
 
-            if (LegacySsl)
+            if (HostnameResolver.Implements<IDirectTls>() 
+                && HostnameResolver.Cast<IDirectTls>().DirectTls == true)
             {
                 await DoSslAsync(cancellationToken);
             }

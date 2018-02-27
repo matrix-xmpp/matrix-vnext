@@ -27,14 +27,12 @@ using System.Threading.Tasks;
 using DnsClient;
 using DnsClient.Protocol;
 using DotNetty.Transport.Bootstrapping;
+using Matrix.Network;
 
 namespace Matrix.Srv
 {
-    public class SrvNameResolver : INameResolver
+    public class SrvNameResolver : INameResolver, IDirectTls
     {
-        const string PrefixSrvClient = "_xmpp-client._tcp.";
-        const string PrefixSrvServer = "_xmpp-server._tcp.";
-        
         public SrvNameResolver()
         {
         }
@@ -51,12 +49,27 @@ namespace Matrix.Srv
         /// </summary>
         public bool IsClient { get; set; } = true;
 
+        /// <inheritdoc/>        
+        public bool DirectTls { get; private set; }
+
         public async Task<EndPoint> ResolveAsync(EndPoint address)
         {
             var asDns = address as DnsEndPoint;
+            
+            // try first to lookup dirct TLS records
+            var srvRecord = await LookupSrvRecords(asDns.Host, true);
 
+            // if no direct tls recourcs found, fall back to starts tls records
+            if (srvRecord == null)
+            {
+                DirectTls = false;
+                srvRecord = await LookupSrvRecords(asDns.Host, false);                
+            }
+            else
+            {
+                DirectTls = true;
+            }
 
-            var srvRecord = await LookupSrvRecords(asDns.Host);
             if (srvRecord != null)
             {
                 var dnsEndPoint = new DnsEndPoint(srvRecord.Target, srvRecord.Port);
@@ -66,17 +79,33 @@ namespace Matrix.Srv
             return await new DefaultNameResolver().ResolveAsync(address);
         }
 
-        private async Task<SrvRecord> LookupSrvRecords(string host)
+        /// <summary>
+        /// Build the query part of the Srv request
+        /// </summary>
+        /// <param name="host">The hostname</param>
+        /// <param name="directTls">defined whether direct Tls should be used or not</param>
+        /// <param name="isClient">defined whether this should be a client or server query</param>
+        /// <returns></returns>
+        public string BuildQuery(string host, bool directTls, bool isClient)
+        {
+            return $"_{(directTls ? "xmpps" : "xmpp")}-{(isClient ? "client" : "server")}._tcp.{host}";           
+        }
+
+        private async Task<SrvRecord> LookupSrvRecords(string host, bool directTls = false)
         {
             try
-            {
-                var lookup = new LookupClient();
-                var prefix = IsClient ? PrefixSrvClient : PrefixSrvServer;
-                var result = await lookup.QueryAsync(prefix + host, QueryType.SRV);
+            {               
+                var lookup = new LookupClient();              
+
+                string query = BuildQuery(host, directTls, IsClient);
+
+                var result = await lookup.QueryAsync(query, QueryType.SRV);
                 var srvRecords = result.Answers.SrvRecords().ToList();
 
                 if (srvRecords.Count > 0)
+                {
                     return PickSrvRecord(srvRecords);
+                }            
             }
             catch (Exception)
             {

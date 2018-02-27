@@ -1,0 +1,6 @@
+﻿<iq type='get'
+    xmlns='jabber:client'
+    to='juliet@capulet.com/balcony'
+    id='time_1'>
+  <time xmlns='urn:xmpp:time'/>
+</iq>
