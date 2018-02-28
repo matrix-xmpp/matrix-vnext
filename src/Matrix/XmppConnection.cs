@@ -35,19 +35,18 @@ using DotNetty.Buffers;
 
 namespace Matrix
 {
-    public abstract class XmppConnection : IStanzaSender
+    public abstract class XmppConnection : IStanzaSender, IDisposable
     {
-        protected   Bootstrap                   Bootstrap              = new Bootstrap();        
+        protected   Bootstrap                   Bootstrap              = new Bootstrap();
         readonly    MultithreadEventLoopGroup   eventLoopGroup         = new MultithreadEventLoopGroup();
         
         readonly    XmppStreamEventHandler      xmppStreamEventHandler = new XmppStreamEventHandler();
         private     INameResolver               resolver               = new DefaultNameResolver();
 
-
         protected XmppConnection() 
             : this(null)
         {
-        }      
+        }
         
         protected XmppConnection(Action<IChannelPipeline> pipelineInitializerAction)
         {
@@ -431,7 +430,20 @@ namespace Matrix
         private async Task TryCloseAsync()
         {
             if (Pipeline.Channel.Active)
+            {
                 await Pipeline.CloseAsync();
+            }           
         }
+
+        #region << IDisposable implementation >>
+        public void Dispose()
+        {
+            Task.Run(async () =>
+            {
+                await eventLoopGroup.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
+            })
+            .Wait();            
+        }
+        #endregion
     }
 }
