@@ -37,17 +37,17 @@ namespace Matrix
 {
     public abstract class XmppConnection : IStanzaSender, IDisposable
     {
-        protected   Bootstrap                   Bootstrap              = new Bootstrap();
-        readonly    MultithreadEventLoopGroup   eventLoopGroup         = new MultithreadEventLoopGroup();
-        
-        readonly    XmppStreamEventHandler      xmppStreamEventHandler = new XmppStreamEventHandler();
-        private     INameResolver               resolver               = new DefaultNameResolver();
+        protected Bootstrap Bootstrap = new Bootstrap();
+        readonly MultithreadEventLoopGroup eventLoopGroup = new MultithreadEventLoopGroup();
 
-        protected XmppConnection() 
+        readonly XmppStreamEventHandler xmppStreamEventHandler = new XmppStreamEventHandler();
+        private INameResolver resolver = new DefaultNameResolver();
+
+        protected XmppConnection()
             : this(null)
         {
         }
-        
+
         protected XmppConnection(Action<IChannelPipeline> pipelineInitializerAction)
         {
             Bootstrap
@@ -59,36 +59,36 @@ namespace Matrix
                 .Option(ChannelOption.Allocator, UnpooledByteBufferAllocator.Default)
                 .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
-                    Pipeline = channel.Pipeline;                    
-                    
+                    Pipeline = channel.Pipeline;
+
                     Pipeline.AddLast2(new ZlibDecoder());
-                   
+
                     Pipeline.AddLast2(new KeepAliveHandler());
-                    
+
                     Pipeline.AddLast2(new XmlStreamDecoder());
-                                        
+
                     Pipeline.AddLast2(new ZlibEncoder());
-                    
+
                     Pipeline.AddLast2(new XmppXElementEncoder());
-                    
-                    
+
+
                     Pipeline.AddLast2(new UTF8StringEncoder());
 
-                    
+
                     Pipeline.AddLast2(new XmppPingHandler<Iq>());
                     Pipeline.AddLast2(xmppStreamEventHandler);
 
                     //Pipeline.AddLast2(new StreamManagementHandler());
 
                     Pipeline.AddLast2(new StreamFooterHandler());
-                    
+
                     Pipeline.AddLast2(XmppStanzaHandler);
 
                     Pipeline.AddLast2(new CatchAllXmppStanzaHandler());
-                    
+
                     Pipeline.AddLast2(new DisconnectHandler(this));
 
-                    pipelineInitializerAction?.Invoke(Pipeline);                    
+                    pipelineInitializerAction?.Invoke(Pipeline);
                 }));
         }
 
@@ -106,9 +106,9 @@ namespace Matrix
         private readonly XmppStanzaHandler XmppStanzaHandler = new XmppStanzaHandler();
 
         // Observers
-        private IObservable<XmlStreamEvent> XmlStreamEventObserver          => xmppStreamEventHandler.XmlStreamEvent;
-        public  IObservable<XmppXElement>   XmppXElementStreamObserver      => xmppStreamEventHandler.XmppXElementStream;        
-        public  IObservable<SessionState>   XmppSessionStateObserver        => XmppSessionState.ValueChanged;
+        private IObservable<XmlStreamEvent> XmlStreamEventObserver => xmppStreamEventHandler.XmlStreamEvent;
+        public IObservable<XmppXElement> XmppXElementStreamObserver => xmppStreamEventHandler.XmppXElementStream;
+        public IObservable<SessionState> XmppSessionStateObserver => XmppSessionState.ValueChanged;
 
         public INameResolver HostnameResolver
         {
@@ -128,7 +128,7 @@ namespace Matrix
         {
             await Pipeline.WriteAndFlushAsync(data);
         }
-       
+
         protected async Task<T> SendAsync<T>(string data)
             where T : XmppXElement
         {
@@ -136,7 +136,7 @@ namespace Matrix
         }
         protected async Task<T> SendAsync<T>(string data, int timeout)
            where T : XmppXElement
-        {            
+        {
             return await XmppStanzaHandler.SendAsync<T>(data, timeout);
         }
 
@@ -146,7 +146,7 @@ namespace Matrix
             return await SendAsync<T>(data, XmppStanzaHandler.DefaultTimeout, cancellationToken);
         }
 
-        protected async Task<T> SendAsync<T>(string data, int timeout , CancellationToken cancellationToken)
+        protected async Task<T> SendAsync<T>(string data, int timeout, CancellationToken cancellationToken)
            where T : XmppXElement
         {
             return await XmppStanzaHandler.SendAsync<T>(data, timeout, cancellationToken);
@@ -188,7 +188,7 @@ namespace Matrix
         /// <param name="el"></param>
         /// <returns></returns>
         public async Task SendAsync(XmppXElement el)
-        {            
+        {
             await Pipeline.WriteAndFlushAsync(el);
         }
 
@@ -325,7 +325,7 @@ namespace Matrix
             return await SendAsync(el, predicate, timeout, CancellationToken.None);
         }
 
-        public async Task<XmppXElement> SendAsync(XmppXElement el, Func<XmppXElement, bool> predicate, int timeout, CancellationToken cancellationToken)         
+        public async Task<XmppXElement> SendAsync(XmppXElement el, Func<XmppXElement, bool> predicate, int timeout, CancellationToken cancellationToken)
         {
             return await XmppStanzaHandler.SendAsync<XmppXElement>(el, predicate, timeout, cancellationToken);
         }
@@ -342,8 +342,8 @@ namespace Matrix
         #endregion
 
         public async Task<StreamFeatures> ResetStreamAsync(CancellationToken cancellationToken)
-        {            
-            Pipeline.Get<XmlStreamDecoder>().Reset();            
+        {
+            Pipeline.Get<XmlStreamDecoder>().Reset();
             return await SendStreamHeaderAsync(cancellationToken);
         }
 
@@ -402,15 +402,18 @@ namespace Matrix
             var resultCompletionSource = new TaskCompletionSource<bool>();
 
             if (sendStreamFooter)
+            {
                 await SendAsync(new Stream().EndTag());
+            }
 
-            anonymousSubscription = XmppXElementStreamObserver.Subscribe(
-                v => { },
-
-                () =>
+            anonymousSubscription = XmlStreamEventObserver.Subscribe(
+                evt =>
                 {
-                    anonymousSubscription?.Dispose();
-                    resultCompletionSource.SetResult(true);
+                    if (evt.XmlStreamEventType == XmlStreamEventType.StreamEnd)
+                    {
+                        anonymousSubscription?.Dispose();
+                        resultCompletionSource.SetResult(true);
+                    }
                 });
 
             if (resultCompletionSource.Task ==
@@ -422,17 +425,17 @@ namespace Matrix
 
             // timed out
             anonymousSubscription.Dispose();
-            await TryCloseAsync();           
+            await TryCloseAsync();
 
             return true;
-        }       
+        }
 
         private async Task TryCloseAsync()
         {
             if (Pipeline.Channel.Active)
             {
                 await Pipeline.CloseAsync();
-            }           
+            }
         }
 
         #region << IDisposable implementation >>
@@ -442,7 +445,7 @@ namespace Matrix
             {
                 await eventLoopGroup.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
             })
-            .Wait();            
+            .Wait();
         }
         #endregion
     }

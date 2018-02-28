@@ -33,19 +33,12 @@ namespace Matrix.Network.Handlers
     {
         public override bool IsSharable => true;
 
-        readonly ISubject<XmppXElement>     xmppXElementStreamSubject   = new Subject<XmppXElement>();
-        readonly ISubject<XmlStreamEvent>   xmlStreamEventSubject       = new Subject<XmlStreamEvent>();
+        private ISubject<XmppXElement> xmppXElementStreamSubject = new Subject<XmppXElement>();
+        private ISubject<XmlStreamEvent> xmlStreamEventSubject = new Subject<XmlStreamEvent>();
 
-        public IObservable<XmppXElement>    XmppXElementStream          => xmppXElementStreamSubject;
-        public IObservable<XmlStreamEvent>  XmlStreamEvent              => xmlStreamEventSubject;
+        public IObservable<XmppXElement> XmppXElementStream => xmppXElementStreamSubject;
+        public IObservable<XmlStreamEvent> XmlStreamEvent => xmlStreamEventSubject;
 
-        public override void ChannelInactive(IChannelHandlerContext context)
-        {
-            // this gets called when the socket gets closed
-            base.ChannelInactive(context);
-            xmppXElementStreamSubject.OnCompleted();
-        }
-       
         protected override void ChannelRead0(IChannelHandlerContext ctx, XmlStreamEvent msg)
         {
             xmlStreamEventSubject.OnNext(msg);
@@ -60,11 +53,11 @@ namespace Matrix.Network.Handlers
             }
             else if (msg.XmlStreamEventType == XmlStreamEventType.StreamEnd)
             {
-                xmppXElementStreamSubject.OnCompleted();
+                // ignore here
             }
             else if (msg.XmlStreamEventType == XmlStreamEventType.StreamError)
             {
-                xmppXElementStreamSubject.OnError(msg.Exception);
+                // ignore here
             }
 
             ctx.FireChannelRead(msg.XmppXElement);
