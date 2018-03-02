@@ -27,6 +27,7 @@ using DotNetty.Transport.Channels.Sockets;
 using Matrix.Network;
 using Matrix.Network.Codecs;
 using Matrix.Network.Handlers;
+using Matrix.Network.Resolver;
 using Matrix.Xml;
 using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Stream;
@@ -41,7 +42,7 @@ namespace Matrix
         readonly MultithreadEventLoopGroup eventLoopGroup = new MultithreadEventLoopGroup();
 
         readonly XmppStreamEventHandler xmppStreamEventHandler = new XmppStreamEventHandler();
-        private INameResolver resolver = new DefaultNameResolver();
+        private INameResolver resolver = new NameResolver();
 
         protected XmppConnection()
             : this(null)

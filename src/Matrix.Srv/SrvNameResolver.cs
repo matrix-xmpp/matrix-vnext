@@ -28,6 +28,7 @@ using DnsClient;
 using DnsClient.Protocol;
 using DotNetty.Transport.Bootstrapping;
 using Matrix.Network;
+using Matrix.Network.Resolver;
 
 namespace Matrix.Srv
 {
@@ -73,10 +74,10 @@ namespace Matrix.Srv
             if (srvRecord != null)
             {
                 var dnsEndPoint = new DnsEndPoint(srvRecord.Target, srvRecord.Port);
-                return await new DefaultNameResolver().ResolveAsync(dnsEndPoint);
+                return await new NameResolver().ResolveAsync(dnsEndPoint);
             }
             
-            return await new DefaultNameResolver().ResolveAsync(address);
+            return await new NameResolver().ResolveAsync(address);
         }
 
         /// <summary>
