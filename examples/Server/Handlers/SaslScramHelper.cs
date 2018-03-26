@@ -62,7 +62,7 @@ namespace Server.Handlers
         private async Task ProcessSaslFirstClientMessage(IChannelHandlerContext context, Auth auth)
         {
             /*
-             * parse the first client message and return teh first server message embedded in a <challenge/> tag
+             * parse the first client message and return the first server message embedded in a <challenge/> tag
              * <challenge xmlns="urn:ietf:params:xml:ns:xmpp-sasl">aXRobT1tZDUtc2Vzcw==</challenge>
              */
             string firstServerMessage;

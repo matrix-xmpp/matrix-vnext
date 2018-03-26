@@ -19,13 +19,17 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
 using System.Net;
 using System.Threading.Tasks;
 using DotNetty.Transport.Bootstrapping;
 
 namespace Matrix.Network.Resolver
 {
+    /// <summary>
+    /// Represents a resolver which allow us to pass the hostname or ip address
+    /// of the server, in cases where the host does not match the XMPP domain,
+    /// or no SRV records exist for automatic lookups in DNS.
+    /// </summary>
     public class StaticNameResolver : INameResolver, IDirectTls
     {
         /// <summary>

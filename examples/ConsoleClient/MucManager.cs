@@ -32,6 +32,7 @@ namespace ConsoleClient
     using Matrix.Xmpp.Muc;
     using Matrix.Xmpp.Muc.Owner;
     using Matrix.Xmpp.XData;
+    using Matrix.Xmpp.Muc.Admin;
 
     /// <summary>
     /// Small helper class for group chat (aka MUC)
@@ -125,5 +126,18 @@ namespace ConsoleClient
 
             return pres;
         }
+
+        //public void RequestMemberList(Jid room)
+        //{
+        //    RequestList(Affiliation.Member, room, cb, state);
+        //}
+
+        //private Iq CreateRequestListStanza(Affiliation affiliation, Jid room)
+        //{
+        //    var aIq = new AdminIq {To = room, Type = IqType.Get};
+        //    aIq.AdminQuery.AddItem(new Matrix.Xmpp.Muc.Admin.Item(affiliation));
+
+        //    return aIq;
+        //}
     }
 }

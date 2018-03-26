@@ -54,7 +54,7 @@ namespace Matrix.Network.Handlers
         protected XmppStanzaHandler Handle(Func<XmppXElement, bool> predicate, Action<IChannelHandlerContext, XmppXElement> action)
         {
             if (predicate == null) return this;
-            if (action == null) throw new ArgumentNullException(nameof(action));
+            Contract.Requires<ArgumentNullException>(action != null, nameof(action));
 
             handleTypes.Add(predicate, action);
             return this;

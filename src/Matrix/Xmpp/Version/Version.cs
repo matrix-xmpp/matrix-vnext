@@ -58,7 +58,7 @@ namespace Matrix.Xmpp.Version
         }
 
         /// <summary>
-        /// Gets or sets the operating system of teh software.
+        /// Gets or sets the operating system of the software.
         /// </summary>
         /// <value>
         /// The os.

@@ -27,7 +27,7 @@ namespace Matrix
     public interface IRegister
     {
         /// <summary>
-        /// MatriX will try to register an account on the server when set to true. When set to false new accoutn registration will be disabled
+        /// MatriX will try to register an account on the server when set to true.
         /// </summary>
         bool RegisterNewAccount { get; }
 

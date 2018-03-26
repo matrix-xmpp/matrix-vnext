@@ -54,7 +54,9 @@ namespace Matrix.Network.Handlers
         public override Task WriteAsync(IChannelHandlerContext ctx, object msg)
         {
             if (KeepAliveInterval > 0)
+            { 
                 keepaliveTimer?.Change(KeepAliveInterval, KeepAliveInterval);
+            }
 
             return ctx.WriteAsync(msg);
         }

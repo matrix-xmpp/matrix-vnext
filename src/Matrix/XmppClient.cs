@@ -124,7 +124,7 @@ namespace Matrix
 
         /// <summary>
         /// Connect to the XMPP server.
-        /// This establishes the connection to teh server, including TLS, authentication, resource binding and
+        /// This establishes the connection to the server, including TLS, authentication, resource binding and
         /// compression.
         /// </summary>
         /// <param name="cancellationToken"></param>
@@ -185,7 +185,7 @@ namespace Matrix
         {
             XmppSessionState.Value = SessionState.Securing;
 
-            var tlsSettingsProvider = TlsSettingsProvider.ProvideAsync(this).GetAwaiter().GetResult();
+            var tlsSettingsProvider = await TlsSettingsProvider.ProvideAsync(this);
             var tlsHandler =
                 new TlsHandler(stream
                 => new SslStream(stream,
@@ -208,9 +208,9 @@ namespace Matrix
         /// <returns></returns>
         private async Task DoSslAsync(CancellationToken cancellationToken)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                var tlsSettingsProvider = TlsSettingsProvider.ProvideAsync(this).GetAwaiter().GetResult();
+                var tlsSettingsProvider = await TlsSettingsProvider.ProvideAsync(this);
                 XmppSessionState.Value = SessionState.Securing;
                 var tlsHandler =
                     new TlsHandler(stream

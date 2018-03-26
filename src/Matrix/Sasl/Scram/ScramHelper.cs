@@ -179,7 +179,7 @@ namespace Matrix.Sasl.Scram
         /// Creates the final server message based on the final client message
         /// </summary>
         /// <param name="finalClient">The final client message</param>
-        /// <returns>return null on failure and teh server final message on success</returns>
+        /// <returns>return null on failure and the server final message on success</returns>
         public string GenerateFinalServerMessage(string finalClient)
         {
             var pairs = ParseMessage(finalClient);

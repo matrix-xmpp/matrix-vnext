@@ -381,9 +381,13 @@ namespace Matrix
             var res = await SendAsync<StreamFeatures, Xmpp.Stream.Error>(streamHeader.StartTag(), timeout, cancellationToken);
 
             if (res.OfType<StreamFeatures>())
+            {
                 return res.Cast<StreamFeatures>();
+            }                
             else //if (res.OfType<Xmpp.Stream.Error>())
+            {
                 throw new StreamErrorException(res.Cast<Xmpp.Stream.Error>());
+            }                
         }
 
         /// <summary>

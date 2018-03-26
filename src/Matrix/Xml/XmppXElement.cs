@@ -904,7 +904,7 @@ namespace Matrix.Xml
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="newel">The newel.</param>
-        /// <param name="addFirst">if set to <c>true</c> adds teh element as first child element.</param>
+        /// <param name="addFirst">if set to <c>true</c> adds the element as first child element.</param>
         public void Replace<T>(T newel, bool addFirst) where T : XElement
         {
             XElement el = Element<T>();
@@ -1340,7 +1340,7 @@ namespace Matrix.Xml
         /// Set a "double" attribute with the given FormatProvider
         /// </summary>
         /// <param name="name">attribute name</param>
-        /// <param name="value">value of teh attribute as double</param>
+        /// <param name="value">value of the attribute as double</param>
         /// <param name="ifp">IFormatProvider</param>
         public XmppXElement SetAttribute(string name, double value, IFormatProvider ifp)
         {

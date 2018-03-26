@@ -76,7 +76,7 @@ namespace Matrix.Network.Handlers
         /// <param name="level">the log level</param>
         public XmppLoggingHandler(Type type, LogLevel level)
         {
-            Contract.Requires<ArgumentNullException>(type != null, $"{nameof(type)} cannot be null");           
+            Contract.Requires<ArgumentNullException>(type != null, $"{nameof(type)} cannot be null");
 
             Logger = InternalLoggerFactory.GetInstance(type);
             Level = level;
