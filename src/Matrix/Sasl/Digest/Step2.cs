@@ -137,7 +137,7 @@ namespace Matrix.Sasl.Digest
             var sb = new StringBuilder();
             sb.Append(xmppClient.Username);
             sb.Append(":");
-            sb.Append(step1.Realm);
+            sb.Append(step1.Realm ?? xmppClient.XmppDomain);
             sb.Append(":");
             sb.Append(xmppClient.Password);
 
@@ -194,7 +194,9 @@ namespace Matrix.Sasl.Digest
             sb.Append(DigestUri);
 
             if (step1.Qop != "auth")
+            { 
                 sb.Append(":00000000000000000000000000000000");
+            }
 
             A2 = sb.ToString();
             H2 = Encoding.ASCII.GetBytes(A2);
