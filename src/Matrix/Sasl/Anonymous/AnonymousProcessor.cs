@@ -26,8 +26,12 @@ using System.Threading;
 
 namespace Matrix.Sasl.Anonymous
 {
+    /// <summary>
+    /// XMPP implementation of SASL Anonymous
+    /// </summary>
     public class AnonymousProcessor : ISaslProcessor
     {
+        /// <inheritdoc/>
         public async Task<XmppXElement> AuthenticateClientAsync(XmppClient xmppClient, CancellationToken cancellationToken)
         {
             /*

@@ -15,9 +15,9 @@
     <AssemblyOriginatorKeyFile>../../matrix.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <AssemblyVersion>2.0.1</AssemblyVersion>
-    <FileVersion>2.0.1</FileVersion>
-    <Version>2.0.1</Version>
+    <AssemblyVersion>2.0.2</AssemblyVersion>
+    <FileVersion>2.0.2</FileVersion>
+    <Version>2.0.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetty.Handlers" Version="0.4.7" />

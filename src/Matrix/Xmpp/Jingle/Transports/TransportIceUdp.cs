@@ -77,22 +77,22 @@ namespace Matrix.Xmpp.Jingle.Transports
 
         public void GeneratePwd()
         {
-                Pwd = Randoms.GenerateRandomString(22);
+            Pwd = Randoms.GenerateRandomString(22);
         }
 
         public void GeneratePwd(int length)
         {            
-               Pwd = Randoms.GenerateRandomString(length);
+            Pwd = Randoms.GenerateRandomString(length);
         }
 
         public void GenerateUfrag()
         {
-            Pwd = Randoms.GenerateRandomString(4);
+            Ufrag = Randoms.GenerateRandomString(4);
         }
 
         public void GenerateUfrag(int length)
         {
-            Pwd = Randoms.GenerateRandomString(length);
+            Ufrag = Randoms.GenerateRandomString(length);
         }
 
         #region << Candidate properties >>

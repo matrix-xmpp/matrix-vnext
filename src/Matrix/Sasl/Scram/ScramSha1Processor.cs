@@ -29,8 +29,12 @@ using System.Threading;
 
 namespace Matrix.Sasl.Scram
 {
+    /// <summary>
+    /// XMPP implementation of SCRAM SHA-1 SASL
+    /// </summary>
     public class ScramSha1Processor : ISaslProcessor
     {
+        /// <inheritdoc/>
         public async Task<XmppXElement> AuthenticateClientAsync(XmppClient xmppClient, CancellationToken cancellationToken)
         {
             var scramHelper = new ScramHelper();

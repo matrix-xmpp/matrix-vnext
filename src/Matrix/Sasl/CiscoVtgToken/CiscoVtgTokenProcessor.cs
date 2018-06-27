@@ -19,38 +19,57 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
-using System.Text;
-using System.Threading.Tasks;
 using Matrix.Xml;
 using Matrix.Xmpp.Sasl;
+using System;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
-namespace Matrix.Sasl.Plain
+namespace Matrix.Sasl.Processor.CiscoVtgToken
 {
     /// <summary>
-    /// XMPP implementation of SASL PLAIN
+    /// XMPP implementation of CISCO VTG TOKEN SASL
     /// </summary>
-    public class PlainProcessor : ISaslProcessor
+    public class CiscoVtgTokenProcessor : ISaslProcessor
     {
+        string AccessToken { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CiscoVtgTokenProcessor"/> class.
+        /// </summary>
+        /// <param name="accessToken">The token</param>
+        public CiscoVtgTokenProcessor(string accessToken)
+        {
+            this.AccessToken = accessToken;
+        }
+
         /// <inheritdoc/>
         public async Task<XmppXElement> AuthenticateClientAsync(XmppClient xmppClient, CancellationToken cancellationToken)
         {
-            var authMessage = new Auth(SaslMechanism.Plain, GetMessage(xmppClient));
+            var authMessage = new Auth(SaslMechanism.CiscoVtgToken, GetMessage(xmppClient));
 
             return
                 await xmppClient.SendAsync<Success, Failure>(authMessage, cancellationToken);
         }
 
-        private string GetMessage(XmppClient xmppClient)
+        internal string GetMessage(XmppClient xmppClient)
         {
-            // NULL Username NULL Password
+            // Base64(userid=user@domain, NULL, token=one-time-password)
+            // userid=juliet@capulet.com/0/token=2345678
             var sb = new StringBuilder();
-            sb.Append((char)0);
+
+            sb.Append("userid=");
             sb.Append(xmppClient.Username);
+            sb.Append("@");
+            sb.Append(xmppClient.XmppDomain);
+            
             sb.Append((char)0);
-            sb.Append(xmppClient.Password);
-            byte[] msg = Encoding.UTF8.GetBytes(sb.ToString());
+            
+            sb.Append("token=");
+            sb.Append(AccessToken);
+
+            var msg = Encoding.UTF8.GetBytes(sb.ToString());
             return Convert.ToBase64String(msg, 0, msg.Length);
         }
     }

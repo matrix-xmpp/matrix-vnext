@@ -27,8 +27,12 @@ using System.Threading;
 
 namespace Matrix.Sasl.Digest
 {
+    /// <summary>
+    /// XMPP implementation of DIGEST MD5 SASL
+    /// </summary>
     public class DigestMd5Processor : ISaslProcessor
     {
+        /// <inheritdoc/>
         public async Task<XmppXElement> AuthenticateClientAsync(XmppClient xmppClient, CancellationToken cancellationToken)
         {
             var authMessage = new Auth(SaslMechanism.DigestMd5);

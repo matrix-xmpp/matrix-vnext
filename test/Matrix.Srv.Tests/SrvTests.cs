@@ -56,8 +56,6 @@ namespace Matrix.Srv.Tests
 
             srvResolver.BuildQuery("example.com", true, true).ShouldBe(PrefixClientSecure + "example.com");
             srvResolver.BuildQuery("example.com", true, false).ShouldBe(PrefixServerSecure + "example.com");
-        }
-
-       
+        }       
     }
 }
