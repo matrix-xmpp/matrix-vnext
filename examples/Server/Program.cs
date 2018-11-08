@@ -35,7 +35,7 @@ namespace Server
 {
     class Program
     {
-        private static readonly SaslPlainHandler salsPlainHandler = new SaslPlainHandler();
+        private static readonly SaslPlainHandler saslPlainHandler = new SaslPlainHandler();
 
         private static IChannelPipeline pipeline;
         static async Task RunServerAsync()

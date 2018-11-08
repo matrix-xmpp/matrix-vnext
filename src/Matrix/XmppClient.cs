@@ -101,7 +101,7 @@ namespace Matrix
         /// </value>
         public bool Compression { get; set; } = true;      
 
-        public IAuthenticate SalsHandler { get; set; } = new DefaultSaslHandler();
+        public IAuthenticate SaslHandler { get; set; } = new DefaultSaslHandler();
 
         public IRegister RegistrationHandler { get; set; } = null;
         #endregion
@@ -227,7 +227,7 @@ namespace Matrix
         private async Task<StreamFeatures> DoAuthenicateAsync(Mechanisms mechanisms, CancellationToken cancellationToken)
         {
             XmppSessionState.Value = SessionState.Authenticating;
-            var res = await SalsHandler.AuthenticateAsync(mechanisms, this, cancellationToken);
+            var res = await SaslHandler.AuthenticateAsync(mechanisms, this, cancellationToken);
 
             if (res is Success)
             {
