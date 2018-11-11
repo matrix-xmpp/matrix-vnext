@@ -31,10 +31,10 @@ namespace Matrix.Network.Resolver
     /// </summary>
     public class NameResolver : INameResolver
     {
-        /// <inheritdoc/>     
+        /// <inheritdoc/>
         public bool IsResolved(EndPoint address) => !(address is DnsEndPoint);
 
-        /// <inheritdoc/>        
+        /// <inheritdoc/>
         public async Task<EndPoint> ResolveAsync(EndPoint address)
         {
             var asDns = address as DnsEndPoint;

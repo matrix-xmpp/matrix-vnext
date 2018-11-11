@@ -45,16 +45,33 @@ namespace Matrix
     /// </summary>
     public class XmppClient : XmppConnection, IClientIqSender
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppClient"/> class.
+        /// </summary>
         public XmppClient()
             : this(null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppClient"/> class.
+        /// </summary>
+        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
         public XmppClient(Action<IChannelPipeline> pipelineInitializerAction)
             : base(pipelineInitializerAction)
         {
         }
-               
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppClient"/> class.
+        /// </summary>
+        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
+        /// <param name="eventLoopGroup">The event loop group.</param>
+        public XmppClient(Action<IChannelPipeline> pipelineInitializerAction, IEventLoopGroup eventLoopGroup)
+           : base(pipelineInitializerAction, eventLoopGroup)
+        {
+        }
+
         private string resource = "MatriX";
 
         #region << Properties >>

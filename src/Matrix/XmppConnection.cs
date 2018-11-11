@@ -38,19 +38,40 @@ namespace Matrix
 {
     public abstract class XmppConnection : IStanzaSender, IDisposable
     {
+        private IEventLoopGroup eventLoopGroup;
         protected Bootstrap Bootstrap = new Bootstrap();
-        readonly MultithreadEventLoopGroup eventLoopGroup = new MultithreadEventLoopGroup();
-
+        
         readonly XmppStreamEventHandler xmppStreamEventHandler = new XmppStreamEventHandler();
         private INameResolver resolver = new NameResolver();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppConnection"/> class.
+        /// </summary>
         protected XmppConnection()
             : this(null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppConnection"/> class.
+        /// </summary>
+        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
         protected XmppConnection(Action<IChannelPipeline> pipelineInitializerAction)
+            : this(pipelineInitializerAction, new MultithreadEventLoopGroup())
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppConnection"/> class.
+        /// </summary>
+        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
+        /// <param name="eventLoopGroup">The event loop group.</param>
+        protected XmppConnection(Action<IChannelPipeline> pipelineInitializerAction, IEventLoopGroup eventLoopGroup)
+        {
+            Contract.Requires<ArgumentNullException>(eventLoopGroup != null, $"{nameof(eventLoopGroup)} cannot be null");
+
+            this.eventLoopGroup = eventLoopGroup;
+
             Bootstrap
                 .Group(eventLoopGroup)
                 .Channel<TcpSocketChannel>()
