@@ -57,9 +57,9 @@ namespace ConsoleClient
 
             var xmppClient = new XmppClient(pipelineInitializerAction)
             {                
-                Username = "username",
-                Password = "secret",
-                XmppDomain = "jabber.org",
+                Username = "alex",
+                Password = "***REMOVED***",
+                XmppDomain = "ag-software.net",
                 HostnameResolver = new SrvNameResolver()
             };            
 

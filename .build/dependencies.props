@@ -1,0 +1,6 @@
+<Project>
+	<PropertyGroup>
+		<DotNettyVersion>0.6.0</DotNettyVersion>    
+		<SystemReactiveVersion>4.1.2</SystemReactiveVersion>    
+	</PropertyGroup>
+</Project>

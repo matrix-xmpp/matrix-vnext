@@ -1,30 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>MatriX vNext</Description>
-    <Copyright>Copyright © Alexander Gnauck, AG-Software</Copyright>
     <AssemblyTitle>Matrix vNext Srv Resolver</AssemblyTitle>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <Authors>AG-Software</Authors>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;net451</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
     <AssemblyName>Matrix.Srv</AssemblyName>
-    <PackageId>Matrix.vNext.Srv</PackageId>
-    <PackageLicenseUrl>https://www.ag-software.net/matrix-vnext/license</PackageLicenseUrl>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageTags>xmpp;jabber;srv</PackageTags>    
+    <PackageId>Matrix.vNext.Srv</PackageId>   
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyOriginatorKeyFile>../../matrix.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <AssemblyVersion>2.0.4</AssemblyVersion>
-    <FileVersion>2.0.4</FileVersion>
-    <Version>2.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DnsClient" Version="1.2.0" />    
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
