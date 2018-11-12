@@ -26,6 +26,7 @@ namespace Matrix
     using DotNetty.Transport.Bootstrapping;
     using DotNetty.Transport.Channels;
     using Matrix.Attributes;
+    using System;
     using System.Reflection;
 
     public static class DotNettyExtensions
@@ -45,7 +46,20 @@ namespace Matrix
         }
 
         /// <summary>
-        /// Inserts a  ChannelHandler after an existing handler of this pipeline.
+        /// Appends a ChannelHandler at the last position of this pipeline. 
+        //  The name of the handler to append is taken from the NameAttribute of the handler class.
+        /// </summary>
+        /// <typeparam name="T">type of the handler to add.</typeparam>
+        /// <param name="channelPipeline">The channel pipeline.</param>
+        /// <returns></returns>
+        public static IChannelPipeline AddLast<T>(this IChannelPipeline channelPipeline) 
+            where T : class, IChannelHandler
+        {            
+            return channelPipeline.AddLast2(Activator.CreateInstance<T>());
+        }
+
+        /// <summary>
+        /// Inserts a ChannelHandler after an existing handler of this pipeline.
         //  The name of the handlers is taken from the NameAttribute of the handler class.        
         /// </summary>
         /// <typeparam name="TAfter"></typeparam>
@@ -61,12 +75,26 @@ namespace Matrix
         }
 
         /// <summary>
-        /// Inserts a  ChannelHandler before an existing handler of this pipeline.
+        /// Inserts a ChannelHandler after an existing handler of this pipeline.
+        //  The name of the handlers is taken from the NameAttribute of the handler class.        
+        /// </summary>
+        /// <typeparam name="TNewHandler">The type of the new handler.</typeparam>
+        /// <typeparam name="TAfter">The type of the handler to be added after.</typeparam>
+        /// <param name="channelPipeline">The channel pipeline.</param>
+        /// <returns></returns>
+        public static IChannelPipeline AddAfter<TNewHandler, TAfter>(this IChannelPipeline channelPipeline)
+            where TNewHandler : class, IChannelHandler
+        {
+            return channelPipeline.AddAfter<TAfter>(Activator.CreateInstance<TNewHandler>());
+        }
+
+        /// <summary>
+        /// Inserts a ChannelHandler before an existing handler of this pipeline.
         //  The name of the handlers is taken from the NameAttribute of the handler class.        
         /// </summary>
         /// <typeparam name="TBefore"></typeparam>
         /// <param name="channelPipeline"></param>
-        /// <param name="handler"></param>
+        /// <param name="handler">The new handler to add</param>
         /// <returns></returns>
         public static IChannelPipeline AddBefore<TBefore>(this IChannelPipeline channelPipeline, IChannelHandler handler)
         {
@@ -76,7 +104,30 @@ namespace Matrix
             return channelPipeline.AddBefore(baseName, name, handler);
         }
 
-        public static bool Contains<T>(this IChannelPipeline channelPipeline) where T : class, IChannelHandler
+        /// <summary>
+        /// Inserts a ChannelHandler before an existing handler of this pipeline.
+        //  The name of the handlers is taken from the NameAttribute of the handler class.        
+        /// </summary>
+        /// <typeparam name="TNewHandler">The type of the new handler.</typeparam>
+        /// <typeparam name="TBefore">The type of the handler to be added before.</typeparam>
+        /// <param name="channelPipeline">The channel pipeline.</param>
+        /// <returns></returns>
+        public static IChannelPipeline AddBefore<TNewHandler, TBefore>(this IChannelPipeline channelPipeline)
+            where TNewHandler : class, IChannelHandler
+        {
+            return channelPipeline.AddBefore<TBefore>(Activator.CreateInstance<TNewHandler>());
+        }
+
+        /// <summary>
+        /// Determines whether the pipeline contains a handler.
+        /// </summary>
+        /// <typeparam name="T">Type if the handler</typeparam>
+        /// <param name="channelPipeline">The channel pipeline.</param>
+        /// <returns>
+        ///   <c>true</c> if the pipeline cntains a handler of the given type, otherwise, <c>false</c>.
+        /// </returns>
+        public static bool Contains<T>(this IChannelPipeline channelPipeline)
+            where T : class, IChannelHandler
         {
             return channelPipeline.Get<T>() != null;
         }

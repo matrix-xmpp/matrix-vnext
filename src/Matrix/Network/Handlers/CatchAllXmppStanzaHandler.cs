@@ -32,7 +32,7 @@ namespace Matrix.Network.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, XmppXElement msg)
         {
-            // only responsible for cacthing the last packet o nthe pipeline
+            // only responsible for cacthing the last packet on the pipeline
         }
 
         public static string Name => "CatchAllXmppStanzaHandler";
