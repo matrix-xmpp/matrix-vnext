@@ -84,30 +84,17 @@ namespace Matrix
                     Pipeline = channel.Pipeline;
 
                     Pipeline.AddLast2(new ZlibDecoder());
-
                     Pipeline.AddLast2(new KeepAliveHandler());
-
                     Pipeline.AddLast2(new XmlStreamDecoder());
 
                     Pipeline.AddLast2(new ZlibEncoder());
-
                     Pipeline.AddLast2(new XmppXElementEncoder());
-
-
                     Pipeline.AddLast2(new UTF8StringEncoder());
 
-
-                    Pipeline.AddLast2(new XmppPingHandler<Iq>());
                     Pipeline.AddLast2(xmppStreamEventHandler);
-
-                    //Pipeline.AddLast2(new StreamManagementHandler());
-
                     Pipeline.AddLast2(new StreamFooterHandler());
-
                     Pipeline.AddLast2(XmppStanzaHandler);
-
                     Pipeline.AddLast2(new CatchAllXmppStanzaHandler());
-
                     Pipeline.AddLast2(new DisconnectHandler(this));
 
                     pipelineInitializerAction?.Invoke(Pipeline);
