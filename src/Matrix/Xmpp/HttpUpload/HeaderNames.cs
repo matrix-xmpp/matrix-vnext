@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,28 +19,19 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using Matrix.Xml;
-using Matrix.Xmpp.Disco;
-using Shouldly;
-using Xunit;
+using Matrix.Attributes;
 
-namespace Matrix.Tests.Xmpp.Disco
+namespace Matrix.Xmpp.HttpUpload
 {
-    public class ItemTest
+    public enum HeaderNames
     {
-        [Fact]
-        public void ElementShouldBeOfTypeItem()
-        {
-            XmppXElement.LoadXml(Resource.Get("Xmpp.Disco.item1.xml")).ShouldBeOfType<Item>();
-        }
+        [Name("Authorization")]
+        Authorization,
 
-        [Fact]
-        public void TestItemProperties()
-        {
-            var item = XmppXElement.LoadXml(Resource.Get("Xmpp.Disco.item1.xml")).Cast<Item>();
-            item.Node.ShouldBe("node1");
-            item.Jid.Bare.ShouldBe("user1@server.com");
-            item.Name.ShouldBe("name1");
-        }
+        [Name("Cookie")]
+        Cookie,
+
+        [Name("Expires")]
+        Expires
     }
 }

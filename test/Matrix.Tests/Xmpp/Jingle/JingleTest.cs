@@ -83,7 +83,7 @@ namespace Matrix.Tests.Xmpp.Jingle
         }
 
         [Fact]
-        public void ElementSouldBeOfTypeJingle()
+        public void ElementShouldBeOfTypeJingle()
         {
             XmppXElement.LoadXml(Resource.Get("Xmpp.Jingle.jingle1.xml")).ShouldBeOfType<Matrix.Xmpp.Jingle.Jingle>();
         }
@@ -127,7 +127,7 @@ namespace Matrix.Tests.Xmpp.Jingle
         }
 
         [Fact]
-        public void ElementSouldBeOfTypeDescription()
+        public void ElementShouldBeOfTypeDescription()
         {
             XmppXElement.LoadXml(Resource.Get("Xmpp.Jingle.description1.xml")).ShouldBeOfType<Description>();
         }
@@ -154,7 +154,7 @@ namespace Matrix.Tests.Xmpp.Jingle
         }
 
         [Fact]
-        public void ElementSouldBeOfTypeReason()
+        public void ElementShouldBeOfTypeReason()
         {
             XmppXElement.LoadXml(Resource.Get("Xmpp.Jingle.reason1.xml")).ShouldBeOfType<Reason>();
         }

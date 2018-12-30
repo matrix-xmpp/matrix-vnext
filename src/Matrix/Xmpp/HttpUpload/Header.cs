@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,28 +19,34 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
+using Matrix.Attributes;
 using Matrix.Xml;
-using Matrix.Xmpp.Disco;
-using Shouldly;
-using Xunit;
 
-namespace Matrix.Tests.Xmpp.Disco
+namespace Matrix.Xmpp.HttpUpload
 {
-    public class ItemTest
+    [XmppTag(Name = "header", Namespace = Namespaces.HttpUpload)]
+    public class Header : XmppXElement
     {
-        [Fact]
-        public void ElementShouldBeOfTypeItem()
+        public Header() : base(Namespaces.HttpUpload, "header")
         {
-            XmppXElement.LoadXml(Resource.Get("Xmpp.Disco.item1.xml")).ShouldBeOfType<Item>();
         }
 
-        [Fact]
-        public void TestItemProperties()
+        public Header(HeaderNames headerName, string val) : base(Namespaces.HttpUpload, "header")
         {
-            var item = XmppXElement.LoadXml(Resource.Get("Xmpp.Disco.item1.xml")).Cast<Item>();
-            item.Node.ShouldBe("node1");
-            item.Jid.Bare.ShouldBe("user1@server.com");
-            item.Name.ShouldBe("name1");
+            this.HeaderName = headerName;
+            this.Value = val;
+        }
+
+        /// <summary>
+        ///   Gets or sets the name of the header.
+        /// </summary>
+        /// <value>
+        ///   The header name.
+        /// </value>
+        public HeaderNames HeaderName
+        {
+            get { return GetAttributeEnumUsingNameAttrib<HeaderNames>("name"); }
+            set { SetAttribute("name", value.GetName()); }
         }
     }
 }

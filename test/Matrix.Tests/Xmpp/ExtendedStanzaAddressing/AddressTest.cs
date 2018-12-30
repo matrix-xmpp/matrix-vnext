@@ -30,7 +30,7 @@ namespace Matrix.Tests.Xmpp.ExtendedStanzaAddressing
     public class AddressTest
     {
         [Fact]
-        public void ElementSouldBeOfTypeAddress()
+        public void ElementShouldBeOfTypeAddress()
         {
             XmppXElement.LoadXml(Resource.Get("Xmpp.ExtendedStanzaAddressing.address1.xml")).ShouldBeOfType<Address>();
         }

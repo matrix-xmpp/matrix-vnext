@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,28 +19,28 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
+using Matrix.Attributes;
 using Matrix.Xml;
-using Matrix.Xmpp.Disco;
-using Shouldly;
-using Xunit;
 
-namespace Matrix.Tests.Xmpp.Disco
+namespace Matrix.Xmpp.HttpUpload
 {
-    public class ItemTest
+    [XmppTag(Name = "get", Namespace = Namespaces.HttpUpload)]
+    public class Get : XmppXElement
     {
-        [Fact]
-        public void ElementShouldBeOfTypeItem()
+        public Get(): base(Namespaces.HttpUpload, "get")
         {
-            XmppXElement.LoadXml(Resource.Get("Xmpp.Disco.item1.xml")).ShouldBeOfType<Item>();
         }
 
-        [Fact]
-        public void TestItemProperties()
+        /// <summary>
+        ///   Gets or sets the url.
+        /// </summary>
+        /// <value>
+        ///   The url.
+        /// </value>
+        public string Url
         {
-            var item = XmppXElement.LoadXml(Resource.Get("Xmpp.Disco.item1.xml")).Cast<Item>();
-            item.Node.ShouldBe("node1");
-            item.Jid.Bare.ShouldBe("user1@server.com");
-            item.Name.ShouldBe("name1");
+            get { return GetAttribute("url"); }
+            set { SetAttribute("url", value); }
         }
     }
 }

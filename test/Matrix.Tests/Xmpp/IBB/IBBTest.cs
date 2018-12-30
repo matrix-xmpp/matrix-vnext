@@ -30,19 +30,19 @@ namespace Matrix.Tests.Xmpp.IBB
     public class IBBTest
     {
         [Fact]
-        public void ElementSouldBeOfTypeOpen()
+        public void ElementShouldBeOfTypeOpen()
         {
             XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.open1.xml")).ShouldBeOfType<Open>();
         }
 
         [Fact]
-        public void ElementSouldBeOfTypeClose()
+        public void ElementShouldBeOfTypeClose()
         {
             XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.close1.xml")).ShouldBeOfType<Close>();
         }
 
         [Fact]
-        public void ElementSouldBeOfTypeData()
+        public void ElementShouldBeOfTypeData()
         {
             XmppXElement.LoadXml(Resource.Get("Xmpp.IBB.data1.xml")).ShouldBeOfType<Data>();
         }

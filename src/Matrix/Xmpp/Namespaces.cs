@@ -321,5 +321,10 @@ namespace Matrix.Xmpp
         /// urn:xmpp:avatar:data  (XEP-0084: User Avatar)
         /// </summary>
         public const string AvatarData = "urn:xmpp:avatar:data";
+
+        /// <summary>
+        /// urn:xmpp:http:upload:0 (XEP-0363: HTTP File Upload)
+        /// </summary>
+        public const string HttpUpload = "urn:xmpp:http:upload:0";
     }
 }

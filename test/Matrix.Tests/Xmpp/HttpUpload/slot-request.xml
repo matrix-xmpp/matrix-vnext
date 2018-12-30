@@ -1,0 +1,4 @@
+﻿<request xmlns='urn:xmpp:http:upload:0'
+  filename='très cool.jpg'
+  size='23456'
+  content-type='image/jpeg' />

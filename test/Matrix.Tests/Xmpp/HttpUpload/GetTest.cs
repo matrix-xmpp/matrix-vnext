@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -20,27 +20,33 @@
  */
 
 using Matrix.Xml;
-using Matrix.Xmpp.Disco;
+using Matrix.Xmpp.HttpUpload;
 using Shouldly;
 using Xunit;
 
-namespace Matrix.Tests.Xmpp.Disco
+namespace Matrix.Tests.Xmpp.HttpUpload
 {
-    public class ItemTest
+
+    public class GetTest
     {
         [Fact]
-        public void ElementShouldBeOfTypeItem()
+        public void ElementShouldBeOfTypeGet()
         {
-            XmppXElement.LoadXml(Resource.Get("Xmpp.Disco.item1.xml")).ShouldBeOfType<Item>();
+            XmppXElement.LoadXml(Resource.Get("Xmpp.HttpUpload.get.xml")).ShouldBeOfType<Get>();
+        }
+           
+        [Fact]
+        public void TestGetProperties()
+        {
+            var get = XmppXElement.LoadXml(Resource.Get("Xmpp.HttpUpload.get.xml")).Cast<Get>();
+            Assert.Equal(get.Url, "https://download.montague.tld/4a771ac1-f0b2-4a4a-9700-f2a26fa2bb67/tr%C3%A8s%20cool.jpg");
         }
 
         [Fact]
-        public void TestItemProperties()
+        public void TestBuildGet()
         {
-            var item = XmppXElement.LoadXml(Resource.Get("Xmpp.Disco.item1.xml")).Cast<Item>();
-            item.Node.ShouldBe("node1");
-            item.Jid.Bare.ShouldBe("user1@server.com");
-            item.Name.ShouldBe("name1");
+            var get = new Get { Url = "https://download.montague.tld/4a771ac1-f0b2-4a4a-9700-f2a26fa2bb67/tr%C3%A8s%20cool.jpg" };
+            get.ShouldBe(Resource.Get("Xmpp.HttpUpload.get.xml"));
         }
     }
 }

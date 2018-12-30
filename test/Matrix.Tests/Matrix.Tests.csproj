@@ -21,6 +21,11 @@
     <None Remove="Xmpp\Avatar\info.xml" />
     <None Remove="Xmpp\Avatar\metadata.xml" />
     <None Remove="Xmpp\Client\timeiq.xml" />
+    <None Remove="Xmpp\HttpUpload\get.xml" />
+    <None Remove="Xmpp\HttpUpload\header-authorization.xml" />
+    <None Remove="Xmpp\HttpUpload\header-cookie.xml" />
+    <None Remove="Xmpp\HttpUpload\slot-request-iq.xml" />
+    <None Remove="Xmpp\HttpUpload\slot-request.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -122,6 +127,11 @@
     <EmbeddedResource Include="Xmpp\ExtendedStanzaAddressing\address4.xml" />
     <EmbeddedResource Include="Xmpp\ExtendedStanzaAddressing\address5.xml" />
     <EmbeddedResource Include="Xmpp\Google\GCM\message1.xml" />
+    <EmbeddedResource Include="Xmpp\HttpUpload\header-cookie.xml" />
+    <EmbeddedResource Include="Xmpp\HttpUpload\header-authorization.xml" />
+    <EmbeddedResource Include="Xmpp\HttpUpload\get.xml" />
+    <EmbeddedResource Include="Xmpp\HttpUpload\slot-request-iq.xml" />
+    <EmbeddedResource Include="Xmpp\HttpUpload\slot-request.xml" />
     <EmbeddedResource Include="Xmpp\IBB\close1.xml" />
     <EmbeddedResource Include="Xmpp\IBB\data1.xml" />
     <EmbeddedResource Include="Xmpp\IBB\open1.xml" />
