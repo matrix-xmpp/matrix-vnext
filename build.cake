@@ -54,14 +54,14 @@ Task("Update-Assembly-Version")
         var splitted = vstsBuildNumber.Split('.');
         var buildIncrementalNumber = splitted[splitted.Length - 1];
 
-        var projects = GetFiles("./src/**/*.csproj");
-        foreach(var project in projects)
+        var files = GetFiles("./**/version.props");
+        foreach(var file in files)
         {
-            var currentVersion = XmlPeek(project.FullPath, "/Project/PropertyGroup/AssemblyVersion");
+            var currentVersion = XmlPeek(file.FullPath, "/Project/PropertyGroup/AssemblyVersion");
             var newVersion = $"{currentVersion}-ci-{julianDate}-{buildIncrementalNumber}";
 
-            XmlPoke(project.FullPath, "/Project/PropertyGroup/FileVersion", currentVersion);
-            XmlPoke(project.FullPath, "/Project/PropertyGroup/Version", newVersion);
+            XmlPoke(file.FullPath, "/Project/PropertyGroup/FileVersion", currentVersion);
+            XmlPoke(file.FullPath, "/Project/PropertyGroup/Version", newVersion);
         }
     });
 
