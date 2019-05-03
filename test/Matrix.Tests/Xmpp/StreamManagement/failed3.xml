@@ -1,0 +1,4 @@
+﻿<failed xmlns='urn:xmpp:sm:3'
+        h='another-sequence-number'>
+  <item-not-found xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+</failed>

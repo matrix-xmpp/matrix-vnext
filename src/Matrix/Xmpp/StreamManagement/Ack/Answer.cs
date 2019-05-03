@@ -34,9 +34,9 @@ namespace Matrix.Xmpp.StreamManagement.Ack
         /// <summary>
         /// Identifies the last handled stanza (i.e., the last stanza that the receiver will acknowledge as having received).
         /// </summary>
-        public int LastHandledStanza
+        public long LastHandledStanza
         {
-            get { return GetAttributeInt("h"); }
+            get { return GetAttributeLong("h"); }
             set { SetAttribute("h", value); }
         }
     }

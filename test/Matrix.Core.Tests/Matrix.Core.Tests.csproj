@@ -2,15 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <AssemblyName>Matrix.Tests</AssemblyName>
-    <PackageId>Matrix.Tests</PackageId>
+    <AssemblyName>Matrix.Core.Tests</AssemblyName>
+    <PackageId>Matrix.Core.Tests</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="ClientEnd2End\stream_compression_failed.xml" />
     <None Remove="ClientEnd2End\stream_error_host_unknown.xml" />
-    <None Remove="ClientEnd2End\stream_management_resume_failure.xml" />
-    <None Remove="ClientEnd2End\stream_management_resume_success.xml" />
     <None Remove="ClientEnd2End\stream_not_authorized.xml" />
     <None Remove="ClientEnd2End\stream_no_server_reply_to_bind.xml" />
     <None Remove="ClientEnd2End\stream_registeraccount_failed2.xml" />
@@ -28,13 +26,11 @@
     <None Remove="Xmpp\HttpUpload\header-cookie.xml" />
     <None Remove="Xmpp\HttpUpload\slot-request-iq.xml" />
     <None Remove="Xmpp\HttpUpload\slot-request.xml" />
-    <None Remove="Xmpp\StreamManagement\failed3.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="ClientEnd2End\stream_compression_failed.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream_error_host_unknown.xml" />
-    <EmbeddedResource Include="ClientEnd2End\stream_management_resume_failure.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream_not_authorized.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream1.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream2.xml" />
@@ -42,7 +38,6 @@
     <EmbeddedResource Include="ClientEnd2End\stream_registeraccount_failed1.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream_registeraccount_failed2.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream_registeraccount_success.xml" />
-    <EmbeddedResource Include="ClientEnd2End\stream_management_resume_success.xml" />
     <EmbeddedResource Include="ClientEnd2End\stream_resource_conflict.xml" />
     <EmbeddedResource Include="Xml\cdata1.xml" />
     <EmbeddedResource Include="Xml\message.xml" />
@@ -262,7 +257,6 @@
     <EmbeddedResource Include="Xmpp\StreamManagement\enabled3.xml" />
     <EmbeddedResource Include="Xmpp\StreamManagement\failed1.xml" />
     <EmbeddedResource Include="Xmpp\StreamManagement\failed2.xml" />
-    <EmbeddedResource Include="Xmpp\StreamManagement\failed3.xml" />
     <EmbeddedResource Include="Xmpp\StreamManagement\r1.xml" />
     <EmbeddedResource Include="Xmpp\StreamManagement\resume1.xml" />
     <EmbeddedResource Include="Xmpp\StreamManagement\resumed1.xml" />

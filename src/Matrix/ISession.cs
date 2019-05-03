@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,26 +19,11 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
-
-namespace Matrix.Network.Handlers
+namespace Matrix
 {
-    public class StanzaCounter : DistinctBehaviorSubject<long>
-    {       
-        private long maxSequence = (long)Math.Pow(2, 32);
-
-        public StanzaCounter() : base(0)
-        {
-        }
-
-        public void Increment()
-        {
-            this.Value = (this.Value + 1) % maxSequence;
-        }
-
-        public void Reset()
-        {
-            this.Value = 0;
-        }
+    public interface ISession
+    {
+        XmppSessionState XmppSessionState { get; }
+        XmppSessionEvent XmppSessionEvent { get; }
     }
 }

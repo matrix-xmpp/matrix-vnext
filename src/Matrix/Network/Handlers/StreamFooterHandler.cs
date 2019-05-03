@@ -33,6 +33,12 @@ namespace Matrix.Network.Handlers
         private readonly string streamFooter = new Stream().EndTag();
         private bool sentStreamHeader;
         private bool sentStreamFooter;
+        private ISession session;
+
+        public StreamFooterHandler(ISession session)
+        {
+            this.session = session;
+        }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
@@ -44,8 +50,11 @@ namespace Matrix.Network.Handlers
         {
             if (msg.XmlStreamEventType == XmlStreamEventType.StreamEnd)
             {
+                session.XmppSessionEvent.Value = SessionEvent.StreamFooterReceived;
                 if (!sentStreamFooter && sentStreamHeader && ctx.Channel.IsWritable)
-                    await ctx.WriteAsync(streamFooter);
+                {
+                    await ctx.WriteAsync(streamFooter);                    
+                }                    
                 
                 if (ctx.Channel.Open)
                 { 
@@ -62,12 +71,17 @@ namespace Matrix.Network.Handlers
             if (!sentStreamHeader)
             {
                 if (sent != null && sent.StartsWith("<stream:stream"))
+                {
                     sentStreamHeader = true;
+                }
             }
             if (!sentStreamFooter)
             {
                 if (sent != null && sent.StartsWith(streamFooter))
+                {
                     sentStreamFooter = true;
+                    session.XmppSessionEvent.Value = SessionEvent.StreamFooterSent;
+                }                    
             }
             return context.WriteAsync(message);
         }

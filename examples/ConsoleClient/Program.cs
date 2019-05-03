@@ -50,23 +50,23 @@ namespace ConsoleClient
             loggerFactory.AddConsole();
             var logger = loggerFactory.CreateLogger<Program>();
 
-            var pipelineInitializerAction = new Action<IChannelPipeline>(pipeline =>
+            var pipelineInitializerAction = new Action<IChannelPipeline, ISession>((pipeline, session) =>
             {
                 pipeline.AddFirst(new MyLoggingHandler(logger));
             });
 
             var xmppClient = new XmppClient(pipelineInitializerAction)
-            {                
+            {
                 Username = "alex",
                 Password = "***REMOVED***",
                 XmppDomain = "ag-software.net",
                 HostnameResolver = new SrvNameResolver()
-            };            
+            };
 
             xmppClient.XmppSessionStateObserver.Subscribe(v => {
                 Debug.WriteLine($"State changed: {v}");
             });
-          
+
             xmppClient
                 .XmppXElementStreamObserver
                 .Where(el => el is Presence)
@@ -74,7 +74,7 @@ namespace ConsoleClient
                 {
                     Debug.WriteLine(el.ToString());
                 });
-           
+
             xmppClient
                 .XmppXElementStreamObserver
                 .Where(el => el is Message)
@@ -100,7 +100,7 @@ namespace ConsoleClient
 
             // Send our presence to the server
             xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
-            
+
             Console.ReadLine();
 
             // Disconnect the XMPP connection

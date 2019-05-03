@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,38 +19,25 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using Matrix.Attributes;
-using Matrix.Xml;
-
-namespace Matrix.Xmpp.StreamManagement
+namespace Matrix
 {
-    [XmppTag(Name = "resume", Namespace = Namespaces.FeatureStreamManagement)]
-    public class Resume : XmppXElement
+    public enum SessionEvent
     {
-        internal Resume(string tagname) : base(Namespaces.FeatureStreamManagement, tagname)
-        {
-        }
-
-        public Resume() : this("resume")
-        {
-        }
+        SessionInitialized,
 
         /// <summary>
-        /// The sequenze number of the last handled stanza of the previous connection.
+        /// The stream footer was sent
         /// </summary>
-        public long LastHandledStanza
-        {
-            get { return GetAttributeLong("h"); }
-            set { SetAttribute("h", value); }
-        }
+        StreamFooterSent,
 
         /// <summary>
-        /// The SM-ID of the former stream.
+        /// The stream footer was received
         /// </summary>
-        public string PreviousId
-        {
-            get { return GetAttribute("previd"); }
-            set { SetAttribute("previd", value); }
-        }
+        StreamFooterReceived,
+
+        /// <summary>
+        /// A call disconnect the xmpp connection was made
+        /// </summary>
+        CallDisconnect,
     }
 }

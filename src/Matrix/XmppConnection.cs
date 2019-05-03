@@ -36,14 +36,14 @@ using DotNetty.Buffers;
 
 namespace Matrix
 {
-    public abstract class XmppConnection : IStanzaSender, IDisposable
+    public abstract class XmppConnection : IStanzaSender, ISession, IDisposable
     {
         private IEventLoopGroup eventLoopGroup;
         protected Bootstrap Bootstrap = new Bootstrap();
         
         readonly XmppStreamEventHandler xmppStreamEventHandler = new XmppStreamEventHandler();
         private INameResolver resolver = new NameResolver();
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="XmppConnection"/> class.
         /// </summary>
@@ -56,7 +56,7 @@ namespace Matrix
         /// Initializes a new instance of the <see cref="XmppConnection"/> class.
         /// </summary>
         /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
-        protected XmppConnection(Action<IChannelPipeline> pipelineInitializerAction)
+        protected XmppConnection(Action<IChannelPipeline, ISession> pipelineInitializerAction)
             : this(pipelineInitializerAction, new MultithreadEventLoopGroup())
         {
         }
@@ -66,12 +66,12 @@ namespace Matrix
         /// </summary>
         /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
         /// <param name="eventLoopGroup">The event loop group.</param>
-        protected XmppConnection(Action<IChannelPipeline> pipelineInitializerAction, IEventLoopGroup eventLoopGroup)
+        protected XmppConnection(Action<IChannelPipeline, ISession> pipelineInitializerAction, IEventLoopGroup eventLoopGroup)
         {
             Contract.Requires<ArgumentNullException>(eventLoopGroup != null, $"{nameof(eventLoopGroup)} cannot be null");
 
             this.eventLoopGroup = eventLoopGroup;
-
+            
             Bootstrap
                 .Group(eventLoopGroup)
                 .Channel<TcpSocketChannel>()
@@ -84,27 +84,30 @@ namespace Matrix
                     Pipeline = channel.Pipeline;
 
                     Pipeline.AddLast2(new ZlibDecoder());
+                    Pipeline.AddLast2(new ZlibEncoder());
                     Pipeline.AddLast2(new KeepAliveHandler());
                     Pipeline.AddLast2(new XmlStreamDecoder());
 
-                    Pipeline.AddLast2(new ZlibEncoder());
                     Pipeline.AddLast2(new XmppXElementEncoder());
                     Pipeline.AddLast2(new UTF8StringEncoder());
 
                     Pipeline.AddLast2(xmppStreamEventHandler);
-                    Pipeline.AddLast2(new StreamFooterHandler());
+                    Pipeline.AddLast2(new StreamFooterHandler(this));
                     Pipeline.AddLast2(XmppStanzaHandler);
                     Pipeline.AddLast2(new CatchAllXmppStanzaHandler());
                     Pipeline.AddLast2(new DisconnectHandler(this));
+                    // Pipeline.AddLast2(new ReconnectHandler(this));
 
-                    pipelineInitializerAction?.Invoke(Pipeline);
+                    pipelineInitializerAction?.Invoke(Pipeline, this);
                 }));
         }
 
         #region << Properties >>
         public IChannelPipeline Pipeline { get; protected set; } = null;
 
-        internal XmppSessionState XmppSessionState { get; } = new XmppSessionState();
+        public XmppSessionState XmppSessionState { get; } = new XmppSessionState();
+
+        public XmppSessionEvent XmppSessionEvent { get; } = new XmppSessionEvent();
 
         public string XmppDomain { get; set; }
 
@@ -399,6 +402,34 @@ namespace Matrix
         }
 
         /// <summary>
+        /// Connect to the XMPP server.
+        /// This establishes the connection to the server, including TLS, authentication, resource binding and
+        /// compression.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
+        /// <exception cref="BindException">Thrown when resource binding fails.</exception>
+        /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
+        /// <exception cref="CompressionException">Throws a CompressionException when establishing stream compression fails.</exception>
+        /// <exception cref="RegisterException">Throws a RegisterException when new account registration fails.</exception>
+        public virtual Task<IChannel> ConnectAsync()
+        {
+            return default(Task<IChannel>);
+        }
+
+        /// <summary>
+        /// Connect to the XMPP server.
+        /// This establishes the connection to the server, including TLS, authentication, resource binding and
+        /// compression.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>       
+        public virtual Task<IChannel> ConnectAsync(CancellationToken cancellationToken)
+        {
+            return default(Task<IChannel>);
+        }
+
+        /// <summary>
         /// Close the XMPP connection
         /// </summary>
         /// <param name="sendStreamFooter">
@@ -411,6 +442,8 @@ namespace Matrix
         /// <returns></returns>
         public async Task<bool> DisconnectAsync(bool sendStreamFooter = true, int timeout = 2000)
         {
+            XmppSessionEvent.Value = SessionEvent.CallDisconnect;
+
             IDisposable anonymousSubscription = null;
             var resultCompletionSource = new TaskCompletionSource<bool>();
 

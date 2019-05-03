@@ -65,7 +65,14 @@ namespace Matrix.Tests.Xmpp.StreamManagement
             var failed = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.failed1.xml")).Cast<Failed>();
             Assert.Equal(failed.Condition == Matrix.Xmpp.Base.ErrorCondition.UnexpectedRequest, true);
         }
-        
+
+        [Fact]
+        public void FailedStanzaShouldIncludeItemNotFound()
+        {
+            var failed = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.failed3.xml")).Cast<Failed>();
+            Assert.Equal(failed.Condition == Matrix.Xmpp.Base.ErrorCondition.ItemNotFound, true);
+        }
+
         [Fact]
         public void TestBuildFailed()
         {
@@ -133,6 +140,13 @@ namespace Matrix.Tests.Xmpp.StreamManagement
         {
             var a = XmppXElement.LoadXml(Resource.Get("Xmpp.StreamManagement.a1.xml")).Cast<Answer>();
             Assert.Equal(a.LastHandledStanza, 0);
+        }
+
+        [Fact]
+        public void TestAnswerWithMaximumValue()
+        {
+            var a = XmppXElement.LoadXml("<a xmlns='urn:xmpp:sm:3' h='4294967295'/>").Cast<Answer>();
+            Assert.Equal(a.LastHandledStanza, 4294967295);
         }
 
         [Fact]

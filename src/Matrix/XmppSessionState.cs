@@ -19,30 +19,12 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-
 namespace Matrix
-{   
-    public class XmppSessionState
+{
+    public class XmppSessionState : DistinctBehaviorSubject<SessionState>
     {
-        private readonly BehaviorSubject<SessionState> valueSubject;
-
-        public XmppSessionState()
+        public XmppSessionState(): base(SessionState.Disconnected)
         {
-            valueSubject = new BehaviorSubject<SessionState>(SessionState.Disconnected);
-        }        
-
-        public SessionState Value
-        {
-            get { return valueSubject.Value; }
-            set { valueSubject.OnNext(value); }
         }
-
-        /// <summary>
-        /// When the SessionState changed
-        /// </summary>
-        public IObservable<SessionState> ValueChanged => valueSubject.DistinctUntilChanged();       
     }
 }

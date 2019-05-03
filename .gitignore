@@ -5,6 +5,7 @@ bin
 obj
 packages
 .vs
+.idea
 temp
 .lock.json
 *.lock.json

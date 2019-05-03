@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
@@ -19,26 +19,33 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
-using System;
+using Matrix.Network.Handlers;
+using Shouldly;
+using Xunit;
 
-namespace Matrix.Network.Handlers
+namespace Matrix.Tests.Network.Handlers
 {
-    public class StanzaCounter : DistinctBehaviorSubject<long>
-    {       
-        private long maxSequence = (long)Math.Pow(2, 32);
-
-        public StanzaCounter() : base(0)
+    public class StanzaCounterTests
+    {
+        [Fact]
+        public void TestIncrement()
         {
+            var counter = new StanzaCounter();
+            counter.Increment();
+            counter.Value.ShouldBe(1);
+
+            counter.Increment();
+            counter.Value.ShouldBe(2);
         }
 
-        public void Increment()
+        [Fact]
+        public void TestIncrementOverMaximumValue()
         {
-            this.Value = (this.Value + 1) % maxSequence;
-        }
-
-        public void Reset()
-        {
-            this.Value = 0;
+            var counter = new StanzaCounter();
+            // init with 1 below max
+            counter.Value = 4294967295;
+            counter.Increment();
+            counter.Value.ShouldBe(0);
         }
     }
 }

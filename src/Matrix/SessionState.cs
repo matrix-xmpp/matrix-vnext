@@ -64,6 +64,11 @@ namespace Matrix
         Authenticated,
 
         /// <summary>
+        /// Stream resume failed
+        /// </summary>
+        ResumeFailed,
+
+        /// <summary>
         /// Negotiating stream compression
         /// </summary>
         Compressing,
@@ -74,16 +79,6 @@ namespace Matrix
         Compressed,
 
         /// <summary>
-        /// Trying to resume the previous stream
-        /// </summary>
-        Resume,
-
-        /// <summary>
-        /// Stream was resumed
-        /// </summary>
-        Resumed,
-
-        /// <summary>
         /// Resource binding is in progress
         /// </summary>
         Binding,
@@ -91,6 +86,16 @@ namespace Matrix
         /// <summary>
         /// Resource binding finsihed with success
         /// </summary>
-        Binded        
+        Binded,
+
+        /// <summary>
+        /// Trying to resume the previous stream
+        /// </summary>
+        Resuming,
+
+        /// <summary>
+        /// Stream was resumed
+        /// </summary>
+        Resumed,        
     }
 }

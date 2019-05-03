@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <Copyright>Copyright © Alexander Gnauck, AG-Software</Copyright>
-    <Authors>AG-Software</Authors>
-    <PackageLicenseUrl>https://www.ag-software.net/matrix-vnext/license</PackageLicenseUrl>
+    <Authors>AG-Software</Authors>    
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>    
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>xmpp;jabber;im;instant messaging</PackageTags>
   </PropertyGroup>
