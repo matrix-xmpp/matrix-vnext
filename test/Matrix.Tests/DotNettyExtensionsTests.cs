@@ -28,7 +28,7 @@ namespace Matrix.Tests
     using Matrix;
     using Matrix.Attributes;
 
-    public class DotnNettyExtensionsTests
+    public class DotNettyExtensionsTests
     {
         [Fact]
         public void ShouldAddHandlerAtTheEnd()

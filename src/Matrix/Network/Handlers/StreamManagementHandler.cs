@@ -47,12 +47,12 @@ namespace Matrix.Network.Handlers
         public IObservable<long> IncomingStanzasCountObservable => IncomingStanzaCounter.ValueChanged;
 
         /// <summary>
-        /// Observable for the ougoing stanza counter
+        /// Observable for the outgoing stanza counter
         /// </summary>
         public IObservable<long> OutgoingStanzasCountObservable => OutgoingStanzaCounter.ValueChanged;
 
         /// <summary>
-        /// Gets or sets a value indicating whether stream manaegment was enabled.
+        /// Gets or sets a value indicating whether stream management was enabled.
         /// </summary>
         /// <value>
         ///   <c>true</c> if this instance is enabled; otherwise, <c>false</c>.
@@ -77,13 +77,13 @@ namespace Matrix.Network.Handlers
 
         public string StreamId { get; set; } = null;
 
-        private XmppClient xmppClient;
+        private XmppConnection xmppConnection;
 
-        public StreamManagementHandler(XmppClient xmppClient)
+        public StreamManagementHandler(XmppConnection xmppCon)
         {
-            this.xmppClient = xmppClient;
+            this.xmppConnection = xmppCon;
 
-            this.xmppClient
+            this.xmppConnection
                     .XmppSessionState
                     .ValueChanged
                     .Where(s => s == SessionState.Binded)
@@ -95,8 +95,8 @@ namespace Matrix.Network.Handlers
                         }
                     });
 
-            // wen we see a stream footer then the stream was closed and cannot be resumed
-            this.xmppClient
+            // when we see a stream footer then the stream was closed and cannot be resumed
+            this.xmppConnection
                    .XmppSessionEvent
                    .ValueChanged
                    .Where(s => s == SessionEvent.StreamFooterSent || s == SessionEvent.StreamFooterReceived)
@@ -116,17 +116,6 @@ namespace Matrix.Network.Handlers
                 {
                     Supported = true;
                 });
-
-            //Handle(
-            //    el =>
-            //        el.OfType<StreamFeatures>()
-            //        && xmppClient.XmppSessionState.Value == SessionState.Authenticated
-            //        && CanResume
-            //        && StreamId != null,
-            //      async (context, xmppXElement) =>
-            //      {
-            //          await ResumeAsync(xmppXElement as StreamFeatures);
-            //      });
 
             Handle(
                 el => el.OfType<Iq>()
@@ -154,7 +143,7 @@ namespace Matrix.Network.Handlers
         }
 
         /// <summary>
-        /// Enables Streammanagement on the current XMPP stream
+        /// Enables stream management on the current XMPP stream
         /// </summary>        
         /// <returns></returns>
         private async Task EnableAsync()
@@ -173,7 +162,7 @@ namespace Matrix.Network.Handlers
 
         public async Task ResumeAsync(CancellationToken cancellationToken)
         {
-            this.xmppClient.XmppSessionState.Value = SessionState.Resuming;
+            this.xmppConnection.XmppSessionState.Value = SessionState.Resuming;
 
             var res = await SendAsync<Resumed, Failed>(
                         new Resume()
@@ -191,7 +180,7 @@ namespace Matrix.Network.Handlers
                 OutgoingStanzaCounter.Value = resumed.LastHandledStanza;
                 StreamId = resumed.PreviousId;
 
-                this.xmppClient.XmppSessionState.Value = SessionState.Resumed;
+                this.xmppConnection.XmppSessionState.Value = SessionState.Resumed;
             }
             else if (res.OfType<Failed>())
             {
@@ -203,7 +192,7 @@ namespace Matrix.Network.Handlers
                 OutgoingStanzaCounter.Reset();
 
                 // set state, so we can continue automatically with resource binding
-                this.xmppClient.XmppSessionState.Value = SessionState.ResumeFailed;
+                this.xmppConnection.XmppSessionState.Value = SessionState.ResumeFailed;
             }
         }
 

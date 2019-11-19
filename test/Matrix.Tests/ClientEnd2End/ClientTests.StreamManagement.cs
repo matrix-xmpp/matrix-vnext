@@ -58,7 +58,7 @@ namespace Matrix.Tests.ClientEnd2End
 
                 var xmppClient = new XmppClient(
                     new Action<IChannelPipeline, ISession>((pipeline, session) =>
-                    {                        
+                    {
                         pipeline.AddBefore<XmppStanzaHandler>(smHandler);
                     })
                 )

@@ -33,6 +33,7 @@ using Matrix.Xmpp.Client;
 using Matrix.Xmpp.Stream;
 using System.Threading;
 using DotNetty.Buffers;
+using Matrix.Configuration;
 
 namespace Matrix
 {
@@ -48,7 +49,17 @@ namespace Matrix
         /// Initializes a new instance of the <see cref="XmppConnection"/> class.
         /// </summary>
         protected XmppConnection()
-            : this(null)
+            : this(configurationAction: null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppConnection"/> class.
+        /// </summary>
+        /// <param name="configurationAction">The configuration for this instance</param>
+        protected XmppConnection(
+            Action<ClientConfiguration> configurationAction)
+            : this(configurationAction, null)
         {
         }
 
@@ -56,22 +67,46 @@ namespace Matrix
         /// Initializes a new instance of the <see cref="XmppConnection"/> class.
         /// </summary>
         /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
-        protected XmppConnection(Action<IChannelPipeline, ISession> pipelineInitializerAction)
-            : this(pipelineInitializerAction, new MultithreadEventLoopGroup())
+        protected XmppConnection(
+            Action<IChannelPipeline, ISession> pipelineInitializerAction)
+            : this(null, pipelineInitializerAction, new MultithreadEventLoopGroup())
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmppConnection"/> class.
         /// </summary>
+        /// <param name="configurationAction">The configuration for this instance</param>
+        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
+        protected XmppConnection(
+            Action<ClientConfiguration> configurationAction, 
+            Action<IChannelPipeline, ISession> pipelineInitializerAction)
+            : this(configurationAction, pipelineInitializerAction, new MultithreadEventLoopGroup())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppConnection"/> class.
+        /// </summary>
+        /// <param name="configurationAction">The configuration for this instance</param>
         /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
         /// <param name="eventLoopGroup">The event loop group.</param>
-        protected XmppConnection(Action<IChannelPipeline, ISession> pipelineInitializerAction, IEventLoopGroup eventLoopGroup)
+        protected XmppConnection(
+            Action<ClientConfiguration> configurationAction,
+            Action<IChannelPipeline, ISession> pipelineInitializerAction,
+            IEventLoopGroup eventLoopGroup)
         {
             Contract.Requires<ArgumentNullException>(eventLoopGroup != null, $"{nameof(eventLoopGroup)} cannot be null");
 
+            //if (config != null)
+            //{
+            //    this.Configuration = config;
+            //}
+
             this.eventLoopGroup = eventLoopGroup;
-            
+           
+            configurationAction?.Invoke(this.Configuration);
+
             Bootstrap
                 .Group(eventLoopGroup)
                 .Channel<TcpSocketChannel>()
@@ -92,11 +127,25 @@ namespace Matrix
                     Pipeline.AddLast2(new UTF8StringEncoder());
 
                     Pipeline.AddLast2(xmppStreamEventHandler);
+
+                    if (this.Configuration.StreamManagement)
+                    {
+                        if (this.StreamManagementHandler == null)
+                        {
+                            this.StreamManagementHandler = new StreamManagementHandler(this);
+                        }
+                        Pipeline.AddLast2(this.StreamManagementHandler);
+                    }
+
                     Pipeline.AddLast2(new StreamFooterHandler(this));
-                    Pipeline.AddLast2(XmppStanzaHandler);
+                    Pipeline.AddLast2(this.XmppStanzaHandler);
                     Pipeline.AddLast2(new CatchAllXmppStanzaHandler());
                     Pipeline.AddLast2(new DisconnectHandler(this));
-                    // Pipeline.AddLast2(new ReconnectHandler(this));
+
+                    if (this.Configuration.AutoReconnect)
+                    {
+                        Pipeline.AddLast2(new ReconnectHandler(this));
+                    }
 
                     pipelineInitializerAction?.Invoke(Pipeline, this);
                 }));
@@ -115,7 +164,10 @@ namespace Matrix
 
         public ICertificateValidator CertificateValidator { get; set; } = new DefaultCertificateValidator();
 
+        private ClientConfiguration Configuration { get; } = new ClientConfiguration();
+
         private readonly XmppStanzaHandler XmppStanzaHandler = new XmppStanzaHandler();
+        private StreamManagementHandler StreamManagementHandler;
 
         // Observers
         private IObservable<XmlStreamEvent> XmlStreamEventObserver => xmppStreamEventHandler.XmlStreamEvent;

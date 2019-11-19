@@ -31,7 +31,7 @@ namespace Matrix.Extensions.Client.Message
         /// Send a message
         /// </summary>
         /// <param name="stanzaSender"><see cref="IStanzaSender"/></param>
-        /// <param name="msg"the <see cref="Message"/>></param>
+        /// <param name="msg">the <see cref="Message"/></param>
         /// <returns></returns>
         public static async Task SendMessageAsync(this IStanzaSender stanzaSender, Message msg)
         {
@@ -95,7 +95,6 @@ namespace Matrix.Extensions.Client.Message
         /// <param name="stanzaSender"><see cref="IStanzaSender"/></param>
         /// <param name="to">The chat room the message should get delivered to</param>
         /// <param name="text">The text of the message</param>
-        /// <param name="messageId"></param>
         /// <returns></returns>        
         public static async Task SendGroupChatMessageAsync(this IStanzaSender stanzaSender, Jid to, string text)
         {
@@ -103,7 +102,7 @@ namespace Matrix.Extensions.Client.Message
         }
                 
         /// <summary>
-        /// Send a goup chat message
+        /// Send a group chat message
         /// </summary>
         /// <param name="stanzaSender"><see cref="IStanzaSender"/></param>
         /// <param name="to">The chat room the message should get delivered to</param>
@@ -122,7 +121,7 @@ namespace Matrix.Extensions.Client.Message
         }
 
         /// <summary>
-        /// Send a goup chat message
+        /// Send a group chat message
         /// </summary>
         /// <param name="stanzaSender"><see cref="IStanzaSender"/></param>
         /// <param name="to">The chat room the message should get delivered to</param>
