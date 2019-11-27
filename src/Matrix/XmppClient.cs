@@ -63,6 +63,11 @@ namespace Matrix
         public XmppClient(Action<IChannelPipeline, ISession> pipelineInitializerAction)
             : base(pipelineInitializerAction)
         {
+            TlsHandlerFactory = tlsSettings => new TlsHandler(stream
+               => new SslStream(stream,
+               true,
+               (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
+               tlsSettings);
         }
 
         /// <summary>
@@ -73,6 +78,11 @@ namespace Matrix
         public XmppClient(Action<IChannelPipeline, ISession> pipelineInitializerAction, IEventLoopGroup eventLoopGroup)
            : base(pipelineInitializerAction, eventLoopGroup)
         {
+            TlsHandlerFactory = tlsSettings => new TlsHandler(stream
+               => new SslStream(stream,
+               true,
+               (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
+               tlsSettings);
         }
 
         private string resource = "MatriX";
@@ -104,7 +114,9 @@ namespace Matrix
         /// <summary>
         /// Gets or sets a value indicating whether the stream should be secured over TLS or not when supported and advertised by the server.
         /// </summary>
-        public bool Tls { get; set; } = true;       
+        public bool Tls { get; set; } = true;
+
+        public Func<TlsSettings, IChannelHandler> TlsHandlerFactory { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="ITlsSettingsProvider"/>.
@@ -119,7 +131,7 @@ namespace Matrix
         /// <value>
         /// <c>true</c> if compression; otherwise, <c>false</c>.
         /// </value>
-        public bool Compression { get; set; } = true;      
+        public bool Compression { get; set; } = true;
 
         public IAuthenticate SaslHandler { get; set; } = new DefaultSaslHandler();
 
@@ -159,7 +171,7 @@ namespace Matrix
             var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
             XmppSessionState.Value = SessionState.Connected;
 
-            if (HostnameResolver.Implements<IDirectTls>() 
+            if (HostnameResolver.Implements<IDirectTls>()
                 && HostnameResolver.Cast<IDirectTls>().DirectTls == true)
             {
                 await DoSslAsync(cancellationToken);
@@ -171,7 +183,7 @@ namespace Matrix
         }
 
         internal async Task HandleStreamFeaturesAsync(
-            StreamFeatures features, 
+            StreamFeatures features,
             CancellationToken cancellationToken)
         {
             if (XmppSessionState.Value < SessionState.Securing && features.SupportsStartTls && Tls)
@@ -199,7 +211,7 @@ namespace Matrix
             else if (XmppSessionState.Value < SessionState.Compressing && features.SupportsZlibCompression && Compression)
             {
                 await HandleStreamFeaturesAsync(await DoEnableCompressionAsync(cancellationToken), cancellationToken);
-            }            
+            }
             else if (XmppSessionState.Value < SessionState.Binding)
             {
                 await DoBindAsync(features, cancellationToken);
