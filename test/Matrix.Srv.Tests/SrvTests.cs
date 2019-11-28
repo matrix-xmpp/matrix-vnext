@@ -27,7 +27,7 @@ namespace Matrix.Srv.Tests
 {
     public class XmppClientTests
     {
-        [Fact]
+        // [Fact]
         public void TestSrvResolverWithSingleRecord()
         {
             var dnsEndPoint = new System.Net.DnsEndPoint("xmpp.ag-software.net", 5222);
