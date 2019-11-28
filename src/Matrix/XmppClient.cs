@@ -112,6 +112,13 @@ namespace Matrix
         /// </summary>
         public ITlsSettingsProvider TlsSettingsProvider { get; set; } = new DefaultClientTlsSettingsProvider();
 
+
+        /// <summary>
+        /// Gets or sets the <see cref="ITlsHandlerProvider"/>
+        /// This allows to use customs Tls handler implementations.
+        /// </summary>
+        public ITlsHandlerProvider TlsHandlerProvider { get; set; } = new DefaultClientTlsHandlerProvider();
+
         /// <summary>
         /// Gets or sets a value indicating whether <see href="https://xmpp.org/extensions/xep-0138.html">XEP-0138: Stream Compression</see> should be used
         /// on this <see cref="XmppClient" />.
@@ -214,15 +221,8 @@ namespace Matrix
         private async Task<StreamFeatures> DoStartTlsAsync(CancellationToken cancellationToken)
         {
             XmppSessionState.Value = SessionState.Securing;
-
-            var tlsSettingsProvider = await TlsSettingsProvider.ProvideAsync(this);
-            var tlsHandler =
-                new TlsHandler(stream
-                => new SslStream(stream,
-                true,
-                (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
-                tlsSettingsProvider);
-
+            
+            var tlsHandler = await TlsHandlerProvider.ProvideAsync(this);
             await SendAsync<Proceed>(new StartTls(), cancellationToken);
             Pipeline.AddFirst(tlsHandler);
             var streamFeatures = await ResetStreamAsync(cancellationToken);
@@ -240,14 +240,8 @@ namespace Matrix
         {
             await Task.Run(async () =>
             {
-                var tlsSettingsProvider = await TlsSettingsProvider.ProvideAsync(this);
+                var tlsHandler = await TlsHandlerProvider.ProvideAsync(this);
                 XmppSessionState.Value = SessionState.Securing;
-                var tlsHandler =
-                    new TlsHandler(stream
-                    => new SslStream(stream,
-                    true,
-                    (sender, certificate, chain, errors) => CertificateValidator.RemoteCertificateValidationCallback(sender, certificate, chain, errors)),
-                    tlsSettingsProvider);
 
                 Pipeline.AddFirst(tlsHandler);
                 XmppSessionState.Value = SessionState.Secure;
