@@ -19,22 +19,16 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
+using DotNetty.Transport.Channels;
 using System.Threading.Tasks;
-using DotNetty.Handlers.Tls;
 
 namespace Matrix.Network
 {
     /// <summary>
-    /// A default implementation of a <see cref="ITlsSettingsProvider"/>.
+    /// Interface to provide custom TLS handlers.
     /// </summary>
-    public class DefaultClientTlsSettingsProvider : ITlsSettingsProvider
+    public interface ITlsHandlerProvider
     {
-        public async Task<TlsSettings> ProvideAsync(XmppConnection xmppConnection)
-        {
-            return await Task<TlsSettings>.Run(() =>
-            {
-                return new ClientTlsSettings(xmppConnection.XmppDomain);
-            });
-        }
+        Task<IChannelHandler> ProvideAsync(XmppClient xmppClient);
     }
 }
