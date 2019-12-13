@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>MatriX vNext</Description>
     <AssemblyTitle>Matrix vNext Srv Resolver</AssemblyTitle>
-    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net46</TargetFrameworks>
     <AssemblyName>Matrix.Srv</AssemblyName>
     <PackageId>Matrix.vNext.Srv</PackageId>   
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
