@@ -17,6 +17,7 @@ namespace Matrix.Tls.Mono
     using DotNetty.Codecs;
     using DotNetty.Common.Concurrency;
     using DotNetty.Common.Utilities;
+    using DotNetty.Handlers.Tls;
     using DotNetty.Transport.Channels;
 
     public sealed class TlsHandler : ByteToMessageDecoder

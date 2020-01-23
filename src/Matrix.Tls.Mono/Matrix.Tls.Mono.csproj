@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>MatriX vNext</Description>
     <AssemblyTitle>Matrix vNext Tls implementation for Mono</AssemblyTitle>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
+    <ProjectReference Include="..\Matrix\Matrix.csproj" />
   </ItemGroup>
   
 
