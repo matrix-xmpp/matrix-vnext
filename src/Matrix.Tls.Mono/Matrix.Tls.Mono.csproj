@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>MatriX vNext</Description>
+    <AssemblyTitle>Matrix vNext Tls implementation for Mono</AssemblyTitle>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net46</TargetFrameworks>
+    <AssemblyName>Matrix.Tls.Mono</AssemblyName>
+    <PackageId>Matrix.vNext.Tls.Mono</PackageId>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
+  </ItemGroup>
+  
+
+</Project>
