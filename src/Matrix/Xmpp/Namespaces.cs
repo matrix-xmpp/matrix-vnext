@@ -326,5 +326,10 @@ namespace Matrix.Xmpp
         /// urn:xmpp:http:upload:0 (XEP-0363: HTTP File Upload)
         /// </summary>
         public const string HttpUpload = "urn:xmpp:http:upload:0";
+
+        /// <summary>
+        /// urn:xmpp:mam:2 (XEP-0313 Message Archive Management)
+        /// </summary>
+        public const string MessageArchiveManagement = "urn:xmpp:mam:2";
     }
 }
