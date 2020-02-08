@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003-2017 by AG-Software <info@ag-software.de>
+ * Copyright (c) 2003-2020 by AG-Software <info@ag-software.de>
  *
  * All Rights Reserved.
  * See the COPYING file for more information.
