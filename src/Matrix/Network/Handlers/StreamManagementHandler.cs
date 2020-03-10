@@ -83,18 +83,6 @@ namespace Matrix.Network.Handlers
         {
             this.xmppConnection = xmppCon;
 
-            this.xmppConnection
-                    .XmppSessionState
-                    .ValueChanged
-                    .Where(s => s == SessionState.Binded)
-                    .Subscribe(async s =>
-                    {
-                        if (Supported)
-                        {
-                            await EnableAsync();
-                        }
-                    });
-
             // when we see a stream footer then the stream was closed and cannot be resumed
             this.xmppConnection
                    .XmppSessionEvent
@@ -102,6 +90,7 @@ namespace Matrix.Network.Handlers
                    .Where(s => s == SessionEvent.StreamFooterSent || s == SessionEvent.StreamFooterReceived)
                    .Subscribe(s =>
                    {
+                       
                        IsEnabled = true;
                        StreamId = null;
                        CanResume = false;
@@ -146,7 +135,7 @@ namespace Matrix.Network.Handlers
         /// Enables stream management on the current XMPP stream
         /// </summary>        
         /// <returns></returns>
-        private async Task EnableAsync()
+        internal async Task EnableAsync()
         {
             var res = await SendAsync<Enabled, Failed>(new Enable() { Resume = true });
 
@@ -160,7 +149,7 @@ namespace Matrix.Network.Handlers
             }
         }
 
-        public async Task ResumeAsync(CancellationToken cancellationToken)
+        internal async Task ResumeAsync(CancellationToken cancellationToken)
         {
             this.xmppConnection.XmppSessionState.Value = SessionState.Resuming;
 

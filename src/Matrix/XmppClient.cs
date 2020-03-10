@@ -228,6 +228,13 @@ namespace Matrix
             else if (XmppSessionState.Value < SessionState.Binding)
             {
                 await DoBindAsync(features, cancellationToken);
+                // enable stream Management if supported by the server and enabled directly after resource binding
+                if (Pipeline.Contains<StreamManagementHandler>()
+                    && Pipeline.Get<StreamManagementHandler>().Supported
+                    && !Pipeline.Get<StreamManagementHandler>().IsEnabled)
+                {
+                    await Pipeline.Get<StreamManagementHandler>().EnableAsync();
+                }
             }
         }
 
