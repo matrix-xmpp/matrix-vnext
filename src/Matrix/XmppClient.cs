@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
-
+using Matrix.Configuration;
 using Matrix.Network.Codecs;
 using Matrix.Network.Handlers;
 using Matrix.Sasl;
@@ -52,7 +52,16 @@ namespace Matrix
         /// Initializes a new instance of the <see cref="XmppClient"/> class.
         /// </summary>
         public XmppClient()
-            : this(null)
+            : this(configurationAction: null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppClient"/> class.
+        /// </summary>
+        /// <param name="configurationAction">The configuration for this instance</param>
+        public XmppClient(Action<ClientConfiguration> configurationAction)
+            : this(configurationAction, null)
         {
         }
 
@@ -61,17 +70,33 @@ namespace Matrix
         /// </summary>
         /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
         public XmppClient(Action<IChannelPipeline, ISession> pipelineInitializerAction)
-            : base(pipelineInitializerAction)
+            : this(null, pipelineInitializerAction)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmppClient"/> class.
         /// </summary>
+        /// <param name="configurationAction">The configuration for this instance</param>
+        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
+        public XmppClient(
+            Action<ClientConfiguration> configurationAction,
+            Action<IChannelPipeline, ISession> pipelineInitializerAction)
+            : base(configurationAction, pipelineInitializerAction)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmppClient"/> class.
+        /// </summary>
+        /// <param name="configurationAction">The configuration for this instance</param>
         /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
         /// <param name="eventLoopGroup">The event loop group.</param>
-        public XmppClient(Action<IChannelPipeline, ISession> pipelineInitializerAction, IEventLoopGroup eventLoopGroup)
-           : base(pipelineInitializerAction, eventLoopGroup)
+        public XmppClient(
+            Action<ClientConfiguration> configurationAction,
+            Action<IChannelPipeline, ISession> pipelineInitializerAction, 
+            IEventLoopGroup eventLoopGroup)
+           : base(configurationAction, pipelineInitializerAction, eventLoopGroup)
         {
         }
 
@@ -210,6 +235,13 @@ namespace Matrix
             else if (XmppSessionState.Value < SessionState.Binding)
             {
                 await DoBindAsync(features, cancellationToken);
+                // enable stream Management if supported by the server and enabled directly after resource binding
+                if (Pipeline.Contains<StreamManagementHandler>()
+                    && Pipeline.Get<StreamManagementHandler>().Supported
+                    && !Pipeline.Get<StreamManagementHandler>().IsEnabled)
+                {
+                    await Pipeline.Get<StreamManagementHandler>().EnableAsync();
+                }
             }
         }
 

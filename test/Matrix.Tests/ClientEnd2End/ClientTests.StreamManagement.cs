@@ -58,7 +58,7 @@ namespace Matrix.Tests.ClientEnd2End
 
                 var xmppClient = new XmppClient(
                     new Action<IChannelPipeline, ISession>((pipeline, session) =>
-                    {                        
+                    {
                         pipeline.AddBefore<XmppStanzaHandler>(smHandler);
                     })
                 )
@@ -126,10 +126,10 @@ namespace Matrix.Tests.ClientEnd2End
                 StreamManagementHandler smHandler = null;
 
                 var xmppClient = new XmppClient(
-                    new Action<IChannelPipeline, ISession>((pipeline, session) =>
+                    conf =>
                     {
-                        pipeline.AddBefore<XmppStanzaHandler>(smHandler);
-                    })
+                        conf.UseStreamManagement();
+                    }
                 )
                 {
                     Username = "alex",
@@ -139,14 +139,21 @@ namespace Matrix.Tests.ClientEnd2End
                     HostnameResolver = new StaticNameResolver(IPAddress.Parse("127.0.0.1"), 5222)
                 };
 
-                smHandler = new StreamManagementHandler(xmppClient)
-                {
-                    StreamId = "b39f4f76-da2a-4785-8764-1fda0e6a5435",
-                    CanResume = true,
-                    IsEnabled = true,
-                };
-
-                smHandler.IncomingStanzaCounter.Value = 99;
+                xmppClient
+                    .XmppSessionState
+                    .Subject
+                    .DistinctUntilChanged()
+                    .Subscribe(st =>
+                    {
+                        if (st == SessionState.Connected)
+                        {
+                            smHandler = xmppClient.Pipeline.Get<StreamManagementHandler>();
+                            smHandler.StreamId = "b39f4f76-da2a-4785-8764-1fda0e6a5435";
+                            smHandler.IsEnabled = true;
+                            smHandler.CanResume = true;
+                            smHandler.IncomingStanzaCounter.Value = 99;
+                        }
+                    });
 
                 xmppClient
                     .XmppSessionState
@@ -181,6 +188,10 @@ namespace Matrix.Tests.ClientEnd2End
 
                 resumedStateFired.ShouldBeFalse();
                 bindedStateFired.ShouldBeTrue();
+
+                // because we did a manual disconnect resumption gets disabled in the handler
+                smHandler.StreamId.ShouldBeNull();
+                smHandler.CanResume.ShouldBeFalse();
             }
             finally
             {

@@ -113,7 +113,7 @@ namespace Matrix.Tests.Xmpp.PubSub.Event
         {
             var ev2 = new Matrix.Xmpp.PubSub.Event.Event
                           {
-                              Configuration = new Configuration {Node = "princely_musings"}
+                              Configuration = new Matrix.Xmpp.PubSub.Event.Configuration {Node = "princely_musings"}
                           };
             ev2.ShouldBe(Resource.Get("Xmpp.PubSub.Event.event3.xml"));
         }

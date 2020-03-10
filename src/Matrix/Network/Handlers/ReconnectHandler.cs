@@ -67,7 +67,7 @@ namespace Matrix.Network.Handlers
                {
                    if (se == SessionEvent.CallDisconnect)
                    {
-                       // intented disconnect by user, no recconect required
+                       // intended disconnect by user, no reconnect required
                        this.shouldReconnect = false;
                    }
                });
@@ -75,7 +75,7 @@ namespace Matrix.Network.Handlers
 
         public override bool IsSharable => true;
 
-        public async Task Reconnect()
+        private async Task Reconnect()
         {
             reconnecting = true;
             ExponentialBackoff backoff = new ExponentialBackoff();

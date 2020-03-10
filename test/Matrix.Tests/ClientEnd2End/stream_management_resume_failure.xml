@@ -57,9 +57,16 @@
   </stanza>
 
   <stanza type="client" id="6">
-    <![CDATA[</stream:stream>]]>
+    <![CDATA[<enable xmlns='urn:xmpp:sm:3' resume='true'/>]]>
   </stanza>
   <stanza type="server" id="6">
+    <![CDATA[<enabled xmlns='urn:xmpp:sm:3' id='g2gCbQAAAAZNYXRyaVhoA2IAAAYvYgAM4LVhD' resume='true'/>]]>
+  </stanza>
+
+  <stanza type="client" id="7">
+    <![CDATA[</stream:stream>]]>
+  </stanza>
+  <stanza type="server" id="7">
     <![CDATA[</stream:stream>]]>
   </stanza>
 </stream>
