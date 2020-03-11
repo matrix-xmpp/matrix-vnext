@@ -20,6 +20,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,21 +36,17 @@ using Matrix.Xmpp.Stream;
 
 namespace Matrix.Network.Handlers
 {
+    using System.Reactive.Subjects;
+
     [Name("StreamManagement-Handler")]
     public class StreamManagementHandler : XmppStanzaHandler
     {
+        private XmppConnection xmppConnection;
+        private ISubject<XmppXElement> xmppStanzaAckedSubject = new Subject<XmppXElement>();
+        public IObservable<XmppXElement> XmppStanzaAckedObserver => xmppStanzaAckedSubject;
+        private readonly Dictionary<long, XmppXElement> unacked = new Dictionary<long, XmppXElement>();
         public readonly StanzaCounter IncomingStanzaCounter = new StanzaCounter();
         public readonly StanzaCounter OutgoingStanzaCounter = new StanzaCounter();
-
-        /// <summary>
-        /// Observable for the incoming stanza counter
-        /// </summary>
-        public IObservable<long> IncomingStanzasCountObservable => IncomingStanzaCounter.ValueChanged;
-
-        /// <summary>
-        /// Observable for the outgoing stanza counter
-        /// </summary>
-        public IObservable<long> OutgoingStanzasCountObservable => OutgoingStanzaCounter.ValueChanged;
 
         /// <summary>
         /// Gets or sets a value indicating whether stream management was enabled.
@@ -77,20 +74,17 @@ namespace Matrix.Network.Handlers
 
         public string StreamId { get; set; } = null;
 
-        private XmppConnection xmppConnection;
-
         public StreamManagementHandler(XmppConnection xmppCon)
         {
             this.xmppConnection = xmppCon;
 
             // when we see a stream footer then the stream was closed and cannot be resumed
-            this.xmppConnection
+            xmppConnection
                    .XmppSessionEvent
                    .ValueChanged
                    .Where(s => s == SessionEvent.StreamFooterSent || s == SessionEvent.StreamFooterReceived)
                    .Subscribe(s =>
                    {
-                       
                        IsEnabled = true;
                        StreamId = null;
                        CanResume = false;
@@ -129,6 +123,19 @@ namespace Matrix.Network.Handlers
                           await SendAsync(new Answer { LastHandledStanza = IncomingStanzaCounter.Value });
                       }
                   });
+
+            // handle ack replies from server
+            Handle(
+                el => el.OfType<Answer>(),
+                (context, xmppXElement) =>
+                {
+                    var stanzaId = xmppXElement.Cast<Answer>().LastHandledStanza;
+                    if (unacked.ContainsKey(stanzaId))
+                    {
+                        xmppStanzaAckedSubject.OnNext(unacked[stanzaId]);
+                        unacked.Remove(stanzaId);
+                    }
+                });
         }
 
         /// <summary>
@@ -142,8 +149,12 @@ namespace Matrix.Network.Handlers
             if (res.OfType<Enabled>())
             {
                 var enabled = res.Cast<Enabled>();
-                this.CanResume = enabled.Resume;
-                this.StreamId = enabled.Id;
+                
+                CanResume = enabled.Resume;
+                StreamId = enabled.Id;
+                IncomingStanzaCounter.Reset();
+                OutgoingStanzaCounter.Reset();
+                unacked.Clear(); // TODO, let users know about the lost packages
 
                 IsEnabled = true;
             }
@@ -169,7 +180,16 @@ namespace Matrix.Network.Handlers
                 OutgoingStanzaCounter.Value = resumed.LastHandledStanza;
                 StreamId = resumed.PreviousId;
 
-                this.xmppConnection.XmppSessionState.Value = SessionState.Resumed;
+                xmppConnection.XmppSessionState.Value = SessionState.Resumed;
+
+                // send stanzas
+                var toResend = new XmppXElement[unacked.Count];
+                unacked.Values.CopyTo(toResend, 0);
+                unacked.Clear();
+                foreach (var el in toResend)
+                {
+                    await SendAsync(el);
+                }
             }
             else if (res.OfType<Failed>())
             {
@@ -179,84 +199,25 @@ namespace Matrix.Network.Handlers
                 CanResume = false;
                 IncomingStanzaCounter.Reset();
                 OutgoingStanzaCounter.Reset();
+                unacked.Clear(); // TODO, let users know about the lost packages
 
                 // set state, so we can continue automatically with resource binding
                 this.xmppConnection.XmppSessionState.Value = SessionState.ResumeFailed;
             }
         }
 
-        #region << RequestAckAsync >>
-        /// <summary>
-        /// Requests a StreamManagement ack answer from the server
-        /// </summary>        
-        /// <exception cref="StreamManagementAckRequestException">
-        /// Throws an StreamManagementAckRequestException when the replay does not match the expected value.
-        /// </exception>
-        /// <returns></returns>
-        public async Task<Answer> RequestAckAsync()
-        {
-            return await RequestAckAsync(DefaultTimeout, CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Requests a StreamManagement ack answer from the server
-        /// </summary>        
-        /// <param name="cancellationToken"></param>
-        /// <exception cref="StreamManagementAckRequestException">
-        /// Throws an StreamManagementAckRequestException when the replay does not match the expected value.
-        /// </exception>
-        /// <returns></returns>
-        public async Task<Answer> RequestAckAsync(CancellationToken cancellationToken)
-        {
-            return await RequestAckAsync(DefaultTimeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// Requests a StreamManagement ack answer from the server
-        /// </summary>
-        /// <param name="timeout"></param>        
-        /// <exception cref="StreamManagementAckRequestException">
-        /// Throws an StreamManagementAckRequestException when the replay does not match the expected value.
-        /// </exception>
-        /// <returns></returns>
-        public async Task<Answer> RequestAckAsync(int timeout)
-        {
-            return await RequestAckAsync(timeout, CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Requests a StreamManagement ack answer from the server
-        /// </summary>
-        /// <param name="timeout"></param>
-        /// <param name="cancellationToken"></param>
-        /// <exception cref="StreamManagementAckRequestException">
-        /// Throws an StreamManagementAckRequestException when the replay does not match the expected value.
-        /// </exception>
-        /// <returns></returns>
-        public async Task<Answer> RequestAckAsync(int timeout, CancellationToken cancellationToken)
-        {
-            Func<XmppXElement, bool> predicate = pel => pel.OfType<Answer>();
-            var answer = await SendAsync<Answer>(() => SendAsync(new Request()), predicate, timeout, cancellationToken);
-            if (answer.LastHandledStanza != OutgoingStanzaCounter.Value)
-                throw new StreamManagementAckRequestException(answer, $"Expected count {OutgoingStanzaCounter.Value}, actual count is {answer.LastHandledStanza}");
-
-            return answer;
-        }
-        #endregion
-
         public override Task WriteAsync(IChannelHandlerContext context, object message)
         {
-            if (IsEnabled && message is XmppXElement)
+            if (IsEnabled && message is XmppXElement el)
             {
-                var el = message as XmppXElement;
-                if (
-                    el.OfType<Iq>()
-                    || el.OfType<Presence>()
-                    || el.OfType<Message>()
-                    )
+                if (el.OfTypeAny<Xmpp.Base.Iq, Xmpp.Base.Presence, Xmpp.Base.Message>())
                 {
-                    // increase outgoing stanza counter
-                    OutgoingStanzaCounter.Increment();
+                    lock(OutgoingStanzaCounter)
+                    { 
+                        // increase outgoing stanza counter
+                        OutgoingStanzaCounter.Increment();
+                        unacked.Add(OutgoingStanzaCounter.Value, el);
+                    }
                 }
             }
             return base.WriteAsync(context, message);

@@ -37,6 +37,8 @@ using Matrix.Configuration;
 
 namespace Matrix
 {
+    using Xmpp.StreamManagement.Ack;
+
     public abstract class XmppConnection : IStanzaSender, ISession, IDisposable
     {
         private IEventLoopGroup eventLoopGroup;
@@ -254,6 +256,13 @@ namespace Matrix
         public virtual async Task SendAsync(XmppXElement el)
         {
             await Pipeline.WriteAndFlushAsync(el);
+
+            if (Pipeline.Contains<StreamManagementHandler>()
+                && Pipeline.Get<StreamManagementHandler>().IsEnabled
+                && (el.OfTypeAny<Xmpp.Base.Iq, Xmpp.Base.Presence, Xmpp.Base.Message>()))
+            {
+                await Pipeline.WriteAndFlushAsync(new Request());
+            }
         }
 
         /// <summary>

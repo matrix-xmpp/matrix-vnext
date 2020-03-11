@@ -35,16 +35,21 @@ using Matrix.Attributes;
 
 namespace Matrix.Network.Handlers
 {
+    using Xmpp.StreamManagement.Ack;
+
     [Name("XmppStanza-Handler")]
     public class XmppStanzaHandler : SimpleChannelInboundHandler<XmppXElement>
     {
+        private readonly Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>> handleTypes = new Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>>();
+
+        private IChannelHandlerContext channelHandlerContext;
+
         public override bool IsSharable => true;
+
+        private IChannelPipeline Pipeline => channelHandlerContext.Channel.Pipeline;
         
         public static int DefaultTimeout { get; set; } = TimeConstants.TwoMinutes;
 
-        private readonly Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>> handleTypes = new Dictionary<Func<XmppXElement, bool>, Action<IChannelHandlerContext, XmppXElement>>();
-      
-        private IChannelHandlerContext channelHandlerContext;
 
         protected XmppStanzaHandler Handle<T>(Action<IChannelHandlerContext, XmppXElement> action) where T : XmppXElement
         {
@@ -150,7 +155,7 @@ namespace Matrix.Network.Handlers
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>();
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2>();
             return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout);
         }
 
@@ -165,7 +170,7 @@ namespace Matrix.Network.Handlers
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>();
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2>();
             return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout, cancellationToken);
         }
 
@@ -182,7 +187,7 @@ namespace Matrix.Network.Handlers
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>();
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3>();
             return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout);
         }
 
@@ -199,7 +204,7 @@ namespace Matrix.Network.Handlers
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>();
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3>();
             return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout, cancellationToken);
         }
 
@@ -218,7 +223,7 @@ namespace Matrix.Network.Handlers
             where T3 : XmppXElement
             where T4 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>();
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3, T4>();
             return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout, cancellationToken);
         }
 
@@ -238,7 +243,7 @@ namespace Matrix.Network.Handlers
             where T4 : XmppXElement
             where T5 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>() || e.OfType<T5>();
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3, T4, T5>();
             return await SendAsync<XmppXElement>(() => SendAsync(s), predicate, timeout, cancellationToken);
         }
         #endregion
@@ -247,6 +252,13 @@ namespace Matrix.Network.Handlers
         protected async Task SendAsync(XmppXElement el)
         {
             await channelHandlerContext.WriteAndFlushAsync(el);
+
+            if (Pipeline.Contains<StreamManagementHandler>()
+                && Pipeline.Get<StreamManagementHandler>().IsEnabled
+                && (el.OfTypeAny<Xmpp.Base.Iq, Xmpp.Base.Presence, Xmpp.Base.Message>()))
+            {
+                await channelHandlerContext.WriteAndFlushAsync(new Request());
+            }
         }       
 
         public async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, CancellationToken cancellationToken)
@@ -262,7 +274,7 @@ namespace Matrix.Network.Handlers
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>();
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3>();
             return await SendAsync<XmppXElement>(() => SendAsync(el), predicate, timeout, cancellationToken);
         }        
 
@@ -322,7 +334,7 @@ namespace Matrix.Network.Handlers
            where T1 : XmppXElement
            where T2 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>();
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2>();
             return await SendAsync<XmppXElement>(() => SendAsync(el), predicate, timeout, cancellationToken);
         }
 
@@ -339,8 +351,8 @@ namespace Matrix.Network.Handlers
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>();
-            return await SendAsync<XmppXElement>(() => SendAsync(el.ToString(false)), predicate, timeout);
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3>();
+            return await SendAsync<XmppXElement>(() => SendAsync(el), predicate, timeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2, T3, T4>(XmppXElement el)
@@ -349,8 +361,8 @@ namespace Matrix.Network.Handlers
            where T3 : XmppXElement
            where T4 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>();
-            return await SendAsync<XmppXElement>(() => SendAsync(el.ToString(false)), predicate, DefaultTimeout);
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3, T4>();
+            return await SendAsync<XmppXElement>(() => SendAsync(el), predicate, DefaultTimeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2, T3, T4>(XmppXElement el, int timeout)
@@ -359,8 +371,8 @@ namespace Matrix.Network.Handlers
             where T3 : XmppXElement
             where T4 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>();
-            return await SendAsync<XmppXElement>(() => SendAsync(el.ToString(false)), predicate, timeout);
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3, T4>();
+            return await SendAsync<XmppXElement>(() => SendAsync(el), predicate, timeout);
         }
 
         public async Task<XmppXElement> SendAsync<T1, T2, T3, T4, T5>(XmppXElement el)
@@ -370,8 +382,8 @@ namespace Matrix.Network.Handlers
            where T4 : XmppXElement
            where T5 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>() || e.OfType<T5>();
-            return await SendAsync<XmppXElement>(() => SendAsync(el.ToString(false)), predicate, DefaultTimeout);
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3, T4, T5>();
+            return await SendAsync<XmppXElement>(() => SendAsync(el), predicate, DefaultTimeout);
         }
         public async Task<XmppXElement> SendAsync<T1, T2, T3, T4, T5>(XmppXElement el, int timeout)
             where T1 : XmppXElement
@@ -380,8 +392,8 @@ namespace Matrix.Network.Handlers
             where T4 : XmppXElement
             where T5 : XmppXElement
         {
-            Func<XmppXElement, bool> predicate = e => e.OfType<T1>() || e.OfType<T2>() || e.OfType<T3>() || e.OfType<T4>() || e.OfType<T5>();
-            return await SendAsync<XmppXElement>( ()=>SendAsync(el.ToString(false)), predicate, timeout);
+            Func<XmppXElement, bool> predicate = e => e.OfTypeAny<T1, T2, T3, T4, T5>();
+            return await SendAsync<XmppXElement>( () => SendAsync(el), predicate, timeout);
         }        
         #endregion
        
@@ -411,6 +423,7 @@ namespace Matrix.Network.Handlers
         /// <param name="sendTask"></param>
         /// <param name="predicate"></param>
         /// <param name="timeout"></param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="TimeoutException">Throws a TimeoutException when no response gets received within the given timeout.</exception>
         /// <exception cref="TaskCanceledException"></exception>
         /// <returns></returns>
@@ -441,9 +454,9 @@ namespace Matrix.Network.Handlers
             {
                 if (resultCompletionSource.Task ==
                     await Task.WhenAny(resultCompletionSource.Task, Task.Delay(timeout, cancellationToken)))
-                        return await resultCompletionSource.Task;
-
-
+                {
+                    return await resultCompletionSource.Task;
+                }
                 cancellationToken.ThrowIfCancellationRequested();               
             }
             catch (TaskCanceledException ex)
@@ -486,7 +499,7 @@ namespace Matrix.Network.Handlers
             Func<XmppXElement, bool> predicate = e =>
                 e.OfType<T>()
                 && e.Cast<T>().Id == iq.Id
-                && (e.Cast<T>().Type == IqType.Error || e.Cast<T>().Type == IqType.Result);
+                && (e.Cast<T>().Type.IsAnyOf(IqType.Error, IqType.Result));
 
             return await SendAsync<T>(() => SendAsync(iq), predicate, timeout, cancellationToken);
         }

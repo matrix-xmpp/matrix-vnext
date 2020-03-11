@@ -47,6 +47,40 @@ namespace Matrix.Xml
             return xmppXElement is T;
         }
 
+        public static bool OfTypeAny<T1, T2>(this XmppXElement xmppXElement) 
+            where T1 : XmppXElement
+            where T2 : XmppXElement
+        {
+            return xmppXElement.OfType<T1>() || xmppXElement.OfType<T2>();
+        }
+
+        public static bool OfTypeAny<T1, T2, T3>(this XmppXElement xmppXElement)
+            where T1 : XmppXElement
+            where T2 : XmppXElement
+            where T3 : XmppXElement
+        {
+            return xmppXElement.OfType<T1>() || xmppXElement.OfType<T2>() || xmppXElement.OfType<T3>();
+        }
+
+        public static bool OfTypeAny<T1, T2, T3, T4>(this XmppXElement xmppXElement)
+            where T1 : XmppXElement
+            where T2 : XmppXElement
+            where T3 : XmppXElement
+            where T4 : XmppXElement
+        {
+            return xmppXElement.OfType<T1>() || xmppXElement.OfType<T2>() || xmppXElement.OfType<T3>() || xmppXElement.OfType<T4>();
+        }
+
+        public static bool OfTypeAny<T1, T2, T3, T4, T5>(this XmppXElement xmppXElement)
+            where T1 : XmppXElement
+            where T2 : XmppXElement
+            where T3 : XmppXElement
+            where T4 : XmppXElement
+            where T5 : XmppXElement
+        {
+            return xmppXElement.OfType<T1>() || xmppXElement.OfType<T2>() || xmppXElement.OfType<T3>() || xmppXElement.OfType<T4>() || xmppXElement.OfType<T5>();
+        }
+
         /// <summary>
         /// Cast a XmppXElement to the given type.
         /// </summary>

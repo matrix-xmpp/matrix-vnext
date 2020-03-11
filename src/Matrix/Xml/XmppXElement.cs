@@ -1004,7 +1004,7 @@ namespace Matrix.Xml
                        
        
         /// <summary>
-        /// Get a attribute as string. Returns 0 if the attribute does not exist.
+        /// Get a attribute as string. Returns null if the attribute does not exist.
         /// </summary>
         /// <param name="attname">attribute name to lookup</param>
         /// <returns></returns>
