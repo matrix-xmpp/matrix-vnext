@@ -55,6 +55,14 @@ namespace Matrix.Tests.Xmpp.Capabilities
         }
 
         [Fact]
+        public void TestBuildHash6()
+        {
+            var info = XmppXElement.LoadXml(Resource.Get("Xmpp.Capabilities.discoinfo5.xml")).Cast<Info>();
+            string hash = Caps.BuildHash(info);
+            hash.ShouldBe("KV4qaXUgvEqhWE7WEJoqvO6gTYA=");
+        }
+
+        [Fact]
         public void TestCapsInStreamFeatures()
         {
             var features = XmppXElement.LoadXml(Resource.Get("Xmpp.Capabilities.streamfeatures.xml")).Cast<StreamFeatures>();

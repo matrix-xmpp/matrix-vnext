@@ -22,6 +22,7 @@
     <None Remove="Xmpp\Avatar\data.xml" />
     <None Remove="Xmpp\Avatar\info.xml" />
     <None Remove="Xmpp\Avatar\metadata.xml" />
+    <None Remove="Xmpp\Capabilities\discoinfo5.xml" />
     <None Remove="Xmpp\Client\timeiq.xml" />
     <None Remove="Xmpp\HttpUpload\get.xml" />
     <None Remove="Xmpp\HttpUpload\header-authorization.xml" />
@@ -83,6 +84,7 @@
     <EmbeddedResource Include="Xmpp\Capabilities\discoinfo1.xml" />
     <EmbeddedResource Include="Xmpp\Capabilities\discoinfo2.xml" />
     <EmbeddedResource Include="Xmpp\Capabilities\discoinfo3.xml" />
+    <EmbeddedResource Include="Xmpp\Capabilities\discoinfo5.xml" />
     <EmbeddedResource Include="Xmpp\Capabilities\discoinfo4.xml" />
     <EmbeddedResource Include="Xmpp\Capabilities\streamfeatures.xml" />
     <EmbeddedResource Include="Xmpp\Chatstates\message1.xml" />

@@ -105,9 +105,9 @@ namespace Matrix.Xmpp.Capabilities
             var forms = di.GetDataForms().Select(form => form.GetField("FORM_TYPE").GetValue()).ToList();
 
             // sort everything now
-            ids.Sort();
-            features.Sort();
-            forms.Sort();
+            ids.Sort(StringComparer.Ordinal);
+            features.Sort(StringComparer.Ordinal);
+            forms.Sort(StringComparer.Ordinal);
 
             var sb = new StringBuilder();
 
