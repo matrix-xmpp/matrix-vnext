@@ -952,10 +952,10 @@ namespace Matrix.Extensions.Client.PubSub
         /// <param name="node">The node.</param>
         /// <param name="id">The id</param>
         /// <returns></returns>
-        public static async Task<Iq> RequestItem(
+        public static async Task<Iq> RequestItemAsync(
             this IClientIqSender iqSender, Jid to, string node, string id)
         {
-            return await RequestItem(iqSender, to, node, id, DefaultTimeout, CancellationToken.None);
+            return await RequestItemAsync(iqSender, to, node, id, DefaultTimeout, CancellationToken.None);
         }
 
         /// <summary>
@@ -967,10 +967,10 @@ namespace Matrix.Extensions.Client.PubSub
         /// <param name="id">The id</param>
         /// <param name="timeout">The timeout in milliseconds.</param>
         /// <returns></returns>
-        public static async Task<Iq> RequestItem(
+        public static async Task<Iq> RequestItemAsync(
             this IClientIqSender iqSender, Jid to, string node, string id, int timeout)
         {
-            return await RequestItem(iqSender, to, node, id, timeout, CancellationToken.None);
+            return await RequestItemAsync(iqSender, to, node, id, timeout, CancellationToken.None);
         }
 
         /// <summary>
@@ -983,7 +983,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <param name="timeout">The timeout in milliseconds.</param>
         /// <param name="cancellationToken">The cancellation token used to cancel the request.</param>
         /// <returns></returns>
-        public static async Task<Iq> RequestItem(
+        public static async Task<Iq> RequestItemAsync(
             this IClientIqSender iqSender, Jid to, string node, string id, int timeout, CancellationToken cancellationToken)
         {
             return await iqSender.SendIqAsync(PubSubBuilder.RequestItem(to, node, id), timeout, cancellationToken);

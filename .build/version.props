@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <AssemblyVersion>2.4.4</AssemblyVersion>
-    <FileVersion>2.4.4</FileVersion>
-    <Version>2.4.4</Version>
+    <AssemblyVersion>2.4.5</AssemblyVersion>
+    <FileVersion>2.4.5</FileVersion>
+    <Version>2.4.5</Version>
   </PropertyGroup>
 </Project>
