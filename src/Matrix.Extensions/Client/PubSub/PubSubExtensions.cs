@@ -942,5 +942,52 @@ namespace Matrix.Extensions.Client.PubSub
             return await iqSender.SendIqAsync(PubSubBuilder.PurgeNode(to, node), timeout, cancellationToken);
         }
         #endregion
+
+        #region << request item >>
+        /// <summary>
+        /// Request an item
+        /// </summary>
+        /// <param name="iqSender">The <see cref="IClientIqSender"/></param>
+        /// <param name="to">Jid of the pubsub service for this request</param>
+        /// <param name="node">The node.</param>
+        /// <param name="id">The id</param>
+        /// <returns></returns>
+        public static async Task<Iq> RequestItem(
+            this IClientIqSender iqSender, Jid to, string node, string id)
+        {
+            return await RequestItem(iqSender, to, node, id, DefaultTimeout, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Request an item
+        /// </summary>
+        /// <param name="iqSender">The <see cref="IClientIqSender"/></param>
+        /// <param name="to">Jid of the pubsub service for this request</param>
+        /// <param name="node">The node.</param>
+        /// <param name="id">The id</param>
+        /// <param name="timeout">The timeout in milliseconds.</param>
+        /// <returns></returns>
+        public static async Task<Iq> RequestItem(
+            this IClientIqSender iqSender, Jid to, string node, string id, int timeout)
+        {
+            return await RequestItem(iqSender, to, node, id, timeout, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Request an item
+        /// </summary>
+        /// <param name="iqSender">The <see cref="IClientIqSender"/></param>
+        /// <param name="to">Jid of the pubsub service for this request</param>
+        /// <param name="node">The node.</param>
+        /// <param name="id">The id</param>
+        /// <param name="timeout">The timeout in milliseconds.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel the request.</param>
+        /// <returns></returns>
+        public static async Task<Iq> RequestItem(
+            this IClientIqSender iqSender, Jid to, string node, string id, int timeout, CancellationToken cancellationToken)
+        {
+            return await iqSender.SendIqAsync(PubSubBuilder.RequestItem(to, node, id), timeout, cancellationToken);
+        }
+        #endregion
     }
 }

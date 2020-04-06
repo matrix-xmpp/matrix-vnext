@@ -1,4 +1,5 @@
 #addin "Cake.FileHelpers"
+#tool "nuget:?package=nuget.commandline&version=5.3.0"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS

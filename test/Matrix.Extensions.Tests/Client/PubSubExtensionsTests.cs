@@ -26,6 +26,7 @@ namespace Matrix.Extensions.Tests.Client
     using Matrix.Xmpp.Client;
     using Matrix.Xmpp.PubSub;
     using Matrix.Xmpp.XData;
+    using Xmpp;
     using Item = Matrix.Xmpp.PubSub.Item;
 
     using Xunit;
@@ -625,6 +626,27 @@ namespace Matrix.Extensions.Tests.Client
 
             var iq = PubSubBuilder.RequestAllSubscriptions("pubsub.shakespeare.lit");
             iq.Id = "ent3";
+
+            iq.ShouldBe(XML);
+        }
+
+        [Fact]
+        public void RequestPubsubItemTest()
+        {
+            const string XML =
+                @"<iq type='get'
+                    to='pubsub.shakespeare.lit'
+                    id='retrieve1'
+                    xmlns='jabber:client'>
+                  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+                    <items node='urn:xmpp:avatar:data'>
+                      <item id='111f4b3c50d7b0df729d299bc6f8e9ef9066971f'/>
+                    </items>
+                  </pubsub>
+                </iq>";
+
+            var iq = PubSubBuilder.RequestItem("pubsub.shakespeare.lit", Namespaces.AvatarData, "111f4b3c50d7b0df729d299bc6f8e9ef9066971f");
+            iq.Id = "retrieve1";
 
             iq.ShouldBe(XML);
         }

@@ -415,5 +415,35 @@ namespace Matrix.Extensions.Client.PubSub
                 },
             };
         }
+
+        public static Iq RequestItem(Jid to, string node, string id)
+        {
+            /*
+            Example 6. Subscriber requests last item by ItemID¶
+                <iq type='get'
+                    from='romeo@montague.lit/home'
+                    to='juliet@capulet.lit'
+                    id='retrieve1'>
+                  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+                    <items node='urn:xmpp:avatar:data'>
+                      <item id='111f4b3c50d7b0df729d299bc6f8e9ef9066971f'/>
+                    </items>
+                  </pubsub>
+                </iq>
+            */
+
+            var items = new Xmpp.PubSub.Items { Node = node };
+            items.AddItem(new Item {Id = id});
+
+            return new PubSubIq
+            {
+                Type = IqType.Get,
+                To = to,
+                PubSub =
+                {
+                   Items = items
+                }
+            };
+        }
     }
 }
