@@ -19,10 +19,11 @@
  * Contact information for AG-Software is available at http://www.ag-software.de
  */
 
+using Matrix.Xml;
 using Matrix.Xml.Parser;
+using Shouldly;
 using System.Text;
 using Xunit;
-using Shouldly;
 
 namespace Matrix.Tests.Xml
 {
@@ -80,6 +81,22 @@ namespace Matrix.Tests.Xml
             parser.Write(Encoding.UTF8.GetBytes(xml2));
 
             output.ToString().ShouldBe("1221223");
+        }
+        
+        [Fact]
+        public void XmlWithUnicodeTagsTest()
+        {
+            StreamParser parser = new StreamParser();
+            XmppXElement el = null;
+
+            parser.OnStreamElement += (XmppXElement e) => el = e;
+
+            string xml = @"<foo><फ़क /></foo>";
+
+            var b1 = Encoding.UTF8.GetBytes(xml);
+            parser.Write(b1, 0, b1.Length);
+
+            el.Name.LocalName.ShouldBe("फ़क");
         }
     }
 }
