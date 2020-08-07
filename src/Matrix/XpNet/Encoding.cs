@@ -826,22 +826,22 @@ namespace Matrix.XpNet
                 case BtLead2:
                     if (end - off < 2)
                         return Tokens.PartialChar; //throw new PartialCharException(off);
-                    if (ByteType2(buf, off) != BtNmstrt)
-                        throw new InvalidTokenException(off);
+                    //if (ByteType2(buf, off) != BtNmstrt)
+                    //    throw new InvalidTokenException(off);
                     off += 2;
                     break;
                 case BtLead3:
                     if (end - off < 3)
                         return Tokens.PartialChar; //throw new PartialCharException(off);
-                    if (ByteType3(buf, off) != BtNmstrt)
-                        throw new InvalidTokenException(off);
+                    //if (ByteType3(buf, off) != BtNmstrt)
+                    //    throw new InvalidTokenException(off);
                     off += 3;
                     break;
                 case BtLead4:
                     if (end - off < 4)
                         return Tokens.PartialChar; //throw new PartialCharException(off);
-                    if (ByteType4(buf, off) != BtNmstrt)
-                        throw new InvalidTokenException(off);
+                    //if (ByteType4(buf, off) != BtNmstrt)
+                    //    throw new InvalidTokenException(off);
                     off += 4;
                     break;
                 default:
@@ -859,22 +859,22 @@ namespace Matrix.XpNet
                     case BtLead2:
                         if (end - off < 2)
                             return Tokens.PartialChar; //throw new PartialCharException(off);
-                        if (!IsNameChar2(buf, off))
-                            throw new InvalidTokenException(off);
+                        //if (!IsNameChar2(buf, off))
+                        //    throw new InvalidTokenException(off);
                         off += 2;
                         break;
                     case BtLead3:
                         if (end - off < 3)
                             return Tokens.PartialChar; //throw new PartialCharException(off);
-                        if (!IsNameChar3(buf, off))
-                            throw new InvalidTokenException(off);
+                        //if (!IsNameChar3(buf, off))
+                        //    throw new InvalidTokenException(off);
                         off += 3;
                         break;
                     case BtLead4:
                         if (end - off < 4)
                             return Tokens.PartialChar; //throw new PartialCharException(off);
-                        if (!IsNameChar4(buf, off))
-                            throw new InvalidTokenException(off);
+                        //if (!IsNameChar4(buf, off))
+                        //    throw new InvalidTokenException(off);
                         off += 4;
                         break;
                     case BtS:

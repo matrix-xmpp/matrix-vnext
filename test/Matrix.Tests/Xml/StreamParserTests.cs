@@ -98,5 +98,22 @@ namespace Matrix.Tests.Xml
 
             el.Name.LocalName.ShouldBe("फ़क");
         }
+        
+        [Fact]
+        public void XmlWithUnicodeTagsThatContainPayloadTest()
+        {
+            StreamParser parser = new StreamParser();
+            XmppXElement el = null;
+
+            parser.OnStreamElement += (XmppXElement e) => el = e;
+
+            string xml = @"<foo><फ़क>bar</फ़क></foo>";
+
+            var b1 = Encoding.UTF8.GetBytes(xml);
+            parser.Write(b1, 0, b1.Length);
+
+            el.Name.LocalName.ShouldBe("फ़क");
+            el.Value.ShouldBe("bar");
+        }
     }
 }
