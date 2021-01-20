@@ -1,74 +1,42 @@
-/*
- * Copyright (c) 2003-2020 by AG-Software <info@ag-software.de>
- *
- * All Rights Reserved.
- * See the COPYING file for more information.
- *
- * This file is part of the MatriX project.
- *
- * NOTICE: All information contained herein is, and remains the property
- * of AG-Software and its suppliers, if any.
- * The intellectual and technical concepts contained herein are proprietary
- * to AG-Software and its suppliers and may be covered by German and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- *
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from AG-Software.
- *
- * Contact information for AG-Software is available at http://www.ag-software.de
- */
-
-using System;
-using System.Reactive.Linq;
-using Matrix;
-using Matrix.Extensions.Client.Roster;
-using Matrix.Extensions.Client.Presence;
-using Matrix.Xmpp;
-using Matrix.Xmpp.Base;
-using Matrix.Srv;
-
-using DotNetty.Transport.Channels;
-using System.Diagnostics;
-using Microsoft.Extensions.Logging;
-
 namespace ConsoleClient
 {
+    using Matrix;
+    using Matrix.Extensions.Client.Presence;
+    using Matrix.Extensions.Client.Roster;
+    using Matrix.Transport.Socket;
+    using Matrix.Transport.WebSocket;
+    using Matrix.Xmpp;
+    using Matrix.Xmpp.Base;
+    using System;
+    using System.Diagnostics;
+    using System.Reactive.Linq;
+    using System.Threading.Tasks;
+
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            // log with DotNetty's internal logger
-            //DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
-            //var pipelineInitializerAction = new Action<IChannelPipeline>(pipeline =>
-            //{
-            //    pipeline.AddFirst(new DotNetty.Handlers.Logging.LoggingHandler());
-            //});
+            var xmppClient = new XmppClient(
+                conf =>
+                {
+                    conf.UseSocketTransport();
+                    //conf.UseWebSocketTransport();
+                    conf.AutoReconnect = true;
 
-            // log with custom DotNetty handler to standard netCore logger
-            LoggerFactory loggerFactory = new LoggerFactory();
-            loggerFactory.AddConsole();
-            var logger = loggerFactory.CreateLogger<Program>();
-
-            var pipelineInitializerAction = new Action<IChannelPipeline, ISession>((pipeline, session) =>
+                },
+                (handlers, client) => handlers.Add(new XmppLoggingHandler(client)))
             {
-                pipeline.AddFirst(new MyLoggingHandler(logger));
-            });
-
-            var xmppClient = new XmppClient(pipelineInitializerAction)
-            {
-                Username = "alex",
-                Password = "***REMOVED***",
-                XmppDomain = "ag-software.net",
-                HostnameResolver = new SrvNameResolver()
+                Username = "user",
+                Password = "***secret***",
+                XmppDomain = "server.com",
             };
 
-            xmppClient.XmppSessionStateObserver.Subscribe(v => {
+            xmppClient.StateChanged.Subscribe(v => {
                 Debug.WriteLine($"State changed: {v}");
             });
 
             xmppClient
-                .XmppXElementStreamObserver
+                .XmppXElementReceived
                 .Where(el => el is Presence)
                 .Subscribe(el =>
                 {
@@ -76,7 +44,7 @@ namespace ConsoleClient
                 });
 
             xmppClient
-                .XmppXElementStreamObserver
+                .XmppXElementReceived
                 .Where(el => el is Message)
                 .Subscribe(el =>
                 {
@@ -84,27 +52,37 @@ namespace ConsoleClient
                 });
 
             xmppClient
-                .XmppXElementStreamObserver
+                .XmppXElementReceived
                 .Where(el => el is Iq)
                 .Subscribe(el =>
                 {
                     Debug.WriteLine(el.ToString());
                 });
 
-            // Connect the XMPP connection
-            xmppClient.ConnectAsync().GetAwaiter().GetResult();
+            
+            xmppClient
+                .StateChanged
+                .Where(s => s == SessionState.Binded)
+                .Subscribe(async v =>
+                {
+                    var roster = await xmppClient.RequestRosterAsync();
+                    Debug.WriteLine(roster.ToString());
+                    await xmppClient.SendPresenceAsync(Show.Chat, "free for chat");
+                });
 
-            // request the roster (aka contact list)
-            var roster = xmppClient.RequestRosterAsync().GetAwaiter().GetResult();
-            Console.WriteLine(roster.ToString());
+            
+            await xmppClient.ConnectAsync();
 
-            // Send our presence to the server
-            xmppClient.SendPresenceAsync(Show.Chat, "free for chat").GetAwaiter().GetResult();
+            //await xmppClient.SendAsync(new Matrix.Xmpp.Client.Message
+            //{
+            //    Type = MessageType.Chat,
+            //    To = "user@server.com",
+            //    Body = "Hello World"
+            //});
 
             Console.ReadLine();
 
-            // Disconnect the XMPP connection
-            xmppClient.DisconnectAsync().GetAwaiter().GetResult();
+            await xmppClient.DisconnectAsync();
 
             Console.ReadLine();
         }

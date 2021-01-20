@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Description>MatriX vNext</Description>
-    <AssemblyTitle>Matrix vNext</AssemblyTitle>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net46</TargetFrameworks>
+    <Description>MatriX</Description>
+    <AssemblyTitle>Matrix</AssemblyTitle>
     <AssemblyName>Matrix</AssemblyName>
-    <PackageId>Matrix.vNext</PackageId>
+    <PackageId>Matrix</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
-    <PackageReference Include="System.Reactive" Version="4.1.2" />
+    <PackageReference Include="System.Reactive" Version="$(SystemReactiveVersion)" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Matrix.Core\Matrix.Core.csproj" />
   </ItemGroup>
   
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -24,12 +24,4 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DefineConstants>$(DefineConstants);STRINGPREP</DefineConstants>
   </PropertyGroup>
-  
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System.Linq" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
 </Project>

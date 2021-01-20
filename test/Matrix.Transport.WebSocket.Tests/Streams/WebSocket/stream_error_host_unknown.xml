@@ -1,0 +1,19 @@
+﻿<stream>
+  <stanza type="client" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" to="localhost" version="1.0" />]]>
+  </stanza>
+  <stanza type="server" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" from="localhost" version="1.0" id='71a4bc43-3e09-44f3-9430-81ee7bf6b392' />]]>
+    <![CDATA[<stream:error xmlns:stream='http://etherx.jabber.org/streams'>
+               <host-unknown
+                   xmlns='urn:ietf:params:xml:ns:xmpp-streams'/>
+             </stream:error>]]>
+  </stanza>
+
+  <stanza type="client" id="2">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+  <stanza type="server" id="2">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+</stream>

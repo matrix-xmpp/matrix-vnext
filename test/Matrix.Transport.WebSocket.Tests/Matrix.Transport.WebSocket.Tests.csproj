@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>Matrix.Transport.WebSocket.Tests</AssemblyName>    
+    <RootNamespace>Matrix.Transport.WebSocket.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Streams\WebSocket\*.xml" />
+    <EmbeddedResource Include="Streams\WebSocket\*.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdk)" />
+    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioVersion)" />
+    <PackageReference Include="xunit" Version="$(XunitVersion)" />
+    <PackageReference Include="Shouldly" Version="$(ShouldlyVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Matrix.Transport.WebSocket\Matrix.Transport.WebSocket.csproj" />
+    <ProjectReference Include="..\..\src\Matrix\Matrix.csproj" />
+  </ItemGroup>
+
+</Project>

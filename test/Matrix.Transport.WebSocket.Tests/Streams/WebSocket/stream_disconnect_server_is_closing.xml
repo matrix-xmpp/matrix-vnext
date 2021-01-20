@@ -1,0 +1,62 @@
+﻿<stream>
+  <stanza type="client" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" to="localhost" version="1.0" />]]>
+  </stanza>
+  <stanza type="server" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" from="localhost" version="1.0" />]]>
+    <![CDATA[<stream:features xmlns:stream="http://etherx.jabber.org/streams">
+                <mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
+                    <mechanism>PLAIN</mechanism>
+                </mechanisms>
+            </stream:features>
+            ]]>
+  </stanza>
+
+  <stanza type="client" id="2">
+    <![CDATA[<auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="PLAIN">biwsbj1hbGV4LHI9enpCVUkyekJ2S2RxMndoMWZZNE5kU0JEZmovK0llRFkwaUJ4bk05UGJnaz0=</auth>]]>
+  </stanza>
+  <stanza type="server" id="2">
+    <![CDATA[<success xmlns="urn:ietf:params:xml:ns:xmpp-sasl"/>]]>
+  </stanza>
+
+  <stanza type="client" id="3">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" to="localhost" version="1.0" />]]>
+  </stanza>
+  <stanza type="server" id="3">
+    <![CDATA[<stream:features xmlns:stream="http://etherx.jabber.org/streams">
+                <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
+                    <required/>
+                </bind>
+                <session xmlns="urn:ietf:params:xml:ns:xmpp-session">
+                    <optional/>
+                </session>
+                <c xmlns="http://jabber.org/protocol/caps" node="http://prosody.im" ver="oxBiiFkjfIU4zAle9Gk8+Qn8Fhk=" hash="sha-1"/>
+            </stream:features>]]>
+  </stanza>
+
+  <stanza type="client" id="4">
+    <![CDATA[<iq type="set" id="bind_1" xmlns="jabber:client">
+                <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
+                    <resource>Psi+</resource>
+                </bind>
+            </iq>]]>
+  </stanza>
+  <stanza type="server" id="4">
+    <![CDATA[<iq type="result" id="{id}" xmlns="jabber:client">
+                <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
+                    <jid>alex@localhost/MatriX</jid>
+                </bind>
+            </iq>]]>
+  </stanza>
+
+  <stanza type="client" id="5">
+    <![CDATA[<message type="chat"/>]]>
+  </stanza>
+  <stanza type="server" id="5">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+
+  <stanza type="client" id="6">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+</stream>

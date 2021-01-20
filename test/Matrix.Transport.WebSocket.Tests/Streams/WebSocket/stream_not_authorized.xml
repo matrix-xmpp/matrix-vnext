@@ -1,0 +1,28 @@
+﻿<stream>
+  <stanza type="client" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" to="localhost" version="1.0" />]]>
+  </stanza>
+  <stanza type="server" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" from="localhost" version="1.0" />]]>
+    <![CDATA[<stream:features xmlns:stream="http://etherx.jabber.org/streams">
+                <mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
+                    <mechanism>PLAIN</mechanism>
+                </mechanisms>
+            </stream:features>
+            ]]>
+  </stanza>
+
+  <stanza type="client" id="2">
+    <![CDATA[<auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="PLAIN">biwsbj1hbGV4LHI9enpCVUkyekJ2S2RxMndoMWZZNE5kU0JEZmovK0llRFkwaUJ4bk05UGJnaz0=</auth>]]>
+  </stanza>
+  <stanza type="server" id="2">
+    <![CDATA[<failure xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><not-authorized/></failure>]]>
+  </stanza>
+
+  <stanza type="client" id="3">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+  <stanza type="server" id="3">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+</stream>

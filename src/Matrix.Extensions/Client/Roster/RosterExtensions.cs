@@ -1,25 +1,4 @@
-﻿/*
- * Copyright (c) 2003-2020 by AG-Software <info@ag-software.de>
- *
- * All Rights Reserved.
- * See the COPYING file for more information.
- *
- * This file is part of the MatriX project.
- *
- * NOTICE: All information contained herein is, and remains the property
- * of AG-Software and its suppliers, if any.
- * The intellectual and technical concepts contained herein are proprietary
- * to AG-Software and its suppliers and may be covered by German and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- *
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from AG-Software.
- *
- * Contact information for AG-Software is available at http://www.ag-software.de
- */
-
-namespace Matrix.Extensions.Client.Roster
+﻿namespace Matrix.Extensions.Client.Roster
 {
     using Matrix.Xmpp.Client;
     using System;
@@ -38,7 +17,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RequestRosterAsync(this IClientIqSender iqSender, string version = null)
         {
-            return await RequestRosterAsync(iqSender, version, DefaultTimeout, CancellationToken.None);
+            return await RequestRosterAsync(iqSender, version, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -50,7 +29,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RequestRosterAsync(this IClientIqSender iqSender, int timeout, CancellationToken cancellationToken)
         {
-            return await RequestRosterAsync(iqSender, null, DefaultTimeout, CancellationToken.None);
+            return await RequestRosterAsync(iqSender, null, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -61,7 +40,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RequestRosterAsync(this IClientIqSender iqSender, int timeout)
         {
-            return await RequestRosterAsync(iqSender, null, timeout, CancellationToken.None);
+            return await RequestRosterAsync(iqSender, null, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -73,7 +52,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RequestRosterAsync(this IClientIqSender iqSender, string version, int timeout)
         {
-            return await RequestRosterAsync(iqSender, version, timeout, CancellationToken.None);
+            return await RequestRosterAsync(iqSender, version, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -84,7 +63,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RequestRosterAsync(this IClientIqSender iqSender, CancellationToken cancellationToken)
         {
-            return await RequestRosterAsync(iqSender, null, DefaultTimeout, cancellationToken);
+            return await RequestRosterAsync(iqSender, null, DefaultTimeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -96,7 +75,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RequestRosterAsync(this IClientIqSender iqSender, string version, CancellationToken cancellationToken)
         {
-            return await RequestRosterAsync(iqSender, version, DefaultTimeout, cancellationToken);
+            return await RequestRosterAsync(iqSender, version, DefaultTimeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -109,7 +88,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RequestRosterAsync(this IClientIqSender iqSender, string version, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(RosterBuilder.RequestRoster(version) , timeout, cancellationToken);            
+            return await iqSender.SendIqAsync(RosterBuilder.RequestRoster(version) , timeout, cancellationToken).ConfigureAwait(false);            
         }
 
         /// <summary>
@@ -120,7 +99,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid)
         {
-            return await AddRosterItemAsync(iqSender, jid, null, new string[] { });
+            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -132,7 +111,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, int timeout)
         {
-            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }, timeout, CancellationToken.None);
+            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -145,7 +124,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, int timeout, CancellationToken cancellationToken)
         {
-            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }, timeout, cancellationToken);
+            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -157,7 +136,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { });
+            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -170,7 +149,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, int timeout)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }, timeout, CancellationToken.None);
+            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -184,7 +163,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, int timeout, CancellationToken cancellationToken)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }, timeout, cancellationToken);
+            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -197,7 +176,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string group)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, !String.IsNullOrEmpty(group) ? new[] { group } : new string[] { });
+            return await AddRosterItemAsync(iqSender, jid, nickname, !String.IsNullOrEmpty(group) ? new[] { group } : new string[] { }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -211,7 +190,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string group, int timeout)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, !String.IsNullOrEmpty(group) ? new[] { group } : new string[] { }, timeout, CancellationToken.None);
+            return await AddRosterItemAsync(iqSender, jid, nickname, !String.IsNullOrEmpty(group) ? new[] { group } : new string[] { }, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -226,7 +205,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string group, int timeout, CancellationToken cancellationToken)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, !String.IsNullOrEmpty(group) ? new[] { group } : new string[] { }, timeout, cancellationToken);
+            return await AddRosterItemAsync(iqSender, jid, nickname, !String.IsNullOrEmpty(group) ? new[] { group } : new string[] { }, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -239,7 +218,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string[] groups)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, groups, DefaultTimeout);
+            return await AddRosterItemAsync(iqSender, jid, nickname, groups, DefaultTimeout).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -253,7 +232,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string[] groups, int timeout)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, groups, timeout, CancellationToken.None);
+            return await AddRosterItemAsync(iqSender, jid, nickname, groups, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -269,7 +248,7 @@ namespace Matrix.Extensions.Client.Roster
         public static async Task<Iq> AddRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string[] groups, int timeout, CancellationToken cancellationToken)
         {
             var riq = RosterBuilder.AddRosterItem(jid, nickname, groups);
-            return await iqSender.SendIqAsync(riq, timeout, cancellationToken);
+            return await iqSender.SendIqAsync(riq, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -280,7 +259,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid)
         {
-            return await AddRosterItemAsync(iqSender, jid, null, new string[] { });
+            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -292,7 +271,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, int timeout)
         {
-            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }, timeout, CancellationToken.None);
+            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -305,7 +284,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, int timeout, CancellationToken cancellationToken)
         {
-            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }, timeout, cancellationToken);
+            return await AddRosterItemAsync(iqSender, jid, null, new string[] { }, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -317,7 +296,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { });
+            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -330,7 +309,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, int timeout)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }, timeout, CancellationToken.None);
+            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -344,7 +323,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, int timeout, CancellationToken cancellationToken)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }, timeout, cancellationToken);
+            return await AddRosterItemAsync(iqSender, jid, nickname, new string[] { }, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -357,7 +336,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string group)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, new[] { group });
+            return await AddRosterItemAsync(iqSender, jid, nickname, new[] { group }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -371,7 +350,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string group, int timeout)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, new[] { group }, timeout, CancellationToken.None);
+            return await AddRosterItemAsync(iqSender, jid, nickname, new[] { group }, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -386,7 +365,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string group, int timeout, CancellationToken cancellationToken)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, new[] { group }, timeout, cancellationToken);
+            return await AddRosterItemAsync(iqSender, jid, nickname, new[] { group }, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -399,7 +378,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string[] group)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, group);
+            return await AddRosterItemAsync(iqSender, jid, nickname, group).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -413,7 +392,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string[] group, int timeout)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, group, timeout, CancellationToken.None);
+            return await AddRosterItemAsync(iqSender, jid, nickname, group, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -428,7 +407,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> UpdateRosterItemAsync(this IClientIqSender iqSender, Jid jid, string nickname, string[] group, int timeout, CancellationToken cancellationToken)
         {
-            return await AddRosterItemAsync(iqSender, jid, nickname, group, timeout, cancellationToken);
+            return await AddRosterItemAsync(iqSender, jid, nickname, group, timeout, cancellationToken).ConfigureAwait(false);
         }
         
         /// <summary>
@@ -439,7 +418,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RemoveRosterItemAsync(this IClientIqSender iqSender, Jid jid)
         {
-            return await RemoveRosterItemAsync(iqSender, jid, DefaultTimeout);
+            return await RemoveRosterItemAsync(iqSender, jid, DefaultTimeout).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -451,7 +430,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RemoveRosterItemAsync(this IClientIqSender iqSender, Jid jid, int timeout)
         {
-            return await iqSender.SendIqAsync(RosterBuilder.RemoveRosterItem(jid), timeout, CancellationToken.None);
+            return await iqSender.SendIqAsync(RosterBuilder.RemoveRosterItem(jid), timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -464,7 +443,7 @@ namespace Matrix.Extensions.Client.Roster
         /// <returns></returns>
         public static async Task<Iq> RemoveRosterItemAsync(this IClientIqSender iqSender, Jid jid, int timeout, CancellationToken cancellationToken)
         {            
-            return await iqSender.SendIqAsync(RosterBuilder.RemoveRosterItem(jid), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(RosterBuilder.RemoveRosterItem(jid), timeout, cancellationToken).ConfigureAwait(false);
         }
     }
 }

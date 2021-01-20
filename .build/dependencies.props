@@ -1,6 +1,11 @@
 <Project>
-	<PropertyGroup>
-		<DotNettyVersion>0.6.0</DotNettyVersion>    
-		<SystemReactiveVersion>4.1.2</SystemReactiveVersion>    
+	<PropertyGroup>   
+		<SystemReactiveVersion>5.0.0</SystemReactiveVersion>
+		<ShouldlyVersion>4.0.3</ShouldlyVersion>
+		<XunitVersion>2.4.1</XunitVersion>
+		<XunitRunnerVisualStudioVersion>2.4.3</XunitRunnerVisualStudioVersion>
+		<MicrosoftNetTestSdk>16.8.3</MicrosoftNetTestSdk>
+		<MoqVersion>4.15.2</MoqVersion>
+		<PollyVersion>7.2.1</PollyVersion>
 	</PropertyGroup>
 </Project>

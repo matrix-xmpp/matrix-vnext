@@ -1,5 +1,5 @@
 #addin "Cake.FileHelpers"
-#tool "nuget:?package=nuget.commandline&version=5.3.0"
+#tool "nuget:?package=nuget.commandline&version=5.8.0"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -42,7 +42,8 @@ Task("Clean")
     });
 
 Task("Update-Assembly-Version")
-    .WithCriteria(HasArgument("civersion") && (TFBuild.IsRunningOnVSTS || TFBuild.IsRunningOnTFS))
+    .WithCriteria(HasArgument("civersion") && BuildSystem.AzurePipelines.IsRunningOnAzurePipelines)
+    //.WithCriteria(HasArgument("civersion"))
     .IsDependentOn("Clean")
     .Does(() =>
     {
@@ -51,7 +52,7 @@ Task("Update-Assembly-Version")
         var dayOfYear = DateTime.Now.DayOfYear;
         var julianDate = julianYear + String.Format("{0:D3}", dayOfYear);
 
-        var vstsBuildNumber = TFBuild.Environment.Build.Number;
+        var vstsBuildNumber = AzurePipelines.Environment.Build.Number;
         var splitted = vstsBuildNumber.Split('.');
         var buildIncrementalNumber = splitted[splitted.Length - 1];
 
@@ -70,25 +71,16 @@ Task("Restore-NuGet-Packages")
     .IsDependentOn("Update-Assembly-Version")
     .Does(() =>
     {
-        NuGetRestore("./MatriX-vNext.sln");
+        NuGetRestore("./MatriX.sln");
     });
 
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
     {
-        if(IsRunningOnWindows())
-        {
         // Use MSBuild
-        MSBuild("./MatriX-vNext.sln", settings =>
+        MSBuild("./MatriX.sln", settings =>
             settings.SetConfiguration(configuration));
-        }
-        else
-        {
-        // Use XBuild
-        XBuild("./MatriX-vNext.sln", settings =>
-            settings.SetConfiguration(configuration));
-        }
     });
 
 Task("Run-Unit-Tests")

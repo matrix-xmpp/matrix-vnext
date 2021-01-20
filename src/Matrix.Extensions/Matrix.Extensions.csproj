@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Description>MatriX vNext</Description>
-    <AssemblyTitle>Matrix vNext Extensions</AssemblyTitle>
-    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+    <Description>MatriX Extensions</Description>
+    <AssemblyTitle>Matrix Extensions</AssemblyTitle>
     <AssemblyName>Matrix.Extensions</AssemblyName>
-    <PackageId>Matrix.vNext.Extensions</PackageId>
+    <PackageId>Matrix.Extensions</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -15,10 +16,6 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DefineConstants>$(DefineConstants)</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\Matrix\Matrix.csproj" />

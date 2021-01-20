@@ -1,19 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>    
+    <TargetFramework>net5.0</TargetFramework>    
     <OutputType>Exe</OutputType>    
   </PropertyGroup>
 
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Matrix.Extensions\Matrix.Extensions.csproj" />
-    <ProjectReference Include="..\..\src\Matrix.Srv\Matrix.Srv.csproj" />
+    <ProjectReference Include="..\..\src\Matrix.Transport.Socket\Matrix.Transport.Socket.csproj" />
+    <ProjectReference Include="..\..\src\Matrix.Transport.WebSocket\Matrix.Transport.WebSocket.csproj" />
     <ProjectReference Include="..\..\src\Matrix\Matrix.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Logging">
+      <HintPath>..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\5.0.0\ref\net5.0\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -1,25 +1,4 @@
-﻿/*
- * Copyright (c) 2003-2020 by AG-Software <info@ag-software.de>
- *
- * All Rights Reserved.
- * See the COPYING file for more information.
- *
- * This file is part of the MatriX project.
- *
- * NOTICE: All information contained herein is, and remains the property
- * of AG-Software and its suppliers, if any.
- * The intellectual and technical concepts contained herein are proprietary
- * to AG-Software and its suppliers and may be covered by German and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- *
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from AG-Software.
- *
- * Contact information for AG-Software is available at http://www.ag-software.de
- */
-
-namespace Matrix.Extensions.Client.PubSub
+﻿namespace Matrix.Extensions.Client.PubSub
 {
     using Matrix.Xmpp.Client;
     using Matrix.Xmpp.PubSub;
@@ -45,7 +24,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// </remarks>
         public static async Task<Iq> CreateInstantNodeAsync(this IClientIqSender iqSender, Jid to)
         {
-            return await CreateInstantNodeAsync(iqSender, to, DefaultTimeout, CancellationToken.None);
+            return await CreateInstantNodeAsync(iqSender, to, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -60,7 +39,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// </remarks>
         public static async Task<Iq> CreateInstantNodeAsync(this IClientIqSender iqSender, Jid to, int timeout)
         {
-            return await CreateInstantNodeAsync(iqSender, to, timeout, CancellationToken.None);
+            return await CreateInstantNodeAsync(iqSender, to, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -77,7 +56,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> CreateInstantNodeAsync(
             this IClientIqSender iqSender, Jid to, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.CreateInstantNode(to), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.CreateInstantNode(to), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -91,7 +70,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> CreateNodeAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await CreateNodeAsync(iqSender, to, node, null);
+            return await CreateNodeAsync(iqSender, to, node, null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -104,7 +83,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> CreateNodeAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await CreateNodeAsync(iqSender, to, node, null, timeout, CancellationToken.None);
+            return await CreateNodeAsync(iqSender, to, node, null, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -119,7 +98,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> CreateNodeAsync(
             this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await CreateNodeAsync(iqSender, to, node, null, timeout, cancellationToken);
+            return await CreateNodeAsync(iqSender, to, node, null, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -132,7 +111,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> CreateNodeAsync(this IClientIqSender iqSender, Jid to, string node, Configure config)
         {
-            return await CreateNodeAsync(iqSender, to, node, config, DefaultTimeout, CancellationToken.None);
+            return await CreateNodeAsync(iqSender, to, node, config, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -146,7 +125,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> CreateNodeAsync(this IClientIqSender iqSender, Jid to, string node, Configure config, int timeout)
         {
-            return await CreateNodeAsync(iqSender, to, node, config, timeout, CancellationToken.None);
+            return await CreateNodeAsync(iqSender, to, node, config, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -162,7 +141,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> CreateNodeAsync(
             this IClientIqSender iqSender, Jid to, string node, Configure config, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.CreateNode(to, node, config), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.CreateNode(to, node, config), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -176,7 +155,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> DeleteNodeAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await DeleteNodeAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None);
+            return await DeleteNodeAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -189,7 +168,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> DeleteNodeAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await DeleteNodeAsync(iqSender, to, node, timeout, CancellationToken.None);
+            return await DeleteNodeAsync(iqSender, to, node, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -204,7 +183,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> DeleteNodeAsync(
             this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.DeleteNode(to, node), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.DeleteNode(to, node), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -218,7 +197,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestAffiliationsListAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await RequestAffiliationsListAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None);
+            return await RequestAffiliationsListAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -231,7 +210,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestAffiliationsListAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await RequestAffiliationsListAsync(iqSender, to, node, timeout, CancellationToken.None);
+            return await RequestAffiliationsListAsync(iqSender, to, node, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -246,7 +225,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RequestAffiliationsListAsync(
             this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.RequestAffiliationsList(to, node), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.RequestAffiliationsList(to, node), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -262,7 +241,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> ModifyAffiliationsListAsync(
             this IClientIqSender iqSender, Jid to, string node, Xmpp.PubSub.Owner.Affiliation affiliation)
         {
-            return await ModifyAffiliationsListAsync(iqSender, to, node, new[] { affiliation }, DefaultTimeout, CancellationToken.None);
+            return await ModifyAffiliationsListAsync(iqSender, to, node, new[] { affiliation }, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -277,7 +256,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> ModifyAffiliationsListAsync(
             this IClientIqSender iqSender, Jid to, string node, Xmpp.PubSub.Owner.Affiliation affiliation, int timeout)
         {
-            return await ModifyAffiliationsListAsync(iqSender, to, node, new[] { affiliation }, timeout, CancellationToken.None);
+            return await ModifyAffiliationsListAsync(iqSender, to, node, new[] { affiliation }, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -292,7 +271,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> ModifyAffiliationsListAsync(
             this IClientIqSender iqSender, Jid to, string node, Xmpp.PubSub.Owner.Affiliation[] affiliations)
         {
-            return await ModifyAffiliationsListAsync(iqSender, to, node, affiliations, DefaultTimeout, CancellationToken.None);
+            return await ModifyAffiliationsListAsync(iqSender, to, node, affiliations, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -308,7 +287,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> ModifyAffiliationsListAsync(
             this IClientIqSender iqSender, Jid to, string node, Xmpp.PubSub.Owner.Affiliation[] affiliations, int timeout)
         {
-            return await ModifyAffiliationsListAsync(iqSender, to, node, affiliations, timeout, CancellationToken.None);
+            return await ModifyAffiliationsListAsync(iqSender, to, node, affiliations, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -325,7 +304,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> ModifyAffiliationsListAsync(
             this IClientIqSender iqSender, Jid to, string node, Xmpp.PubSub.Owner.Affiliation[] affiliations, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.ModifyAffiliations(to, node, affiliations), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.ModifyAffiliations(to, node, affiliations), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -340,7 +319,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> PublishItemAsync(this IClientIqSender iqSender, Jid to, string node, Item item)
         {
-            return await PublishItemsAsync(iqSender, to, node, new[] { item }, DefaultTimeout, CancellationToken.None);
+            return await PublishItemsAsync(iqSender, to, node, new[] { item }, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -354,7 +333,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> PublishItemAsync(this IClientIqSender iqSender, Jid to, string node, Item item, int timeout)
         {
-            return await PublishItemsAsync(iqSender, to, node, new[] { item }, timeout, CancellationToken.None);
+            return await PublishItemsAsync(iqSender, to, node, new[] { item }, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -370,7 +349,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> PublishItemAsync(
             this IClientIqSender iqSender, Jid to, string node, Item item, int timeout, CancellationToken cancellationToken)
         {
-            return await PublishItemsAsync(iqSender, to, node, new[] { item }, timeout, cancellationToken);
+            return await PublishItemsAsync(iqSender, to, node, new[] { item }, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -384,7 +363,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> PublishItemsAsync(
             this IClientIqSender iqSender, Jid to, string node, Item[] item)
         {
-            return await PublishItemsAsync(iqSender, to, node, item, DefaultTimeout, CancellationToken.None);
+            return await PublishItemsAsync(iqSender, to, node, item, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -399,7 +378,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> PublishItemsAsync(
             this IClientIqSender iqSender, Jid to, string node, Item[] item, int timeout)
         {
-            return await PublishItemsAsync(iqSender, to, node, item, timeout, CancellationToken.None);
+            return await PublishItemsAsync(iqSender, to, node, item, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -415,7 +394,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> PublishItemsAsync(
             this IClientIqSender iqSender, Jid to, string node, Item[] item, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.PublishItems(to, node, item), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.PublishItems(to, node, item), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -430,7 +409,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RetractItemAsync(this IClientIqSender iqSender, Jid to, string node, string itemId)
         {
-            return await RetractItemsAsync(iqSender, to, node, new[] { itemId }, DefaultTimeout, CancellationToken.None);
+            return await RetractItemsAsync(iqSender, to, node, new[] { itemId }, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -444,7 +423,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RetractItemAsync(this IClientIqSender iqSender, Jid to, string node, string itemId, int timeout)
         {
-            return await RetractItemsAsync(iqSender, to, node, new[] { itemId }, timeout, CancellationToken.None);
+            return await RetractItemsAsync(iqSender, to, node, new[] { itemId }, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -457,7 +436,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RetractItemsAsync(this IClientIqSender iqSender, Jid to, string node, string[] itemIds)
         {
-            return await RetractItemsAsync(iqSender, to, node, itemIds, DefaultTimeout, CancellationToken.None);
+            return await RetractItemsAsync(iqSender, to, node, itemIds, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -471,7 +450,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RetractItemsAsync(this IClientIqSender iqSender, Jid to, string node, string[] itemIds, int timeout)
         {
-            return await RetractItemsAsync(iqSender, to, node, itemIds, timeout, CancellationToken.None);
+            return await RetractItemsAsync(iqSender, to, node, itemIds, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -487,7 +466,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RetractItemsAsync(
             this IClientIqSender iqSender, Jid to, string node, string[] itemIds, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.RetractItems(to, node, itemIds), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.RetractItems(to, node, itemIds), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -502,7 +481,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> SubmitNodeConfigurationAsync(this IClientIqSender iqSender, Jid to, string node, XData form)
         {
-            return await SubmitNodeConfigurationAsync(iqSender, to, node, form, DefaultTimeout, CancellationToken.None);
+            return await SubmitNodeConfigurationAsync(iqSender, to, node, form, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -516,7 +495,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> SubmitNodeConfigurationAsync(this IClientIqSender iqSender, Jid to, string node, XData form, int timeout)
         {
-            return await SubmitNodeConfigurationAsync(iqSender, to, node, form, timeout, CancellationToken.None);
+            return await SubmitNodeConfigurationAsync(iqSender, to, node, form, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -532,7 +511,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> SubmitNodeConfigurationAsync(
             this IClientIqSender iqSender, Jid to, string node, XData form, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.SubmitNodeConfiguration(to, node, form), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.SubmitNodeConfiguration(to, node, form), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -547,7 +526,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> SubscribeAsync(this IClientIqSender iqSender, Jid to, string node, Jid jid)
         {
-            return await SubscribeAsync(iqSender, to, node, jid, DefaultTimeout, CancellationToken.None);
+            return await SubscribeAsync(iqSender, to, node, jid, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -561,7 +540,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> SubscribeAsync(this IClientIqSender iqSender, Jid to, string node, Jid jid, int timeout)
         {
-            return await SubscribeAsync(iqSender, to, node, jid, timeout, CancellationToken.None);
+            return await SubscribeAsync(iqSender, to, node, jid, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -577,7 +556,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> SubscribeAsync(
             this IClientIqSender iqSender, Jid to, string node, Jid jid, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.Subscribe(to, node, jid), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.Subscribe(to, node, jid), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -592,7 +571,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> UnsubscribeAsync(this IClientIqSender iqSender, Jid to, string node, Jid jid)
         {
-            return await UnsubscribeAsync(iqSender, to, node, null, jid, DefaultTimeout, CancellationToken.None);
+            return await UnsubscribeAsync(iqSender, to, node, null, jid, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -606,7 +585,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> UnsubscribeAsync(this IClientIqSender iqSender, Jid to, string node, Jid jid, int timeout)
         {
-            return await UnsubscribeAsync(iqSender, to, node, null, jid, timeout, CancellationToken.None);
+            return await UnsubscribeAsync(iqSender, to, node, null, jid, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -622,7 +601,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> UnsubscribeAsync(
             this IClientIqSender iqSender, Jid to, string node, Jid jid, int timeout, CancellationToken cancellationToken)
         {
-            return await UnsubscribeAsync(iqSender, to, node, null, jid, timeout, cancellationToken);
+            return await UnsubscribeAsync(iqSender, to, node, null, jid, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -636,7 +615,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> UnsubscribeAsync(this IClientIqSender iqSender, Jid to, string node, string subId, Jid jid)
         {
-            return await UnsubscribeAsync(iqSender, to, node, subId, jid, DefaultTimeout, CancellationToken.None);
+            return await UnsubscribeAsync(iqSender, to, node, subId, jid, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -651,7 +630,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> UnsubscribeAsync(this IClientIqSender iqSender, Jid to, string node, string subId, Jid jid, int timeout)
         {
-            return await UnsubscribeAsync(iqSender, to, node, subId, jid, timeout, CancellationToken.None);
+            return await UnsubscribeAsync(iqSender, to, node, subId, jid, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -668,7 +647,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> UnsubscribeAsync(
             this IClientIqSender iqSender, Jid to, string node, string subId, Jid jid, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.Unsubscribe(to, node, subId, jid), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.Unsubscribe(to, node, subId, jid), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -682,7 +661,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestAllSubscriptionsAsync(this IClientIqSender iqSender, Jid to)
         {
-            return await RequestAllSubscriptionsAsync(iqSender, to, DefaultTimeout, CancellationToken.None);
+            return await RequestAllSubscriptionsAsync(iqSender, to, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -694,7 +673,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestAllSubscriptionsAsync(this IClientIqSender iqSender, Jid to, int timeout)
         {
-            return await RequestAllSubscriptionsAsync(iqSender, to, timeout, CancellationToken.None);
+            return await RequestAllSubscriptionsAsync(iqSender, to, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -708,7 +687,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RequestAllSubscriptionsAsync(
             this IClientIqSender iqSender, Jid to, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.RequestAllSubscriptions(to), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.RequestAllSubscriptions(to), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -722,7 +701,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestNodeConfigurationAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await RequestNodeConfigurationAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None);
+            return await RequestNodeConfigurationAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -735,7 +714,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestNodeConfigurationAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await RequestNodeConfigurationAsync(iqSender, to, node, timeout, CancellationToken.None);
+            return await RequestNodeConfigurationAsync(iqSender, to, node, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -750,7 +729,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RequestNodeConfigurationAsync(
             this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.RequestNodeConfiguration(to, node), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.RequestNodeConfiguration(to, node), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -764,7 +743,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestSubscriptionsAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await RequestSubscriptionsAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None);
+            return await RequestSubscriptionsAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -777,7 +756,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestSubscriptionsAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await RequestSubscriptionsAsync(iqSender, to, node, timeout, CancellationToken.None);
+            return await RequestSubscriptionsAsync(iqSender, to, node, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -792,7 +771,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RequestSubscriptionsAsync(
             this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.RequestSubscriptions(to, node), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.RequestSubscriptions(to, node), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -806,7 +785,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns>Task&lt;Iq&gt;.</returns>
         public static async Task<Iq> RequestAllItemsAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await RequestAllItemsAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None);
+            return await RequestAllItemsAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -819,7 +798,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns>Task&lt;Iq&gt;.</returns>
         public static async Task<Iq> RequestAllItemsAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await RequestAllItemsAsync(iqSender, to, node, timeout, CancellationToken.None);
+            return await RequestAllItemsAsync(iqSender, to, node, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -834,7 +813,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RequestAllItemsAsync(
             this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.RequestAllItems(to, node), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.RequestAllItems(to, node), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -848,7 +827,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestSubscriptionsListAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await RequestSubscriptionsListAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None);
+            return await RequestSubscriptionsListAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -861,7 +840,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// <returns></returns>
         public static async Task<Iq> RequestSubscriptionsListAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await RequestSubscriptionsListAsync(iqSender, to, node, timeout, CancellationToken.None);
+            return await RequestSubscriptionsListAsync(iqSender, to, node, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -876,7 +855,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RequestSubscriptionsListAsync(
             this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.RequestSubscriptionsList(to, node), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.RequestSubscriptionsList(to, node), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -897,7 +876,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// </remarks>
         public static async Task<Iq> PurgeNodeAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await PurgeNodeAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None);
+            return await PurgeNodeAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -917,7 +896,7 @@ namespace Matrix.Extensions.Client.PubSub
         /// </remarks>
         public static async Task<Iq> PurgeNodeAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await PurgeNodeAsync(iqSender, to, node, timeout, CancellationToken.None);
+            return await PurgeNodeAsync(iqSender, to, node, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -939,7 +918,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> PurgeNodeAsync(
             this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.PurgeNode(to, node), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.PurgeNode(to, node), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -955,7 +934,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RequestItemAsync(
             this IClientIqSender iqSender, Jid to, string node, string id)
         {
-            return await RequestItemAsync(iqSender, to, node, id, DefaultTimeout, CancellationToken.None);
+            return await RequestItemAsync(iqSender, to, node, id, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -970,7 +949,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RequestItemAsync(
             this IClientIqSender iqSender, Jid to, string node, string id, int timeout)
         {
-            return await RequestItemAsync(iqSender, to, node, id, timeout, CancellationToken.None);
+            return await RequestItemAsync(iqSender, to, node, id, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -986,7 +965,7 @@ namespace Matrix.Extensions.Client.PubSub
         public static async Task<Iq> RequestItemAsync(
             this IClientIqSender iqSender, Jid to, string node, string id, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(PubSubBuilder.RequestItem(to, node, id), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(PubSubBuilder.RequestItem(to, node, id), timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
     }
