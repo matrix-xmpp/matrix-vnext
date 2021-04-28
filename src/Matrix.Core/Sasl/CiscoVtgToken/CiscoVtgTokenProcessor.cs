@@ -39,9 +39,9 @@ namespace Matrix.Sasl.CiscoVtgToken
             var sb = new StringBuilder();
 
             sb.Append("userid=");
-            sb.Append(xmppClient.Username);
+            sb.Append(xmppClient.Jid.Local);
             sb.Append("@");
-            sb.Append(xmppClient.XmppDomain);
+            sb.Append(xmppClient.Jid.Domain);
             
             sb.Append((char)0);
             

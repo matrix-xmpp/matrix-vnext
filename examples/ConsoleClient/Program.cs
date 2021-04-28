@@ -26,9 +26,8 @@ namespace ConsoleClient
                 },
                 (handlers, client) => handlers.Add(new XmppLoggingHandler(client)))
             {
-                Username = "user",
-                Password = "***secret***",
-                XmppDomain = "server.com",
+                Jid = "user@server.com",
+                Password = "***secret***"
             };
 
             xmppClient.StateChanged.Subscribe(v => {

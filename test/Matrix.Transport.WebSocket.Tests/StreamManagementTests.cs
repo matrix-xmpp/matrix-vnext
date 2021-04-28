@@ -38,8 +38,7 @@
                         });
                 })
             {
-                XmppDomain = "localhost",
-                Username = "alex",
+                Jid = "alex@localhost",
                 Password = "secret"
             };
 
@@ -101,8 +100,7 @@
                     h.Add(sm);
                 })
             {
-                XmppDomain = "localhost",
-                Username = "alex",
+                Jid = "alex@localhost",
                 Password = "secret"
             };
 

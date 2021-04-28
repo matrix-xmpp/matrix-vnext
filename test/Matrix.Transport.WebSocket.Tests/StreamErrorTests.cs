@@ -26,8 +26,7 @@
 
             var xmppClient = new XmppClient(config => config.Transport = transport)
             {
-                XmppDomain = "somehost",
-                Username = "alex",
+                Jid = "alex@somehost",
                 Password = "secret"
             };
 

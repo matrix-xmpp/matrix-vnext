@@ -23,7 +23,7 @@
             return await Task<Register>.Run(() =>
             {
                 register.RemoveAll<Data>();
-                register.Username = xmppClient.Username;
+                register.Username = xmppClient.Jid.Local;
                 register.Password = xmppClient.Password;
 
                 return register;
@@ -52,8 +52,7 @@
 
             var xmppClient = new XmppClient(config => config.Transport = transport)
             {
-                XmppDomain = "localhost",
-                Username = "alex",
+                Jid = "alex@localhost",
                 Password = "secret"
             };
 
@@ -99,8 +98,7 @@
 
             var xmppClient = new XmppClient(config => config.Transport = transport)
             {
-                XmppDomain = "localhost",
-                Username = "alex",
+                Jid = "alex@localhost",
                 Password = "secret"
             };
 
@@ -146,8 +144,7 @@
 
             var xmppClient = new XmppClient(config => config.Transport = transport)
             {
-                XmppDomain = "localhost",
-                Username = "alex",
+                Jid = "alex@localhost",
                 Password = "secret"
             };
 

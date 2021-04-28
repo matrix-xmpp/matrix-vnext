@@ -16,10 +16,8 @@
             var expectedXml = "<auth mechanism='CISCO-VTG-TOKEN' xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>dXNlcmlkPXVzZXJAc2VydmVyLmNvbQB0b2tlbj1mb28=</auth>";
 
             var webexTokeSasl = new CiscoVtgTokenProcessor("foo");
-
             var mockXmppClient = new Mock<IXmppClient>();
-            mockXmppClient.SetupGet(client => client.Username).Returns("user");
-            mockXmppClient.SetupGet(client => client.XmppDomain).Returns("server.com");
+            mockXmppClient.SetupGet(client => client.Jid).Returns(new Jid("user@server.com"));
 
             mockXmppClient
                 .Setup(s => s.SendAsync<Success, Failure>(It.IsAny<XmppXElement>(), It.IsAny<CancellationToken>()))

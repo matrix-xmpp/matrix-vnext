@@ -2,8 +2,7 @@
 {
     public interface IXmppClient : IClientIqSender, IStanzaSender
     {
-        string XmppDomain { get; set; }
-        string Username { get; set; }
+        Jid Jid { get; set; }
         string Password { get; set; }
         string Resource { get; set; }
     }

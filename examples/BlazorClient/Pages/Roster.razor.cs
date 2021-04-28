@@ -26,10 +26,7 @@
 
         private async Task Connect()
         {
-            var jid = new Jid(Account.Jid);
-
-            xmppClient.Username = jid.Local;
-            xmppClient.XmppDomain = jid.Domain;
+            xmppClient.Jid = Account.Jid;
             xmppClient.Password = Account.Password;
 
             await xmppClient.ConnectAsync();

@@ -18,7 +18,7 @@ namespace Matrix.Sasl.Scram
         {
             var scramHelper = new ScramHelper();
 
-            var username = xmppClient.Username;
+            var username = xmppClient.Jid.Local;
 #if STRINGPREP
            var  password = StringPrep.SaslPrep(xmppClient.Password);
 #else
