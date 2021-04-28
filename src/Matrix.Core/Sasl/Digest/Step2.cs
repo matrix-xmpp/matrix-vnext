@@ -77,7 +77,7 @@ namespace Matrix.Sasl.Digest
 
         private void GenerateDigestUri()
         {
-            DigestUri = "xmpp/" + xmppClient.XmppDomain;
+            DigestUri = "xmpp/" + xmppClient.Jid.Domain;
         }
 
         /*
@@ -114,9 +114,9 @@ namespace Matrix.Sasl.Digest
             string p2;
 
             var sb = new StringBuilder();
-            sb.Append(xmppClient.Username);
+            sb.Append(xmppClient.Jid.Local);
             sb.Append(":");
-            sb.Append(step1.Realm ?? xmppClient.XmppDomain);
+            sb.Append(step1.Realm ?? xmppClient.Jid.Domain);
             sb.Append(":");
             sb.Append(xmppClient.Password);
 
@@ -216,10 +216,10 @@ namespace Matrix.Sasl.Digest
         {
             var sb = new StringBuilder();
             sb.Append("username=");
-            sb.Append(AddQuotes(xmppClient.Username));
+            sb.Append(AddQuotes(xmppClient.Jid.Local));
             sb.Append(",");
             sb.Append("realm=");
-            sb.Append(AddQuotes(step1.Realm ?? xmppClient.XmppDomain));
+            sb.Append(AddQuotes(step1.Realm ?? xmppClient.Jid.Domain));
             sb.Append(",");
             sb.Append("nonce=");
             sb.Append(AddQuotes(step1.Nonce));

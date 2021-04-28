@@ -26,7 +26,7 @@ namespace Matrix.Sasl.Plain
             // NULL Username NULL Password
             var sb = new StringBuilder();
             sb.Append((char)0);
-            sb.Append(xmppClient.Username);
+            sb.Append(xmppClient.Jid.Local);
             sb.Append((char)0);
             sb.Append(xmppClient.Password);
             byte[] msg = Encoding.UTF8.GetBytes(sb.ToString());

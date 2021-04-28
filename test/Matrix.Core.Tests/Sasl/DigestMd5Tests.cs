@@ -16,9 +16,8 @@ namespace Matrix.Tests.Sasl
             var step1 = new Step1(serverStep1);
             
             var mockXmppClient = new Mock<IXmppClient>();
-            mockXmppClient.SetupGet(client => client.Username).Returns("alex");
+            mockXmppClient.SetupGet(client => client.Jid).Returns(new Jid("alex@server.com"));
             mockXmppClient.SetupGet(client => client.Password).Returns("secret");
-            mockXmppClient.SetupGet(client => client.XmppDomain).Returns("server.com");
 
             var step2 = new Step2(step1, mockXmppClient.Object);
 

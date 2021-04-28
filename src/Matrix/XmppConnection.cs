@@ -32,8 +32,6 @@ namespace Matrix
         public ITransport Transport => Configuration.Transport;
 
         public IObservable<XmppXElement> XmppXElementReceived => Transport.XmlReceived;
-
-        public string XmppDomain { get; set; }
         #endregion
 
         #region << Send members >>

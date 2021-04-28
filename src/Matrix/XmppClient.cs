@@ -61,9 +61,9 @@ namespace Matrix
 
         #region << Properties >>
         /// <summary>
-        /// Gets or sets the username for the XMPP connection.
+        /// Gets or sets the JID for the XMPP connection.
         /// </summary>
-        public string Username { get; set; }
+        public Jid Jid { get; set; }
 
         /// <summary>
         /// Gets or sets the password for the XMPP connection.
@@ -133,7 +133,7 @@ namespace Matrix
         /// <exception cref="RegisterException">Throws aRegisterException when new account registration fails.</exception>
         public override async Task ConnectAsync(CancellationToken cancellationToken)
         {
-            await Transport.ConnectAsync(XmppDomain).ConfigureAwait(false);
+            await Transport.ConnectAsync(Jid.Domain).ConfigureAwait(false);
 
             XmppSessionStateSubject.Value = Matrix.SessionState.Connected;
 
@@ -193,7 +193,7 @@ namespace Matrix
             XmppSessionStateSubject.Value = SessionState.Securing;
 
             await SendAsync<Proceed>(new StartTls(), cancellationToken).ConfigureAwait(false);
-            await Transport.InitTls(XmppDomain).ConfigureAwait(false);
+            await Transport.InitTls(Jid.Domain).ConfigureAwait(false);
             
             var streamFeatures = await ResetStreamAsync(cancellationToken).ConfigureAwait(false);
 
@@ -249,13 +249,13 @@ namespace Matrix
             XmppSessionStateSubject.Value = Matrix.SessionState.Registering;
             var regInfoIqResult =
                 await SendIqAsync(
-                    new RegisterIq { Type = IqType.Get, To = XmppDomain },
+                    new RegisterIq { Type = IqType.Get, To = Jid.Domain },
                     cancellationToken)
                     .ConfigureAwait(false);
 
             if (regInfoIqResult.Type == IqType.Result && regInfoIqResult.Query is Register)
             {
-                var regIq = new Iq { Type = IqType.Set, To = new Jid(XmppDomain) };
+                var regIq = new Iq { Type = IqType.Set, To = new Jid(Jid.Domain) };
                 regIq.GenerateId();
                 if (RegistrationHandler != null)
                 {
@@ -325,7 +325,7 @@ namespace Matrix
 
         protected async Task<StreamFeatures> SendStreamHeaderAsync(int timeout, CancellationToken cancellationToken)
         {
-            var streamHeader = Transport.GetStreamHeader(XmppDomain, "1.0");
+            var streamHeader = Transport.GetStreamHeader(Jid.Domain, "1.0");
             var res = await SendAsync<StreamFeatures, Xmpp.Stream.Error>(streamHeader, timeout, cancellationToken).ConfigureAwait(false);
 
             if (res.OfType<StreamFeatures>())
