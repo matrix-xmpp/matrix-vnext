@@ -42,7 +42,7 @@ Task("Clean")
     });
 
 Task("Update-Assembly-Version")
-    //.WithCriteria(BuildSystem.AzurePipelines.IsRunningOnAzurePipelines)
+    //.WithCriteria(HasArgument("civersion") && BuildSystem.AzurePipelines.IsRunningOnAzurePipelines)
     .WithCriteria(HasArgument("civersion"))
     .IsDependentOn("Clean")
     .Does(() =>
@@ -54,15 +54,13 @@ Task("Update-Assembly-Version")
 
         var vstsBuildNumber = AzurePipelines.Environment.Build.Number;
         var splitted = vstsBuildNumber.Split('.');
-        var buildIncrementalNumber = splitted[splitted.Length - 1];        
+        var buildIncrementalNumber = splitted[splitted.Length - 1];
 
         var files = GetFiles("./**/version.props");
         foreach(var file in files)
         {
             var currentVersion = XmlPeek(file.FullPath, "/Project/PropertyGroup/AssemblyVersion");
             var newVersion = $"{currentVersion}-ci-{julianDate}-{buildIncrementalNumber}";
-
-            Information($"{file} CI version number: {newVersion}");       
 
             XmlPoke(file.FullPath, "/Project/PropertyGroup/FileVersion", currentVersion);
             XmlPoke(file.FullPath, "/Project/PropertyGroup/Version", newVersion);
@@ -119,8 +117,8 @@ Task("Publish-Nuget")
             {
                 // Push the package.
                 NuGetPush(package, new NuGetPushSettings {
-                    Source = Argument<string>("nuget-feed"),
-                    ApiKey = Argument<string>("nuget-token")
+                    Source = Argument<string>("nuget.feed"),
+                    ApiKey = Argument<string>("nuget.token")
                 });
             }
             catch(System.Exception ex)
