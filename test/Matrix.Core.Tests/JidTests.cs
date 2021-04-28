@@ -8,60 +8,60 @@ namespace Matrix.Tests
         [Fact]
         public void FullJidTestTest()
         {
-            var jid1 = "user@server.de/resource";
+            var jid1 = "local@domain.de/resource";
             Jid jid = jid1;
             Assert.Equal(jid.ToString(), jid1);
             Assert.Equal((string)jid, jid1);
         }
 
         [Fact]
-        public void BuilldJidFromUserAndServerTest()
+        public void BuilldJidFromUserAndDomainTest()
         {
-            const string user = "user";
-            const string server = "server.com";
+            const string local = "local";
+            const string domain = "domain.com";
 
-            var jid = new Jid { User = user, Server = server };
-            Assert.Equal(jid.ToString(), user + "@" + server);
+            var jid = new Jid { Local = local, Domain = domain };
+            Assert.Equal(jid.ToString(), local + "@" + domain);
         }
 
         [Fact]
         public void JidEscapeTest()
         {
-            const string user = "gnauck@ag-software.de";
-            const string server = "server.com";
+            const string local = "gnauck@ag-software.de";
+            const string domain = "domain.com";
 
             var jid = new Jid();
-            jid.SetUser(user);
-            Assert.Equal(@"gnauck\40ag-software.de", jid.User);
+            jid.SetLocal(local);
+            Assert.Equal(@"gnauck\40ag-software.de", jid.Local);
 
-            jid.SetServer(server);
-            Assert.Equal(@"server.com", jid.Server);
-            Assert.Equal(@"gnauck\40ag-software.de@server.com", jid.ToString());
+            jid.SetDomain(domain);
+            Assert.Equal(@"domain.com", jid.Domain);
+            Assert.Equal(@"gnauck\40ag-software.de@domain.com", jid.ToString());
         }
 
         [Fact]
-        public void UppercaseUsernameTest()
+        public void UppercaseLocalnameTest()
         {
-            const string user = "Gnauck";
-            const string server = "Server.com";
+            const string local = "Gnauck";
+            const string domain = "Domain.com";
 
-            var jid = new Jid { User = user };
-            Assert.Equal(jid.User, user);
+            var jid = new Jid { Local = local };
+            Assert.Equal(jid.Local, local);
 
-            jid.Server = server;
-            Assert.Equal(jid.Server, server);
-            Assert.Equal(jid.ToString(), user + "@" + server);
+            jid.Domain = domain;
+            Assert.Equal(jid.Domain, domain);
+            Assert.Equal(jid.ToString(), local + "@" + domain);
 
-            jid.SetUser(user);
-            jid.SetServer(server);
-            Assert.Equal("gnauck@server.com", jid.ToString());
+            jid.SetLocal(local);
+            jid.SetDomain(domain);
+            Assert.Equal("gnauck@domain.com", jid.ToString());
         }
 
         [Fact]
         public void CloneJidTest()
         {
-            const string JID1 = "user@server.de/resource";
-            const string JID2 = "user2@server.de/resource2";
+            const string JID1 = "local@domain.de/resource";
+            const string JID2 = "local2@domain.de/resource2";
 
             Jid jid1 = JID1;
             var jid2 = jid1.Clone();
@@ -70,7 +70,7 @@ namespace Matrix.Tests
             Assert.Equal(jid2.ToString(), JID1);
 
             jid2.Resource = "resource2";
-            jid2.User = "user2";
+            jid2.Local = "local2";
 
             Assert.Equal(jid1.ToString(), JID1);
             Assert.Equal(jid2.ToString(), JID2);
@@ -79,8 +79,8 @@ namespace Matrix.Tests
         [Fact]
         public void CompareJidTest1()
         {
-            var a = new Jid("User1", "Server.com", "Res01");
-            var b = new Jid("User1@Server.com/Res01");
+            var a = new Jid("Local1", "Domain.com", "Res01");
+            var b = new Jid("Local1@Domain.com/Res01");
 
             Assert.True(a.CompareTo(b) != 0);
         }
@@ -88,17 +88,17 @@ namespace Matrix.Tests
         [Fact]
         public void CompareJidTest2()
         {
-            var a = new Jid("User1", "Server.com", "Res01");
-            var b = new Jid("user1@server.com/Res01");
+            var a = new Jid("Local1", "Domain.com", "Res01");
+            var b = new Jid("local1@domain.com/Res01");
             Assert.True(a.CompareTo(b) == 0);
         }
 
         [Fact]
         public void CompareJidTest3()
         {
-            var a = new Jid("User1", "Server.com", "Res01");
-            var b = new Jid("User1@Server.com/Res01");
-            var c = new Jid(b.User, b.Server, b.Resource);
+            var a = new Jid("Local1", "Domain.com", "Res01");
+            var b = new Jid("Local1@Domain.com/Res01");
+            var c = new Jid(b.Local, b.Domain, b.Resource);
             Assert.True(a.CompareTo(c) == 0);
             Assert.True(b.CompareTo(c) != 0);
         }
@@ -106,8 +106,8 @@ namespace Matrix.Tests
         [Fact]
         public void BareJidEqualsTest()
         {
-            var a = new Jid("user1@server.com/Res1");
-            var b = new Jid("user1@server.com/Res2");
+            var a = new Jid("local1@domain.com/Res1");
+            var b = new Jid("local1@domain.com/Res2");
             
             a.Equals(b, new BareJidComparer()).ShouldBe(true);
         }
@@ -115,9 +115,9 @@ namespace Matrix.Tests
         [Fact]
         public void FullJidEqualsTest()
         {
-            var a = new Jid("user1@server.com/Res1");
-            var b = new Jid("user1@server.com/Res2");
-            var c = new Jid("user1@server.com/Res2");
+            var a = new Jid("local1@domain.com/Res1");
+            var b = new Jid("local1@domain.com/Res2");
+            var c = new Jid("local1@domain.com/Res2");
             
             a.Equals(b, new FullJidComparer()).ShouldBe(false);
             b.Equals(c, new FullJidComparer()).ShouldBe(true);
