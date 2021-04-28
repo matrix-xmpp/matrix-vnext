@@ -42,8 +42,8 @@ Task("Clean")
     });
 
 Task("Update-Assembly-Version")
-    .WithCriteria(HasArgument("civersion") && BuildSystem.AzurePipelines.IsRunningOnAzurePipelines)
-    //.WithCriteria(HasArgument("civersion"))
+    //.WithCriteria(HasArgument("civersion") && BuildSystem.AzurePipelines.IsRunningOnAzurePipelines)
+    .WithCriteria(HasArgument("civersion"))
     .IsDependentOn("Clean")
     .Does(() =>
     {

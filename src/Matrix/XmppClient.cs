@@ -3,8 +3,7 @@ namespace Matrix
     using Sasl;
     using System;
     using System.Collections.Generic;
-    using System.Net.Security;
-    using System.Reactive.Linq;
+    using System.Collections.ObjectModel;
     using System.Threading;
     using System.Threading.Tasks;
     using Xml;
@@ -101,6 +100,9 @@ namespace Matrix
         public IAuthenticate SaslHandler { get; set; } = new DefaultSaslHandler();
 
         public IRegister RegistrationHandler { get; set; } = null;
+
+
+        public ReadOnlyCollection<XmppHandler> Handlers => new ReadOnlyCollection<XmppHandler>(handlers);
         #endregion
 
         /// <summary>
