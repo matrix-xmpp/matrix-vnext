@@ -40,15 +40,15 @@ namespace Matrix
         (including the '@' and '/' separators) of 3071 bytes.
             
         stringprep with libIDN        
-        m_User      ==> nodeprep
-        m_Server    ==> nameprep
-        m_Resource  ==> resourceprep
+        local       ==> nodeprep
+        domain      ==> nameprep
+        resource    ==> resourceprep
         */
         
-        private string fullJid;
-        private string m_User;
-        private string m_Server;
-        private string m_Resource;
+        private string _fullJid;
+        private string _local;
+        private string _domain;
+        private string _resource;
 
         /// <summary>
         /// Create a new Jid object.
@@ -62,23 +62,23 @@ namespace Matrix
         /// Otherwise use one of the other constructors with escapes the node and prepares the gives balues with the stringprep
         /// profiles
 		/// </summary>
-		/// <param name="jid">XMPP ID, in string form examples: user@server/Resource, user@server</param>
+		/// <param name="jid">XMPP ID, in string form examples: local@domain/Resource, local@domain</param>
 		public Jid(string jid)
 		{			
-			fullJid = jid;
+			_fullJid = jid;
 			Parse(jid);
 		}
 
         public Jid(string jid, bool stringPrep)
         {
-            fullJid = jid;
-            Parse(fullJid);
+            _fullJid = jid;
+            Parse(_fullJid);
 
             if (!stringPrep)
                 return;
 
-            SetUser(User);
-            SetServer(Server);
+            SetLocal(Local);
+            SetDomain(Domain);
             SetResource(Resource);
         }
 
@@ -86,37 +86,37 @@ namespace Matrix
         /// Builds a new Jid object.
         /// StringPrep is applied to the input string.
         /// </summary>
-        /// <param name="user">XMPP User part</param>
-        /// <param name="server">XMPP Domain part</param>
-        /// <param name="resource">XMPP Resource part</param>        
-        public Jid(string user, string server, string resource)
+        /// <param name="local">XMPP local part</param>
+        /// <param name="domain">XMPP domain part</param>
+        /// <param name="resource">XMPP resource part</param>        
+        public Jid(string local, string domain, string resource)
         {
 #if !STRINGPREP
-            if (user != null)
+            if (local != null)
             {
-                user = EscapeNode(user);
+                local = EscapeNode(local);
                 
-                m_User = user.ToLower();
+                _local = local.ToLower();
             }
 
-            if (server != null)
-                m_Server = server.ToLower();
+            if (domain != null)
+                _domain = domain.ToLower();
 
             if (resource != null)
-                m_Resource = resource;
+                _resource = resource;
 #else
-            if (user != null)
+            if (local != null)
             {             
-                user = EscapeNode(user);
+                local = EscapeNode(local);
 
-                m_User = StringPrep.NodePrep(user);
+                _local = StringPrep.NodePrep(local);
             }
 
-            if (server != null)
-                m_Server = StringPrep.NamePrep(server);
+            if (domain != null)
+                _domain = StringPrep.NamePrep(domain);
 
             if (resource != null)
-                m_Resource = StringPrep.ResourcePrep(resource);
+                _resource = StringPrep.ResourcePrep(resource);
 #endif
             BuildJid();            
         }
@@ -145,16 +145,15 @@ namespace Matrix
 
 	    #endregion
 
-
-	    /// <summary>
+        /// <summary>
         /// Parses a JabberId from a string. If we parse a jid we assume it's correct and already prepared via stringprep.
         /// </summary>
         /// <param name="fullJid">jid to parse as string</param>
-        /// <returns>true if the jid could be parsed, false if an error occured</returns>
+        /// <returns>true if the jid could be parsed, false if an error occurred</returns>
 		public bool Parse(string fullJid)
 		{
-			string user		= null;
-			string server	= null;
+			string local = null;
+			string domain = null;
 			string resource = null;
 
             try
@@ -180,16 +179,16 @@ namespace Matrix
 
                 if (atPos == -1)
                 {
-                    //user = null;
+                    //local = null;
                     if (slashPos == -1)
                     {
-                        // JID Contains only the Server
-                        server = fullJid;
+                        // JID Contains only the domain
+                        domain = fullJid;
                     }
                     else
                     {
-                        // JID Contains only the Server and Resource
-                        server = fullJid.Substring(0, slashPos);
+                        // JID Contains only the domain and resource
+                        domain = fullJid.Substring(0, slashPos);
                         resource = fullJid.Substring(slashPos + 1);
                     }
                 }
@@ -198,27 +197,35 @@ namespace Matrix
                     if (slashPos == -1)
                     {
                         // We have no resource
-                        // Devide User and Server (user@server)
-                        server = fullJid.Substring(atPos + 1);
-                        user = fullJid.Substring(0, atPos);
+                        // Devide local and domain (local@domain)
+                        domain = fullJid.Substring(atPos + 1);
+                        local = fullJid.Substring(0, atPos);
                     }
                     else
                     {
                         // We have all
-                        user = fullJid.Substring(0, atPos);
-                        server = fullJid.Substring(atPos + 1, slashPos - atPos - 1);
+                        local = fullJid.Substring(0, atPos);
+                        domain = fullJid.Substring(atPos + 1, slashPos - atPos - 1);
                         resource = fullJid.Substring(slashPos + 1);
                     }
                 }
 
-                if (user != null)
-                    m_User = user;
-                if (server != null)
-                    m_Server = server;
-                if (resource != null)
-                    m_Resource = resource;
+                if (local != null)
+                {
+                    _local = local;
+                }
 
-                this.fullJid = fullJid;
+                if (domain != null)
+                {
+                    _domain = domain;
+                }
+
+                if (resource != null)
+                {
+                    _resource = resource;
+                }
+
+                _fullJid = fullJid;
 
                 return true;
             }
@@ -230,18 +237,18 @@ namespace Matrix
 
         private void BuildJid()
         {
-            fullJid = BuildJid(m_User, m_Server, m_Resource);
+            _fullJid = BuildJid(_local, _domain, _resource);
         }
 
-        private string BuildJid(string user, string server, string resource)
+        private string BuildJid(string local, string domain, string resource)
 		{			
 			var sb = new StringBuilder();
-			if (user != null)
+			if (local != null)
 			{
-				sb.Append(user);
+				sb.Append(local);
 				sb.Append("@");
 			}
-			sb.Append(server);
+			sb.Append(domain);
 			if (resource != null)
 			{
 				sb.Append("/");
@@ -250,54 +257,45 @@ namespace Matrix
 			return sb.ToString();
 		}
         
-		public override string ToString() => fullJid;
+		public override string ToString() => _fullJid;
 
 	    #region << Properties >>
 
 	    /// <summary>
-		/// the user part of the JabberId.
+		/// The local part
 		/// </summary>
-        public string User
+        public string Local
 		{
-			get
-			{				
-				return m_User;
-			}
-			set
+			get => _local;
+            set
 			{
-                m_User = value;
+                _local = value;
                 BuildJid();				
 			}
 		}
 
 		/// <summary>
-		/// Only Server
+		/// The domain part
 		/// </summary>
-        public string Server
+        public string Domain
 		{
-			get
+			get => _domain;
+            set
 			{
-				return m_Server;
-			}
-			set
-			{
-			    m_Server = value;
+			    _domain = value;
                 BuildJid();
 			}
 		}
 
 		/// <summary>
-		/// Only the Resource field, null for none
+		/// The Resource field, null for none
 		/// </summary>        
         public string Resource
 		{
-			get
-			{				
-				return m_Resource;
-			}
-			set
+			get => _resource;
+            set
 			{
-			    m_Resource = value;
+			    _resource = value;
                 BuildJid();
 			}
 		}
@@ -305,44 +303,44 @@ namespace Matrix
         /// <summary>
         /// Sets the User part of the jid. Nodeprep and jid escaping is applied to the input string.
         /// </summary>
-        /// <param name="user"></param>
-        public void SetUser(string user)
+        /// <param name="local"></param>
+        public void SetLocal(string local)
         {
-            User = PrepareUser(user);
+            Local = PrepareLocal(local);
         }
 
-        public static string PrepareUser(string user)
+        public static string PrepareLocal(string local)
         {
-            if (String.IsNullOrEmpty(user))
+            if (String.IsNullOrEmpty(local))
                 return null;
 
             // first Encode the user/node
-            string tmpUser = EscapeNode(user);
+            string tmpLocal = EscapeNode(local);
 #if !STRINGPREP
-			return tmpUser.ToLower();
+			return tmpLocal.ToLower();
 #else
-            return StringPrep.NodePrep(tmpUser);
+            return StringPrep.NodePrep(tmpLocal);
 #endif
         }
 
-	    /// <summary>
-        /// Sets the Server part of the jid. Nameprep is applied to the input string.
+        /// <summary>
+        /// Sets the domain part of the jid. Nameprep is applied to the input string.
         /// </summary>
-        /// <param name="server"></param>
-        public void SetServer(string server)
+        /// <param name="domain"></param>
+        public void SetDomain(string domain)
         {
-            Server = PrepareServer(server);
+            Domain = PrepareDomain(domain);
         }
 
-        public static string PrepareServer(string server)
+        public static string PrepareDomain(string domain)
         {
-            if (String.IsNullOrEmpty(server))
+            if (String.IsNullOrEmpty(domain))
                 return null;
 
 #if !STRINGPREP
-            return server.ToLower();
+            return domain.ToLower();
 #else
-            return StringPrep.NamePrep(server);
+            return StringPrep.NamePrep(domain);
 #endif
         }
 
@@ -369,35 +367,11 @@ namespace Matrix
         }
 
 		/// <summary>
-		/// The Bare Jid only (user@server).
+		/// The Bare Jid only (local@domain).
 		/// </summary>		
-        public string Bare => BuildJid(m_User, m_Server, null);
+        public string Bare => BuildJid(_local, _domain, null);
 
 	    #endregion
-
-	    #region << Overrides >>        
-
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-        /// </returns>
-        public override int GetHashCode()
-        {
-            int hcode = 0;
-            if (m_User  !=null)
-                hcode ^= m_User.GetHashCode();
-
-            if (m_Server != null)
-                hcode ^= m_Server.GetHashCode();
-
-            if (m_Resource != null)
-                hcode ^= m_Resource.GetHashCode();
-            
-            return hcode;
-        }
-        #endregion
 
         #region IEquatable<Jid> Members
 
@@ -410,7 +384,7 @@ namespace Matrix
 
 	    #endregion
         /// <summary>
-        /// Compares Full jid (user@server/resource)
+        /// Compares Full jid (local@domain/resource)
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>

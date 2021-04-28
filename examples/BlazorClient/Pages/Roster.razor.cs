@@ -28,8 +28,8 @@
         {
             var jid = new Jid(Account.Jid);
 
-            xmppClient.Username = jid.User;
-            xmppClient.XmppDomain = jid.Server;
+            xmppClient.Username = jid.Local;
+            xmppClient.XmppDomain = jid.Domain;
             xmppClient.Password = Account.Password;
 
             await xmppClient.ConnectAsync();
