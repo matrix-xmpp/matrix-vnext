@@ -1,7 +1,7 @@
 trigger:
   batch: true # batch changes if true; start a new build for every push if false (default)
   branches:
-    include: [ replace-dotnetty ] # branch names which will trigger a build
+    include: [net5 ] # branch names which will trigger a build
 
 variables:
 - group: MyGet
