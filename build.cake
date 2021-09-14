@@ -15,8 +15,8 @@ var configuration = Argument("configuration", "Release");
 
     nugetpush:      when present will push nuget packages
 
-    nuget.feed:     the Uri of the nuget feed
-    nuget.token:    Nuget Api-key for pushing packages
+    nugetfeed:     the Uri of the nuget feed
+    nugettoken:    Nuget Api-key for pushing packages
  */
 
 //////////////////////////////////////////////////////////////////////
@@ -117,8 +117,8 @@ Task("Publish-Nuget")
             {
                 // Push the package.
                 NuGetPush(package, new NuGetPushSettings {
-                    Source = Argument<string>("nuget.feed"),
-                    ApiKey = Argument<string>("nuget.token")
+                    Source = Argument<string>("nugetfeed"),
+                    ApiKey = Argument<string>("nugettoken")
                 });
             }
             catch(System.Exception ex)

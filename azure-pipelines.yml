@@ -4,7 +4,7 @@ trigger:
     include: [net5 ] # branch names which will trigger a build
 
 variables:
-- group: MyGet
+- group: myget
 
 pool:
   vmImage: 'windows-latest'
@@ -23,4 +23,4 @@ steps:
     target: 'Default'
     verbosity: 'Verbose'
     Version: '1.0.0-rc0002'
-    arguments: '-civersion -nuget.token="$(myget.token)" -nuget.feed="$(myget.feed)" -nugetpush'
+    arguments: '--civersion --nugettoken="$(myget.token)" --nugetfeed="$(myget.feed)" --nugetpush'
