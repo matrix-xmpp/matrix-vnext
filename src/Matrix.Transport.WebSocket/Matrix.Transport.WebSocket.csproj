@@ -6,7 +6,7 @@
     <RootNamespace>Matrix.Transport.WebSocket</RootNamespace>
     <PackageId>Matrix.Transport.WebSocket</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

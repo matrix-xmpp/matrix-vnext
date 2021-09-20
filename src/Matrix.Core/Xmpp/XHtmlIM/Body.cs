@@ -25,7 +25,7 @@ namespace Matrix.Xmpp.XHtmlIM
                 int start = body.IndexOf(startTag) + startTag.Length;
                 int end = body.LastIndexOf(endTag);
 
-                return body[start..end];
+                return body.Substring(start, end - start);
             }
             set
             {

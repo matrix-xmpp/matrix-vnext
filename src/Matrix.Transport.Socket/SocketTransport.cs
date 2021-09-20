@@ -219,10 +219,9 @@
 
             beforeXmlSentSubject.OnNext(xmppXElement);
 
-            var bytes = Encoding.UTF8.GetBytes(xmppXElement.ToString());
-            var buffer = new ArraySegment<byte>(bytes);
+            var bytes = Encoding.UTF8.GetBytes(xmppXElement.ToString());            
 
-            await networkStream.WriteAsync(buffer, cancellationToken).ConfigureAwait(false);
+            await networkStream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
 
             dataSentSubject.OnNext(bytes);
             xmlSentSubject.OnNext(xmppXElement);
@@ -254,7 +253,7 @@
             }
 
             var bytes = Encoding.UTF8.GetBytes(data);
-            await networkStream.WriteAsync(bytes, cancellationToken).ConfigureAwait(false);
+            await networkStream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
             dataSentSubject.OnNext(bytes);
         }
 
@@ -277,13 +276,13 @@
         private async Task Receive(/*CancellationToken cancellationToken*/)
         {
             bool cancelRead = false;
-            var buffer = new ArraySegment<byte>(new byte[1024 * 2]);
+            var bytes = new byte[1024 * 2];
             //while (!cancellationToken.IsCancellationRequested)
             while (!cancelRead)
             {
                 try
                 {
-                    var bytesRead = await networkStream.ReadAsync(buffer).ConfigureAwait(false);
+                    var bytesRead = await networkStream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
 
                     if (bytesRead == 0)
                     {
@@ -293,15 +292,15 @@
 
                     if (!isSecure)
                     {
-                        var text = Encoding.UTF8.GetString(buffer.AsEnumerable().Take(bytesRead).ToArray());
+                        var text = Encoding.UTF8.GetString(bytes, 0, bytesRead);
                         if (text.StartsWith("<proceed"))
                         {
                             cancelRead = true;
                         }
                     }
 
-                    dataReceivedSubject.OnNext(buffer.AsEnumerable().Take(bytesRead).ToArray());
-                    streamParser.Write(buffer.Array, buffer.Offset, bytesRead);
+                    dataReceivedSubject.OnNext(bytes.Take(bytesRead).ToArray());
+                    streamParser.Write(bytes, 0, bytesRead);
 
                 }
                 catch (IOException)
@@ -320,6 +319,8 @@
 
         public async Task InitTls(string xmppDomain)
         {
+            /*
+            // new NET5 APIs, we can use this instead when netstandard 2.0 gets retired
             networkStream = new SslStream(networkStream, true);
             await ((SslStream)networkStream).AuthenticateAsClientAsync(
                 new SslClientAuthenticationOptions()
@@ -328,6 +329,22 @@
                     TargetHost = xmppDomain
                 },
                default
+            ).ConfigureAwait(false);
+            */
+
+
+            networkStream = new SslStream(
+              networkStream,
+              true,
+              CertificateValidator.RemoteCertificateValidationCallback,
+              null
+           );
+
+            await ((SslStream)networkStream).AuthenticateAsClientAsync(
+                xmppDomain,
+                null,
+                System.Security.Authentication.SslProtocols.None,
+                true
             ).ConfigureAwait(false);
 
             isSecure = true;
@@ -348,5 +365,5 @@
         };
         */
 
+        }
     }
-}
