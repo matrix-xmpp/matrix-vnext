@@ -13,7 +13,7 @@
     using Srv;
     using Xml;
     using Xml.Parser;
-    
+
     public class SocketTransport : ITransport
     {
         // subjects
@@ -24,12 +24,13 @@
         private readonly ISubject<byte[]> dataSentSubject = new Subject<byte[]>();
 
         private TransportState TransportStateSubject { get; } = new TransportState();
-        
+
         private bool streamFooterSent;
         private bool streamHeaderSent;
 
         private TcpClient tcpClient;
         private Stream networkStream;
+        private bool isSecure;
         private readonly StreamParser streamParser = new StreamParser();
 
         private const string Whitespace = " ";
@@ -127,12 +128,12 @@
 
             XmlSent
                 .Subscribe(el =>
+                {
+                    if (KeepAliveInterval > 0)
                     {
-                        if (KeepAliveInterval > 0)
-                        {
-                            keepAliveTimer?.Change(KeepAliveInterval, KeepAliveInterval);
-                        }
+                        keepAliveTimer?.Change(KeepAliveInterval, KeepAliveInterval);
                     }
+                }
 
                 );
         }
@@ -155,22 +156,25 @@
 
         public async Task ConnectAsync(string xmppDomain /*, CancellationToken cancellationToken */)
         {
+            isSecure = false;
             tcpClient = new TcpClient();
             var uri = await Resolver.ResolveUriAsync(xmppDomain).ConfigureAwait(false);
             var addresses = await Dns.GetHostAddressesAsync(uri.Host).ConfigureAwait(false);
 
             await tcpClient.ConnectAsync(addresses, uri.Port).ConfigureAwait(false);
-            
+
             networkStream = tcpClient.GetStream();
 
             if (uri.Scheme == Schemes.Tcps)
             {
                 await InitTls(xmppDomain).ConfigureAwait(false);
             }
+            else
+            {
+                StartReceiverTask();
+            }
 
             TransportStateSubject.Value = State.Connected;
-            
-            _ = Task.Run(this.Receive);
         }
 
         public async Task DisconnectAsync()
@@ -265,11 +269,17 @@
             await SendAsync(xmppXElement, CancellationToken.None).ConfigureAwait(false);
         }
 
+        private void StartReceiverTask()
+        {
+            _ = Task.Run(this.Receive);
+        }
+
         private async Task Receive(/*CancellationToken cancellationToken*/)
         {
+            bool cancelRead = false;
             var buffer = new ArraySegment<byte>(new byte[1024 * 2]);
             //while (!cancellationToken.IsCancellationRequested)
-            while (true)
+            while (!cancelRead)
             {
                 try
                 {
@@ -281,10 +291,20 @@
                         break;
                     }
 
+                    if (!isSecure)
+                    {
+                        var text = Encoding.UTF8.GetString(buffer.AsEnumerable().Take(bytesRead).ToArray());
+                        if (text.StartsWith("<proceed"))
+                        {
+                            cancelRead = true;
+                        }
+                    }
+
                     dataReceivedSubject.OnNext(buffer.AsEnumerable().Take(bytesRead).ToArray());
                     streamParser.Write(buffer.Array, buffer.Offset, bytesRead);
+
                 }
-                catch(IOException)
+                catch (IOException)
                 {
                     /*
                      * exception occurs usually when the underlying socket was
@@ -309,6 +329,10 @@
                 },
                default
             ).ConfigureAwait(false);
+
+            isSecure = true;
+
+            StartReceiverTask();
         }
 
         /*
