@@ -1,252 +1,42 @@
-/*
- * Copyright (c) 2003-2020 by AG-Software <info@ag-software.de>
- *
- * All Rights Reserved.
- * See the COPYING file for more information.
- *
- * This file is part of the MatriX project.
- *
- * NOTICE: All information contained herein is, and remains the property
- * of AG-Software and its suppliers, if any.
- * The intellectual and technical concepts contained herein are proprietary
- * to AG-Software and its suppliers and may be covered by German and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- *
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from AG-Software.
- *
- * Contact information for AG-Software is available at http://www.ag-software.de
- */
-
-using System;
-using System.Threading.Tasks;
-using DotNetty.Transport.Bootstrapping;
-using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
-using Matrix.Network;
-using Matrix.Network.Codecs;
-using Matrix.Network.Handlers;
-using Matrix.Network.Resolver;
-using Matrix.Xml;
-using Matrix.Xmpp.Client;
-using Matrix.Xmpp.Stream;
-using System.Threading;
-using DotNetty.Buffers;
-using Matrix.Configuration;
-
 namespace Matrix
 {
-    using Xmpp.StreamManagement.Ack;
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Transport;
+    using Xml;
 
-    public abstract class XmppConnection : IStanzaSender, ISession, IDisposable
+    public abstract class XmppConnection : IStanzaSender
     {
-        private IEventLoopGroup eventLoopGroup;
-        protected Bootstrap Bootstrap = new Bootstrap();
-        
-        readonly XmppStreamEventHandler xmppStreamEventHandler = new XmppStreamEventHandler();
-        private INameResolver resolver = new NameResolver();
-        
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XmppConnection"/> class.
-        /// </summary>
-        protected XmppConnection()
-            : this(configurationAction: null)
-        {
-        }
+        private readonly XmppXElementFilter xmppXElementFilter;
+        internal Configuration Configuration { get; } = new Configuration();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmppConnection"/> class.
         /// </summary>
-        /// <param name="configurationAction">The configuration for this instance</param>
         protected XmppConnection(
-            Action<ClientConfiguration> configurationAction)
-            : this(configurationAction, null)
+            Action<Configuration> configurationAction
+            )
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XmppConnection"/> class.
-        /// </summary>
-        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
-        protected XmppConnection(
-            Action<IChannelPipeline, ISession> pipelineInitializerAction)
-            : this(null, pipelineInitializerAction, new MultithreadEventLoopGroup())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XmppConnection"/> class.
-        /// </summary>
-        /// <param name="configurationAction">The configuration for this instance</param>
-        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
-        protected XmppConnection(
-            Action<ClientConfiguration> configurationAction, 
-            Action<IChannelPipeline, ISession> pipelineInitializerAction)
-            : this(configurationAction, pipelineInitializerAction, new MultithreadEventLoopGroup())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XmppConnection"/> class.
-        /// </summary>
-        /// <param name="configurationAction">The configuration for this instance</param>
-        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
-        /// <param name="eventLoopGroup">The event loop group.</param>
-        protected XmppConnection(
-            Action<ClientConfiguration> configurationAction,
-            Action<IChannelPipeline, ISession> pipelineInitializerAction,
-            IEventLoopGroup eventLoopGroup)
-        {
-            Contract.Requires<ArgumentNullException>(eventLoopGroup != null, $"{nameof(eventLoopGroup)} cannot be null");
-
-            //if (config != null)
-            //{
-            //    this.Configuration = config;
-            //}
-
-            this.eventLoopGroup = eventLoopGroup;
-           
             configurationAction?.Invoke(this.Configuration);
-
-            Bootstrap
-                .Group(eventLoopGroup)
-                .Channel<TcpSocketChannel>()
-                .Option(ChannelOption.TcpNodelay, true)
-                .Option(ChannelOption.SoKeepalive, true)
-                .Resolver(HostnameResolver)
-                .Option(ChannelOption.Allocator, UnpooledByteBufferAllocator.Default)
-                .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
-                {
-                    Pipeline = channel.Pipeline;
-
-                    Pipeline.AddLast2(new ZlibDecoder());
-                    Pipeline.AddLast2(new ZlibEncoder());
-                    Pipeline.AddLast2(new KeepAliveHandler());
-                    Pipeline.AddLast2(new XmlStreamDecoder());
-
-                    Pipeline.AddLast2(new XmppXElementEncoder());
-                    Pipeline.AddLast2(new UTF8StringEncoder());
-
-                    Pipeline.AddLast2(xmppStreamEventHandler);
-
-                    if (this.Configuration.StreamManagement)
-                    {
-                        if (this.StreamManagementHandler == null)
-                        {
-                            this.StreamManagementHandler = new StreamManagementHandler(this);
-                        }
-                        Pipeline.AddLast2(this.StreamManagementHandler);
-                    }
-
-                    Pipeline.AddLast2(new StreamFooterHandler(this));
-                    Pipeline.AddLast2(this.XmppStanzaHandler);
-                    Pipeline.AddLast2(new CatchAllXmppStanzaHandler());
-                    Pipeline.AddLast2(new DisconnectHandler(this));
-
-                    if (this.Configuration.AutoReconnect)
-                    {
-                        Pipeline.AddLast2(new ReconnectHandler(this));
-                    }
-
-                    pipelineInitializerAction?.Invoke(Pipeline, this);
-                }));
+            this.xmppXElementFilter = new XmppXElementFilter(Transport);
         }
 
         #region << Properties >>
-        public IChannelPipeline Pipeline { get; protected set; } = null;
+        internal XmppSessionState XmppSessionStateSubject { get; } = new XmppSessionState();
+        
+        public int Timeout { get; set; } = TimeConstants.TwoMinutes;
 
-        public XmppSessionState XmppSessionState { get; } = new XmppSessionState();
+        public IObservable<SessionState> StateChanged => XmppSessionStateSubject.ValueChanged;
+        
+        public ITransport Transport => Configuration.Transport;
 
-        public XmppSessionEvent XmppSessionEvent { get; } = new XmppSessionEvent();
+        public IObservable<XmppXElement> XmppXElementReceived => Transport.XmlReceived;
 
         public string XmppDomain { get; set; }
-
-        public int Port { get; set; } = 5222;
-
-        public ICertificateValidator CertificateValidator { get; set; } = new DefaultCertificateValidator();
-
-        private ClientConfiguration Configuration { get; } = new ClientConfiguration();
-
-        private readonly XmppStanzaHandler XmppStanzaHandler = new XmppStanzaHandler();
-        private StreamManagementHandler StreamManagementHandler;
-
-        // Observers
-        private IObservable<XmlStreamEvent> XmlStreamEventObserver => xmppStreamEventHandler.XmlStreamEvent;
-        public IObservable<XmppXElement> XmppXElementStreamObserver => xmppStreamEventHandler.XmppXElementStream;
-        public IObservable<SessionState> XmppSessionStateObserver => XmppSessionState.ValueChanged;
-
-        public INameResolver HostnameResolver
-        {
-            get { return resolver; }
-            set
-            {
-                resolver = value;
-                Bootstrap.Resolver(resolver);
-            }
-        }
         #endregion
 
         #region << Send members >>
-
-        #region << SendAsync string members >>
-        protected async Task SendAsync(string data)
-        {
-            await Pipeline.WriteAndFlushAsync(data);
-        }
-
-        protected async Task<T> SendAsync<T>(string data)
-            where T : XmppXElement
-        {
-            return await SendAsync<T>(data, XmppStanzaHandler.DefaultTimeout);
-        }
-        protected async Task<T> SendAsync<T>(string data, int timeout)
-           where T : XmppXElement
-        {
-            return await XmppStanzaHandler.SendAsync<T>(data, timeout);
-        }
-
-        protected async Task<T> SendAsync<T>(string data, CancellationToken cancellationToken)
-           where T : XmppXElement
-        {
-            return await SendAsync<T>(data, XmppStanzaHandler.DefaultTimeout, cancellationToken);
-        }
-
-        protected async Task<T> SendAsync<T>(string data, int timeout, CancellationToken cancellationToken)
-           where T : XmppXElement
-        {
-            return await XmppStanzaHandler.SendAsync<T>(data, timeout, cancellationToken);
-        }
-
-        protected async Task<XmppXElement> SendAsync<T1, T2>(string data)
-            where T1 : XmppXElement
-            where T2 : XmppXElement
-        {
-            return await SendAsync<T1, T2>(data, XmppStanzaHandler.DefaultTimeout);
-        }
-
-        protected async Task<XmppXElement> SendAsync<T1, T2>(string data, int timeout)
-            where T1 : XmppXElement
-            where T2 : XmppXElement
-        {
-            return await XmppStanzaHandler.SendAsync<T1, T2>(data, timeout);
-        }
-
-        protected async Task<XmppXElement> SendAsync<T1, T2>(string data, CancellationToken cancellationToken)
-          where T1 : XmppXElement
-          where T2 : XmppXElement
-        {
-            return await SendAsync<T1, T2>(data, XmppStanzaHandler.DefaultTimeout, cancellationToken);
-        }
-
-        protected async Task<XmppXElement> SendAsync<T1, T2>(string data, int timeout, CancellationToken cancellationToken)
-           where T1 : XmppXElement
-           where T2 : XmppXElement
-        {
-            return await XmppStanzaHandler.SendAsync<T1, T2>(data, timeout, cancellationToken);
-        }
-        #endregion
-
         #region << SendAsync XmppXElement members >>
         /// <summary>
         /// Send a XmppXElement asynchronous
@@ -255,14 +45,7 @@ namespace Matrix
         /// <returns></returns>
         public virtual async Task SendAsync(XmppXElement el)
         {
-            await Pipeline.WriteAndFlushAsync(el);
-
-            if (Pipeline.Contains<StreamManagementHandler>()
-                && Pipeline.Get<StreamManagementHandler>().IsEnabled
-                && (el.OfTypeAny<Xmpp.Base.Iq, Xmpp.Base.Presence, Xmpp.Base.Message>()))
-            {
-                await Pipeline.WriteAndFlushAsync(new Request());
-            }
+            await Transport.SendAsync(el, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -274,7 +57,7 @@ namespace Matrix
         public virtual async Task<T> SendAsync<T>(XmppXElement el)
              where T : XmppXElement
         {
-            return await SendAsync<T>(el, XmppStanzaHandler.DefaultTimeout);
+            return await SendAsync<T>(el, Timeout).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -287,7 +70,7 @@ namespace Matrix
         public virtual async Task<T> SendAsync<T>(XmppXElement el, int timeout)
              where T : XmppXElement
         {
-            return await XmppStanzaHandler.SendAsync<T>(el, timeout);
+            return await xmppXElementFilter.SendAsync<T>(el, timeout).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -300,7 +83,7 @@ namespace Matrix
         public virtual async Task<T> SendAsync<T>(XmppXElement el, CancellationToken cancellationToken)
              where T : XmppXElement
         {
-            return await SendAsync<T>(el, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+            return await SendAsync<T>(el, Timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -314,7 +97,7 @@ namespace Matrix
         public virtual async Task<T> SendAsync<T>(XmppXElement el, int timeout, CancellationToken cancellationToken)
              where T : XmppXElement
         {
-            return await XmppStanzaHandler.SendAsync<T>(el, timeout, cancellationToken);
+            return await xmppXElementFilter.SendAsync<T>(el, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -328,28 +111,28 @@ namespace Matrix
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
-            return await SendAsync<T1, T2>(el, XmppStanzaHandler.DefaultTimeout);
+            return await SendAsync<T1, T2>(el, Timeout).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, int timeout)
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
-            return await XmppStanzaHandler.SendAsync<T1, T2>(el, timeout);
+            return await xmppXElementFilter.SendAsync<T1, T2>(el, timeout).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, CancellationToken cancellationToken)
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
-            return await SendAsync<T1, T2>(el, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+            return await SendAsync<T1, T2>(el, Timeout, cancellationToken).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync<T1, T2>(XmppXElement el, int timeout, CancellationToken cancellationToken)
             where T1 : XmppXElement
             where T2 : XmppXElement
         {
-            return await XmppStanzaHandler.SendAsync<T1, T2>(el, timeout, cancellationToken);
+            return await xmppXElementFilter.SendAsync<T1, T2>(el, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el)
@@ -357,7 +140,7 @@ namespace Matrix
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            return await SendAsync<T1, T2, T3>(el, XmppStanzaHandler.DefaultTimeout);
+            return await SendAsync<T1, T2, T3>(el, Timeout).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, int timeout)
@@ -365,7 +148,7 @@ namespace Matrix
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            return await XmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout);
+            return await xmppXElementFilter.SendAsync<T1, T2, T3>(el, timeout).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, CancellationToken cancellationToken)
@@ -373,7 +156,7 @@ namespace Matrix
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            return await SendAsync<T1, T2, T3>(el, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+            return await SendAsync<T1, T2, T3>(el, Timeout, cancellationToken).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync<T1, T2, T3>(XmppXElement el, int timeout, CancellationToken cancellationToken)
@@ -381,26 +164,26 @@ namespace Matrix
             where T2 : XmppXElement
             where T3 : XmppXElement
         {
-            return await XmppStanzaHandler.SendAsync<T1, T2, T3>(el, timeout, cancellationToken);
+            return await xmppXElementFilter.SendAsync<T1, T2, T3>(el, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync(XmppXElement el, Func<XmppXElement, bool> predicate)
         {
-            return await SendAsync(el, predicate, XmppStanzaHandler.DefaultTimeout, CancellationToken.None);
+            return await SendAsync(el, predicate, Timeout, CancellationToken.None).ConfigureAwait(false);
         }
         public virtual async Task<XmppXElement> SendAsync(XmppXElement el, Func<XmppXElement, bool> predicate, CancellationToken cancellationToken)
         {
-            return await SendAsync(el, predicate, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+            return await SendAsync(el, predicate, Timeout, cancellationToken).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync(XmppXElement el, Func<XmppXElement, bool> predicate, int timeout)
         {
-            return await SendAsync(el, predicate, timeout, CancellationToken.None);
+            return await SendAsync(el, predicate, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         public virtual async Task<XmppXElement> SendAsync(XmppXElement el, Func<XmppXElement, bool> predicate, int timeout, CancellationToken cancellationToken)
         {
-            return await XmppStanzaHandler.SendAsync<XmppXElement>(el, predicate, timeout, cancellationToken);
+            return await xmppXElementFilter.SendAsync<XmppXElement>(el, predicate, timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
@@ -408,61 +191,13 @@ namespace Matrix
         public async Task<T> SendIqAsync<T>(Xmpp.Base.Iq iq, int timeout, CancellationToken cancellationToken)
           where T : Xmpp.Base.Iq
         {
-            return await XmppStanzaHandler.SendIqAsync<T>(iq, timeout, cancellationToken);
+            return await xmppXElementFilter.SendIqAsync<T>(iq, timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
         #endregion
 
-        public async Task<StreamFeatures> ResetStreamAsync(CancellationToken cancellationToken)
-        {
-            Pipeline.Get<XmlStreamDecoder>().Reset();
-            return await SendStreamHeaderAsync(cancellationToken);
-        }
-
-        protected async Task<StreamFeatures> SendStreamHeaderAsync()
-        {
-            return await SendStreamHeaderAsync(XmppStanzaHandler.DefaultTimeout);
-        }
-
-        /// <summary>
-        /// Sends the XMPP stream header and awaits the reply.
-        /// </summary>
-        /// <exception cref="StreamErrorException">
-        /// Throws a StreamErrorException when the server returns a stream error
-        /// </exception>
-        /// <returns></returns>
-        protected async Task<StreamFeatures> SendStreamHeaderAsync(int timeout)
-        {
-            return await SendStreamHeaderAsync(timeout, CancellationToken.None);
-        }
-
-        protected async Task<StreamFeatures> SendStreamHeaderAsync(CancellationToken cancellationToken)
-        {
-            return await SendStreamHeaderAsync(XmppStanzaHandler.DefaultTimeout, cancellationToken);
-        }
-
-        protected async Task<StreamFeatures> SendStreamHeaderAsync(int timeout, CancellationToken cancellationToken)
-        {
-            var streamHeader = new Stream
-            {
-                To = new Jid(XmppDomain),
-                Version = "1.0"
-            };
-
-            var res = await SendAsync<StreamFeatures, Xmpp.Stream.Error>(streamHeader.StartTag(), timeout, cancellationToken);
-
-            if (res.OfType<StreamFeatures>())
-            {
-                return res.Cast<StreamFeatures>();
-            }                
-            else //if (res.OfType<Xmpp.Stream.Error>())
-            {
-                throw new StreamErrorException(res.Cast<Xmpp.Stream.Error>());
-            }                
-        }
-
-        /// <summary>
+      /// <summary>
         /// Connect to the XMPP server.
         /// This establishes the connection to the server, including TLS, authentication, resource binding and
         /// compression.
@@ -471,11 +206,10 @@ namespace Matrix
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
-        /// <exception cref="CompressionException">Throws a CompressionException when establishing stream compression fails.</exception>
         /// <exception cref="RegisterException">Throws a RegisterException when new account registration fails.</exception>
-        public virtual Task<IChannel> ConnectAsync()
+        public virtual Task ConnectAsync()
         {
-            return default(Task<IChannel>);
+            return default;
         }
 
         /// <summary>
@@ -485,9 +219,9 @@ namespace Matrix
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>       
-        public virtual Task<IChannel> ConnectAsync(CancellationToken cancellationToken)
+        public virtual Task ConnectAsync(CancellationToken cancellationToken)
         {
-            return default(Task<IChannel>);
+            return default;
         }
 
         /// <summary>
@@ -503,20 +237,21 @@ namespace Matrix
         /// <returns></returns>
         public async Task<bool> DisconnectAsync(bool sendStreamFooter = true, int timeout = 2000)
         {
-            XmppSessionEvent.Value = SessionEvent.CallDisconnect;
-
+            XmppSessionStateSubject.Value = SessionState.Disconnecting;
+            
             IDisposable anonymousSubscription = null;
             var resultCompletionSource = new TaskCompletionSource<bool>();
 
             if (sendStreamFooter)
             {
-                await SendAsync(new Stream().EndTag());
+                var streamFooter = Transport.GetStreamFooter();
+                await SendAsync(streamFooter).ConfigureAwait(false);
             }
 
-            anonymousSubscription = XmlStreamEventObserver.Subscribe(
-                evt =>
+            anonymousSubscription = Transport.StateChanged.Subscribe(
+                state =>
                 {
-                    if (evt.XmlStreamEventType == XmlStreamEventType.StreamEnd)
+                    if (state == State.StreamFooterReceived)
                     {
                         anonymousSubscription?.Dispose();
                         resultCompletionSource.SetResult(true);
@@ -524,36 +259,17 @@ namespace Matrix
                 });
 
             if (resultCompletionSource.Task ==
-                await Task.WhenAny(resultCompletionSource.Task, Task.Delay(timeout)))
+                await Task.WhenAny(resultCompletionSource.Task, Task.Delay(timeout)).ConfigureAwait(false))
             {
-                await TryCloseAsync();
-                return await resultCompletionSource.Task;
+                await Transport.DisconnectAsync().ConfigureAwait(false);
+                return await resultCompletionSource.Task.ConfigureAwait(false);
             }
 
             // timed out
             anonymousSubscription.Dispose();
-            await TryCloseAsync();
+            await Transport.DisconnectAsync().ConfigureAwait(false);
 
             return true;
         }
-
-        private async Task TryCloseAsync()
-        {
-            if (Pipeline.Channel.Active)
-            {
-                await Pipeline.CloseAsync();
-            }
-        }
-
-        #region << IDisposable implementation >>
-        public void Dispose()
-        {
-            Task.Run(async () =>
-            {
-                await eventLoopGroup.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
-            })
-            .Wait();
-        }
-        #endregion
     }
 }

@@ -1,0 +1,41 @@
+﻿@page "/roster"
+
+<h1>Contact List, aka Roster</h1>
+
+<div class="mb-3">
+    <label for="jid" class="form-label">Your Jid</label>
+    <input @bind="Account.Jid" @bind:event="oninput" type="email" class="form-control" id="jid" placeholder="user@example.com">
+</div>
+<div class="mb-3">
+    <label for="password" class="form-label">Your password</label>
+    <input @bind="Account.Password" @bind:event="oninput" type="password" class="form-control" id="password" placeholder="your password">
+</div>
+
+
+<button class="btn btn-primary" @onclick="Connect">Connect</button>
+<button class="btn btn-primary" @onclick="Disconnect">Disconnect</button>
+
+@if (Contacts.Count == 0)
+{
+    <p><em>contact list not requested yet...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Jid</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contact in Contacts)
+            {
+                <tr>
+                    <td>@contact.Jid</td>
+                    <td>@contact.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

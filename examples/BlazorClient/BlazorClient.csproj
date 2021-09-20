@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.2" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Matrix.Extensions\Matrix.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\Matrix.Transport.WebSocket\Matrix.Transport.WebSocket.csproj" />
+    <ProjectReference Include="..\..\src\Matrix\Matrix.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\Counter - Copy - Copy.razor.cs">
+      <DependentUpon>Counter - Copy.razor.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Counter - Copy.razor.cs">
+      <DependentUpon>Counter.razor.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

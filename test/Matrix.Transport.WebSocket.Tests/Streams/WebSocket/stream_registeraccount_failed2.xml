@@ -1,0 +1,61 @@
+﻿<stream>
+  <stanza type="client" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" to="localhost" version="1.0" />]]>
+  </stanza>
+  <stanza type="server" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" from="localhost" version="1.0" />]]>
+    <![CDATA[<stream:features xmlns:stream="http://etherx.jabber.org/streams">
+                <mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
+                    <mechanism>PLAIN</mechanism>
+                </mechanisms>
+                <register xmlns='http://jabber.org/features/iq-register'/>
+            </stream:features>]]>
+  </stanza>
+
+  <stanza type="client" id="2">
+    <![CDATA[<iq type='get' id='reg1' to='shakespeare.lit' xmlns='jabber:client'><query xmlns='jabber:iq:register'/></iq>]]>
+  </stanza>
+  <stanza type="server" id="2">
+    <![CDATA[<iq type='result' id='{id}' xmlns='jabber:client'>
+  <query xmlns='jabber:iq:register'>
+    <instructions>
+      Choose a username and password for use with this service.
+      Please also provide your email address.
+    </instructions>
+    <username/>
+    <password/>
+    <email/>
+  </query>
+</iq>]]>
+  </stanza>
+
+  <stanza type="client" id="3">
+    <![CDATA[<iq type='result' id='reg2' xmlns='jabber:client'>
+  <query xmlns='jabber:iq:register'>
+    <registered/>
+    <username>juliet</username>
+    <password>R0m30</password>
+    <email>juliet@capulet.com</email>
+  </query>
+</iq>]]>
+  </stanza>
+  <stanza type="server" id="3">
+    <![CDATA[<iq type='error' id='{id}' xmlns='jabber:client'>
+  <query xmlns='jabber:iq:register'>
+    <username>juliet</username>
+    <password>R0m30</password>
+    <email>juliet@capulet.com</email>
+  </query>
+  <error code='409' type='cancel'>
+    <conflict xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+  </error>
+</iq>]]>
+  </stanza>
+
+  <stanza type="client" id="4">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+  <stanza type="server" id="4">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+</stream>

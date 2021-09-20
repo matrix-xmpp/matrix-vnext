@@ -1,0 +1,33 @@
+﻿@page "/logs"
+
+<h1>Xml Logs</h1>
+
+<div class="mb-3">
+    <label for="jid" class="form-label">Your Jid</label>
+    <input @bind="Account.Jid" @bind:event="oninput" type="email" class="form-control" id="jid" placeholder="user@example.com">
+</div>
+<div class="mb-3">
+    <label for="password" class="form-label">Your password</label>
+    <input  @bind="Account.Password" @bind:event="oninput" type="password" class="form-control" id="password" placeholder="your password">
+</div>
+
+<button class="btn btn-primary" @onclick="Connect">Connect</button>
+<button class="btn btn-primary" @onclick="Disconnect">Disconnect</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Direction</th>
+            <th>XML</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in LogMessages)
+        {
+            <tr>
+                <td>@log.Direction</td>
+                <td>@log.Xml</td>
+            </tr>
+        }
+    </tbody>
+</table>

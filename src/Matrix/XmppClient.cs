@@ -1,103 +1,61 @@
-/*
- * Copyright (c) 2003-2020 by AG-Software <info@ag-software.de>
- *
- * All Rights Reserved.
- * See the COPYING file for more information.
- *
- * This file is part of the MatriX project.
- *
- * NOTICE: All information contained herein is, and remains the property
- * of AG-Software and its suppliers, if any.
- * The intellectual and technical concepts contained herein are proprietary
- * to AG-Software and its suppliers and may be covered by German and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- *
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from AG-Software.
- *
- * Contact information for AG-Software is available at http://www.ag-software.de
- */
-
-using System;
-using System.Net.Security;
-using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-using DotNetty.Handlers.Tls;
-using DotNetty.Transport.Channels;
-using Matrix.Configuration;
-using Matrix.Network.Codecs;
-using Matrix.Network.Handlers;
-using Matrix.Sasl;
-using Matrix.Xml;
-using Matrix.Xmpp;
-using Matrix.Xmpp.Client;
-using Matrix.Xmpp.Compression;
-using Matrix.Xmpp.Register;
-using Matrix.Xmpp.Sasl;
-using Matrix.Xmpp.Stream;
-using Matrix.Xmpp.Tls;
-using Matrix.Network;
-
 namespace Matrix
 {
+    using Sasl;
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Security;
+    using System.Reactive.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Xml;
+    using Xmpp;
+    using Xmpp.Client;
+    using Xmpp.Register;
+    using Xmpp.Sasl;
+    using Xmpp.Stream;
+    using Xmpp.Tls;
+
     /// <summary>
     /// Handles XMPP client connections
     /// </summary>
-    public class XmppClient : XmppConnection, IClientIqSender
+    public class XmppClient : XmppConnection, IXmppClient
     {
+        private readonly List<XmppHandler> handlers = new List<XmppHandler>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="XmppClient"/> class.
         /// </summary>
-        public XmppClient()
-            : this(configurationAction: null)
+        public XmppClient(Action<Configuration> configurationAction)
+            : this(
+                configurationAction,
+                null
+                )
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmppClient"/> class.
         /// </summary>
-        /// <param name="configurationAction">The configuration for this instance</param>
-        public XmppClient(Action<ClientConfiguration> configurationAction)
-            : this(configurationAction, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XmppClient"/> class.
-        /// </summary>
-        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
-        public XmppClient(Action<IChannelPipeline, ISession> pipelineInitializerAction)
-            : this(null, pipelineInitializerAction)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XmppClient"/> class.
-        /// </summary>
-        /// <param name="configurationAction">The configuration for this instance</param>
-        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
+        /// <param name="configurationAction"></param>
+        /// <param name="handlerInitializerAction"></param>
         public XmppClient(
-            Action<ClientConfiguration> configurationAction,
-            Action<IChannelPipeline, ISession> pipelineInitializerAction)
-            : base(configurationAction, pipelineInitializerAction)
+            Action<Configuration> configurationAction,
+            Action<List<XmppHandler>, XmppClient> handlerInitializerAction)
+            : base(configurationAction)
         {
-        }
+            handlers.Add(new DisconnectHandler(this));
+            
+            if (Configuration.StreamManagement)
+            {
+                handlers.Add(new StreamManagementHandler(this));
+            }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XmppClient"/> class.
-        /// </summary>
-        /// <param name="configurationAction">The configuration for this instance</param>
-        /// <param name="pipelineInitializerAction">The pipeline initializer action.</param>
-        /// <param name="eventLoopGroup">The event loop group.</param>
-        public XmppClient(
-            Action<ClientConfiguration> configurationAction,
-            Action<IChannelPipeline, ISession> pipelineInitializerAction, 
-            IEventLoopGroup eventLoopGroup)
-           : base(configurationAction, pipelineInitializerAction, eventLoopGroup)
-        {
+            if (Configuration.AutoReconnect)
+            {
+                handlers.Add(new ReconnectHandler(this));
+            }
+
+            handlerInitializerAction?.Invoke(handlers, this);
         }
 
         private string resource = "MatriX";
@@ -132,26 +90,13 @@ namespace Matrix
         public bool Tls { get; set; } = true;       
 
         /// <summary>
-        /// Gets or sets the <see cref="ITlsSettingsProvider"/>.
-        /// By setting a custom provider default settings can be customized.
-        /// </summary>
-        public ITlsSettingsProvider TlsSettingsProvider { get; set; } = new DefaultClientTlsSettingsProvider();
-
-
-        /// <summary>
-        /// Gets or sets the <see cref="ITlsHandlerProvider"/>
-        /// This allows to use customs Tls handler implementations.
-        /// </summary>
-        public ITlsHandlerProvider TlsHandlerProvider { get; set; } = new DefaultClientTlsHandlerProvider();
-
-        /// <summary>
         /// Gets or sets a value indicating whether <see href="https://xmpp.org/extensions/xep-0138.html">XEP-0138: Stream Compression</see> should be used
         /// on this <see cref="XmppClient" />.
         /// </summary>
         /// <value>
         /// <c>true</c> if compression; otherwise, <c>false</c>.
         /// </value>
-        public bool Compression { get; set; } = true;      
+        //public bool Compression { get; set; } = true;      
 
         public IAuthenticate SaslHandler { get; set; } = new DefaultSaslHandler();
 
@@ -167,11 +112,10 @@ namespace Matrix
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
-        /// <exception cref="CompressionException">Throws a CompressionException when establishing stream compression fails.</exception>
         /// <exception cref="RegisterException">Throws a RegisterException when new account registration fails.</exception>
-        public override async Task<IChannel> ConnectAsync()
+        public override async Task ConnectAsync()
         {
-            return await ConnectAsync(CancellationToken.None);
+            await ConnectAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -184,63 +128,55 @@ namespace Matrix
         /// <exception cref="AuthenticationException">Thrown when the authentication fails.</exception>
         /// <exception cref="BindException">Thrown when resource binding fails.</exception>
         /// <exception cref="StreamErrorException">Throws a StreamErrorException when the server returns a stream error.</exception>
-        /// <exception cref="CompressionException">Throws a CompressionException when establishing stream compression fails.</exception>
         /// <exception cref="RegisterException">Throws aRegisterException when new account registration fails.</exception>
-        public override async Task<IChannel> ConnectAsync(CancellationToken cancellationToken)
+        public override async Task ConnectAsync(CancellationToken cancellationToken)
         {
-            var iChannel = await Bootstrap.ConnectAsync(XmppDomain, Port);
-            XmppSessionState.Value = SessionState.Connected;
+            await Transport.ConnectAsync(XmppDomain).ConfigureAwait(false);
 
-            if (HostnameResolver.Implements<IDirectTls>() 
-                && HostnameResolver.Cast<IDirectTls>().DirectTls == true)
-            {
-                await DoSslAsync(cancellationToken);
-            }
+            XmppSessionStateSubject.Value = Matrix.SessionState.Connected;
 
-            var feat = await SendStreamHeaderAsync(cancellationToken);
-            await HandleStreamFeaturesAsync(feat, cancellationToken);
-            return iChannel;
+            var feat = await SendStreamHeaderAsync(cancellationToken).ConfigureAwait(false);
+            await HandleStreamFeaturesAsync(feat, cancellationToken).ConfigureAwait(false);
         }
 
         internal async Task HandleStreamFeaturesAsync(
             StreamFeatures features, 
             CancellationToken cancellationToken)
         {
-            if (XmppSessionState.Value < SessionState.Securing && features.SupportsStartTls && Tls)
+            if (XmppSessionStateSubject.Value < Matrix.SessionState.Securing && features.SupportsStartTls && Tls)
             {
-                await HandleStreamFeaturesAsync(await DoStartTlsAsync(cancellationToken), cancellationToken);
+                await HandleStreamFeaturesAsync(
+                    await DoStartTlsAsync(cancellationToken).ConfigureAwait(false),
+                    cancellationToken
+                    ).ConfigureAwait(false);
             }
-            else if (XmppSessionState.Value < SessionState.Registering && features.SupportsRegistration && RegistrationHandler?.RegisterNewAccount == true)
+            else if (XmppSessionStateSubject.Value < Matrix.SessionState.Registering && features.SupportsRegistration && RegistrationHandler?.RegisterNewAccount == true)
             {
-                await DoRegisterAsync(cancellationToken);
-                await HandleStreamFeaturesAsync(features, cancellationToken);
+                await DoRegisterAsync(cancellationToken).ConfigureAwait(false);
+                await HandleStreamFeaturesAsync(features, cancellationToken).ConfigureAwait(false);
             }
-            else if (XmppSessionState.Value < SessionState.Authenticating)
+            else if (XmppSessionStateSubject.Value < Matrix.SessionState.Authenticating)
             {
-                var authRet = await DoAuthenicateAsync(features.Mechanisms, cancellationToken);
-                await HandleStreamFeaturesAsync(authRet, cancellationToken);
+                var authRet = await DoAuthenicateAsync(features.Mechanisms, cancellationToken).ConfigureAwait(false);
+                await HandleStreamFeaturesAsync(authRet, cancellationToken).ConfigureAwait(false);
             }
-            else if (XmppSessionState.Value < SessionState.Binding
-                && Pipeline.Contains<StreamManagementHandler>()
-                && Pipeline.Get<StreamManagementHandler>().CanResume
-                && Pipeline.Get<StreamManagementHandler>().StreamId != null)
+            else if (XmppSessionStateSubject.Value < Matrix.SessionState.Binding
+                    && handlers.Contains<IStreamManagementHandler>()
+                    && handlers.Get<IStreamManagementHandler>().CanResume
+                    && handlers.Get<IStreamManagementHandler>().StreamId != null)
             {
-                await Pipeline.Get<StreamManagementHandler>().ResumeAsync(cancellationToken);
-                await HandleStreamFeaturesAsync(features, cancellationToken);
+                await handlers.Get<IStreamManagementHandler>().ResumeAsync(cancellationToken).ConfigureAwait(false);
+                await HandleStreamFeaturesAsync(features, cancellationToken).ConfigureAwait(false);
             }
-            else if (XmppSessionState.Value < SessionState.Compressing && features.SupportsZlibCompression && Compression)
+            else if (XmppSessionStateSubject.Value < Matrix.SessionState.Binding)
             {
-                await HandleStreamFeaturesAsync(await DoEnableCompressionAsync(cancellationToken), cancellationToken);
-            }            
-            else if (XmppSessionState.Value < SessionState.Binding)
-            {
-                await DoBindAsync(features, cancellationToken);
+                await DoBindAsync(features, cancellationToken).ConfigureAwait(false);
                 // enable stream Management if supported by the server and enabled directly after resource binding
-                if (Pipeline.Contains<StreamManagementHandler>()
-                    && Pipeline.Get<StreamManagementHandler>().Supported
-                    && !Pipeline.Get<StreamManagementHandler>().IsEnabled)
+                if (handlers.Contains<IStreamManagementHandler>()
+                    && handlers.Get<IStreamManagementHandler>().Supported
+                    && !handlers.Get<IStreamManagementHandler>().IsEnabled)
                 {
-                    await Pipeline.Get<StreamManagementHandler>().EnableAsync();
+                    await handlers.Get<IStreamManagementHandler>().EnableAsync().ConfigureAwait(false);
                 }
             }
         }
@@ -252,43 +188,26 @@ namespace Matrix
         /// <returns></returns>
         private async Task<StreamFeatures> DoStartTlsAsync(CancellationToken cancellationToken)
         {
-            XmppSessionState.Value = SessionState.Securing;
+            XmppSessionStateSubject.Value = SessionState.Securing;
+
+            await SendAsync<Proceed>(new StartTls(), cancellationToken).ConfigureAwait(false);
+            await Transport.InitTls(XmppDomain).ConfigureAwait(false);
             
-            var tlsHandler = await TlsHandlerProvider.ProvideAsync(this);
-            await SendAsync<Proceed>(new StartTls(), cancellationToken);
-            Pipeline.AddFirst(tlsHandler);
-            var streamFeatures = await ResetStreamAsync(cancellationToken);
-            XmppSessionState.Value = SessionState.Secure;
+            var streamFeatures = await ResetStreamAsync(cancellationToken).ConfigureAwait(false);
 
+            XmppSessionStateSubject.Value = SessionState.Secure;
             return streamFeatures;
-        }
-
-        /// <summary>
-        /// Starts SSL/TLS on a connection. This can be used for old Jabber style SSL.
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        private async Task DoSslAsync(CancellationToken cancellationToken)
-        {
-            await Task.Run(async () =>
-            {
-                var tlsHandler = await TlsHandlerProvider.ProvideAsync(this);
-                XmppSessionState.Value = SessionState.Securing;
-
-                Pipeline.AddFirst(tlsHandler);
-                XmppSessionState.Value = SessionState.Secure;
-            }, cancellationToken);
         }
 
         private async Task<StreamFeatures> DoAuthenicateAsync(Mechanisms mechanisms, CancellationToken cancellationToken)
         {
-            XmppSessionState.Value = SessionState.Authenticating;
-            var res = await SaslHandler.AuthenticateAsync(mechanisms, this, cancellationToken);
+            XmppSessionStateSubject.Value = Matrix.SessionState.Authenticating;
+            var res = await SaslHandler.AuthenticateAsync(mechanisms, this, cancellationToken).ConfigureAwait(false);
 
             if (res is Success)
             {
-                XmppSessionState.Value = SessionState.Authenticated;
-                return await ResetStreamAsync(cancellationToken);
+                XmppSessionStateSubject.Value = Matrix.SessionState.Authenticated;
+                return await ResetStreamAsync(cancellationToken).ConfigureAwait(false);
             }
             else //if (res is Failure)
             {
@@ -298,10 +217,10 @@ namespace Matrix
 
         private async Task<Iq> DoBindAsync(StreamFeatures features, CancellationToken cancellationToken)
         {
-            XmppSessionState.Value = SessionState.Binding;
+            XmppSessionStateSubject.Value = Matrix.SessionState.Binding;
 
             var bIq = new BindIq { Type = IqType.Set, Bind = { Resource = Resource } };
-            var resBindIq = await SendIqAsync(bIq, cancellationToken);
+            var resBindIq = await SendIqAsync(bIq, cancellationToken).ConfigureAwait(false);
 
             if (resBindIq.Type != IqType.Result)
                 throw new BindException(resBindIq);
@@ -309,10 +228,10 @@ namespace Matrix
             if (features.SupportsSession && !features.Session.Optional)
             {
                 var sessionIq = new SessionIq { Type = IqType.Set };
-                var resSessionIq = await SendIqAsync(sessionIq, cancellationToken);
+                await SendIqAsync(sessionIq, cancellationToken).ConfigureAwait(false);
             }
 
-            XmppSessionState.Value = SessionState.Binded;
+            XmppSessionStateSubject.Value = Matrix.SessionState.Binded;
 
             return resBindIq;
         }
@@ -325,22 +244,26 @@ namespace Matrix
         /// <exception cref="RegisterException">Thrown when the registration fails.</exception>
         private async Task DoRegisterAsync(CancellationToken cancellationToken)
         {
-            XmppSessionState.Value = SessionState.Registering;
+            XmppSessionStateSubject.Value = Matrix.SessionState.Registering;
             var regInfoIqResult =
                 await SendIqAsync(
                     new RegisterIq { Type = IqType.Get, To = XmppDomain },
-                    cancellationToken);
+                    cancellationToken)
+                    .ConfigureAwait(false);
 
             if (regInfoIqResult.Type == IqType.Result && regInfoIqResult.Query is Register)
             {
                 var regIq = new Iq { Type = IqType.Set, To = new Jid(XmppDomain) };
                 regIq.GenerateId();
-                regIq.Query = await RegistrationHandler?.RegisterAsync(regInfoIqResult.Query as Register);
-
-                var regResult = await SendIqAsync(regIq, cancellationToken);
+                if (RegistrationHandler != null)
+                {
+                    regIq.Query = await RegistrationHandler.RegisterAsync(regInfoIqResult.Query as Register);
+                }
+                
+                var regResult = await SendIqAsync(regIq, cancellationToken).ConfigureAwait(false);
                 if (regResult.Type == IqType.Result)
                 {
-                    XmppSessionState.Value = SessionState.Registered;
+                    XmppSessionStateSubject.Value = Matrix.SessionState.Registered;
                     return;
                 }
                 else
@@ -349,26 +272,68 @@ namespace Matrix
             throw new RegisterException(regInfoIqResult);
         }
 
-        private async Task<StreamFeatures> DoEnableCompressionAsync(CancellationToken cancellationToken)
+        //private async Task<StreamFeatures> DoEnableCompressionAsync(CancellationToken cancellationToken)
+        //{
+        //    XmppSessionState.Value = SessionState.Compressing;
+
+        //    var ret = await SendAsync<Compresed, Xmpp.Compression.Failure>(new Compress(Methods.Zlib), cancellationToken);
+        //    if (ret.OfType<Compresed>())
+        //    {
+        //        Pipeline.Get<ZlibEncoder>().Active = true;
+        //        Pipeline.Get<ZlibDecoder>().Active = true;
+
+        //        var streamFeatures = await ResetStreamAsync(cancellationToken);
+        //        XmppSessionState.Value = SessionState.Compressed;
+        //        return streamFeatures;
+        //    }
+        //    else if (ret.OfType<Xmpp.Compression.Failure>())
+        //    {
+        //        throw new CompressionException(ret.Cast<Xmpp.Compression.Failure>());
+        //    }
+
+        //    throw new XmppException(ret);
+        //}
+
+        public async Task<StreamFeatures> ResetStreamAsync(CancellationToken cancellationToken)
         {
-            XmppSessionState.Value = SessionState.Compressing;
+            return await SendStreamHeaderAsync(cancellationToken).ConfigureAwait(false);
+        }
 
-            var ret = await SendAsync<Compresed, Xmpp.Compression.Failure>(new Compress(Methods.Zlib), cancellationToken);
-            if (ret.OfType<Compresed>())
+        protected async Task<StreamFeatures> SendStreamHeaderAsync()
+        {
+            return await SendStreamHeaderAsync(Timeout).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Sends the XMPP stream header and awaits the reply.
+        /// </summary>
+        /// <exception cref="StreamErrorException">
+        /// Throws a StreamErrorException when the server returns a stream error
+        /// </exception>
+        /// <returns></returns>
+        protected async Task<StreamFeatures> SendStreamHeaderAsync(int timeout)
+        {
+            return await SendStreamHeaderAsync(timeout, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        protected async Task<StreamFeatures> SendStreamHeaderAsync(CancellationToken cancellationToken)
+        {
+            return await SendStreamHeaderAsync(Timeout, cancellationToken).ConfigureAwait(false);
+        }
+
+        protected async Task<StreamFeatures> SendStreamHeaderAsync(int timeout, CancellationToken cancellationToken)
+        {
+            var streamHeader = Transport.GetStreamHeader(XmppDomain, "1.0");
+            var res = await SendAsync<StreamFeatures, Xmpp.Stream.Error>(streamHeader, timeout, cancellationToken).ConfigureAwait(false);
+
+            if (res.OfType<StreamFeatures>())
             {
-                Pipeline.Get<ZlibEncoder>().Active = true;
-                Pipeline.Get<ZlibDecoder>().Active = true;
-
-                var streamFeatures = await ResetStreamAsync(cancellationToken);
-                XmppSessionState.Value = SessionState.Compressed;
-                return streamFeatures;
+                return res.Cast<StreamFeatures>();
             }
-            else if (ret.OfType<Xmpp.Compression.Failure>())
+            else //if (res.OfType<Xmpp.Stream.Error>())
             {
-                throw new CompressionException(ret.Cast<Xmpp.Compression.Failure>());
+                throw new StreamErrorException(res.Cast<Xmpp.Stream.Error>());
             }
-
-            throw new XmppException(ret);
         }
 
         #region << Send iq >>
@@ -379,7 +344,7 @@ namespace Matrix
         /// <returns>The server response Iq</returns>
         public async Task<Iq> SendIqAsync(Iq iq)
         {
-            return await SendIqAsync(iq, XmppStanzaHandler.DefaultTimeout);
+            return await SendIqAsync(iq, XmppXElementFilter.DefaultTimeout).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -390,7 +355,7 @@ namespace Matrix
         /// <returns>The server response Iq</returns>
         public async Task<Iq> SendIqAsync(Iq iq, int timeout)
         {
-            return await SendIqAsync(iq, timeout, CancellationToken.None);
+            return await SendIqAsync(iq, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -401,7 +366,7 @@ namespace Matrix
         /// <returns>The server response Iq</returns>
         public async Task<Iq> SendIqAsync(Iq iq, CancellationToken cancellationToken)
         {
-            return await SendIqAsync(iq, XmppStanzaHandler.DefaultTimeout, cancellationToken);
+            return await SendIqAsync(iq, XmppXElementFilter.DefaultTimeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -415,7 +380,7 @@ namespace Matrix
         {
             Contract.Requires<ArgumentNullException>(iq != null, $"{nameof(iq)} cannot be null");
 
-            return await SendIqAsync<Iq>(iq, timeout, cancellationToken);
+            return await SendIqAsync<Iq>(iq, timeout, cancellationToken).ConfigureAwait(false);
         }
         #endregion   
     }

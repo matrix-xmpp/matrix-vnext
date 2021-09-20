@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>MatriX Socket Transport</Description>
+    <AssemblyTitle>MatriX Socket Transport</AssemblyTitle>
+    <PackageId>Matrix.Transport.Socket</PackageId>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Matrix.Core\Matrix.Core.csproj" />
+    <ProjectReference Include="..\Matrix.Srv\Matrix.Srv.csproj" />
+  </ItemGroup>
+
+</Project>

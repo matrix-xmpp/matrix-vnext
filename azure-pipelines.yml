@@ -1,0 +1,27 @@
+variables:
+- group: MyGet
+
+trigger:
+  batch: true # batch changes if true; start a new build for every push if false (default)
+  branches:
+    include: [ replace-dotnetty ] # branch names which will trigger a build
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: UseDotNet@2
+  displayName: Use .NET Core sdk 5.0.100
+  inputs:
+    packageType: 'sdk'
+    version: '5.0.100'
+
+- task: Cake@2
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/replace-dotnetty')
+  displayName: Run Cake script
+  inputs:
+    script: 'build.cake'
+    target: 'Default'
+    verbosity: 'Verbose'
+    Version: '1.0.0-rc0002'
+    arguments: '--civersion --nuget-token="$(myget.token)" --nuget-feed="$(myget.feed)" --nugetpush'

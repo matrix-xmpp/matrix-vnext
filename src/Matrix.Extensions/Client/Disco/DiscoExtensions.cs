@@ -1,25 +1,4 @@
-﻿/*
- * Copyright (c) 2003-2020 by AG-Software <info@ag-software.de>
- *
- * All Rights Reserved.
- * See the COPYING file for more information.
- *
- * This file is part of the MatriX project.
- *
- * NOTICE: All information contained herein is, and remains the property
- * of AG-Software and its suppliers, if any.
- * The intellectual and technical concepts contained herein are proprietary
- * to AG-Software and its suppliers and may be covered by German and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- *
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from AG-Software.
- *
- * Contact information for AG-Software is available at http://www.ag-software.de
- */
-
-namespace Matrix.Extensions.Client.Disco
+﻿namespace Matrix.Extensions.Client.Disco
 {
     using Matrix.Xmpp.Client; 
     using System.Threading;
@@ -37,7 +16,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverItemsAsync(this IClientIqSender iqSender, Jid to)
         {
-            return await DiscoverItemsAsync(iqSender, to, null, DefaultTimeout, CancellationToken.None);
+            return await DiscoverItemsAsync(iqSender, to, null, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -49,7 +28,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverItemsAsync(this IClientIqSender iqSender, Jid to, int timeout)
         {
-            return await DiscoverItemsAsync(iqSender, to, null, timeout, CancellationToken.None);
+            return await DiscoverItemsAsync(iqSender, to, null, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -61,7 +40,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverItemsAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await DiscoverItemsAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None);
+            return await DiscoverItemsAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -74,7 +53,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverItemsAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await DiscoverItemsAsync(iqSender, to, node, timeout, CancellationToken.None);
+            return await DiscoverItemsAsync(iqSender, to, node, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -88,7 +67,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverItemsAsync(this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(DiscoBuilder.DiscoverItems(to, node), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(DiscoBuilder.DiscoverItems(to, node), timeout, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -99,7 +78,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverInformationAsync(this IClientIqSender iqSender, Jid to)
         {
-            return await DiscoverInformationAsync(iqSender, to, null, DefaultTimeout, CancellationToken.None);
+            return await DiscoverInformationAsync(iqSender, to, null, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -111,7 +90,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverInformationAsync(this IClientIqSender iqSender, Jid to, int timeout)
         {
-            return await DiscoverInformationAsync(iqSender, to, null, timeout, CancellationToken.None);
+            return await DiscoverInformationAsync(iqSender, to, null, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -123,7 +102,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverInformationAsync(this IClientIqSender iqSender, Jid to, string node)
         {
-            return await DiscoverInformationAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None);
+            return await DiscoverInformationAsync(iqSender, to, node, DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -136,7 +115,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverInformationAsync(this IClientIqSender iqSender, Jid to, string node, int timeout)
         {
-            return await DiscoverInformationAsync(iqSender, to, node, timeout, CancellationToken.None);
+            return await DiscoverInformationAsync(iqSender, to, node, timeout, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -150,7 +129,7 @@ namespace Matrix.Extensions.Client.Disco
         /// <returns></returns>
         public static async Task<Iq> DiscoverInformationAsync(this IClientIqSender iqSender, Jid to, string node, int timeout, CancellationToken cancellationToken)
         {
-            return await iqSender.SendIqAsync(DiscoBuilder.DiscoverInformation(to, node), timeout, cancellationToken);
+            return await iqSender.SendIqAsync(DiscoBuilder.DiscoverInformation(to, node), timeout, cancellationToken).ConfigureAwait(false);
         }
     }
 }

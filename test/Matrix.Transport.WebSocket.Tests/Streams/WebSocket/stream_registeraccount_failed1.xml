@@ -1,0 +1,33 @@
+﻿<stream>
+  <stanza type="client" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" to="localhost" version="1.0" />]]>
+  </stanza>
+  <stanza type="server" id="1">
+    <![CDATA[<open xmlns="urn:ietf:params:xml:ns:xmpp-framing" from="localhost" version="1.0" />]]>
+    <![CDATA[<stream:features xmlns:stream="http://etherx.jabber.org/streams">
+                <mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
+                    <mechanism>PLAIN</mechanism>
+                </mechanisms>
+                <register xmlns='http://jabber.org/features/iq-register'/>
+            </stream:features>
+            ]]>
+  </stanza>
+
+  <stanza type="client" id="2">
+    <![CDATA[<iq type='get' id='reg1' to='shakespeare.lit' xmlns='jabber:client'><query xmlns='jabber:iq:register'/></iq>]]>
+  </stanza>
+  <stanza type="server" id="2">
+    <![CDATA[<iq type='error' id='{id}' xmlns='jabber:client'>
+  <error code='409' type='cancel'>
+    <conflict xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+  </error>
+</iq>]]>
+  </stanza>
+
+  <stanza type="client" id="3">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+  <stanza type="server" id="3">
+    <![CDATA[<close xmlns="urn:ietf:params:xml:ns:xmpp-framing"/>]]>
+  </stanza>
+</stream>
