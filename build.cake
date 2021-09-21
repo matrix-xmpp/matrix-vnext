@@ -57,7 +57,7 @@ Task("Update-Assembly-Version")
         var splitted = vstsBuildNumber.Split('.');
         var buildIncrementalNumber = splitted[splitted.Length - 1];
 
-        string prefix = ""
+        string prefix = "";
         if (HasArgument("rcversion"))
         {
             prefix = "rc." + Argument<string>("rcversion");
