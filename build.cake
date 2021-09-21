@@ -12,6 +12,8 @@ var configuration = Argument("configuration", "Release");
     Additional arguments:
     civersion:      when present a ci version should be build. Its appending
                     ci-$juliandate-$buildnumber
+    rcversion:      when present a rc version should be build
+                    rc.1-$juliandate-$buildnumber
 
     nugetpush:      when present will push nuget packages
 
@@ -41,9 +43,8 @@ Task("Clean")
         }		
     });
 
-Task("Update-Assembly-Version")
-    //.WithCriteria(HasArgument("civersion") && BuildSystem.AzurePipelines.IsRunningOnAzurePipelines)
-    .WithCriteria(HasArgument("civersion"))
+Task("Update-Assembly-Version")    
+    .WithCriteria(HasArgument("civersion") || HasArgument("rcversion"))
     .IsDependentOn("Clean")
     .Does(() =>
     {
@@ -56,11 +57,21 @@ Task("Update-Assembly-Version")
         var splitted = vstsBuildNumber.Split('.');
         var buildIncrementalNumber = splitted[splitted.Length - 1];
 
+        string prefix = ""
+        if (HasArgument("rcversion"))
+        {
+            prefix = "rc." + Argument<string>("rcversion");
+        }
+        else
+        {
+            prefix = "ci";
+        }
+
         var files = GetFiles("./**/version.props");
         foreach(var file in files)
         {
             var currentVersion = XmlPeek(file.FullPath, "/Project/PropertyGroup/AssemblyVersion");
-            var newVersion = $"{currentVersion}-ci-{julianDate}-{buildIncrementalNumber}";
+            var newVersion = $"{currentVersion}-{prefix}-{julianDate}-{buildIncrementalNumber}";
 
             XmlPoke(file.FullPath, "/Project/PropertyGroup/FileVersion", currentVersion);
             XmlPoke(file.FullPath, "/Project/PropertyGroup/Version", newVersion);
