@@ -1,3 +1,2 @@
-# MatriX vnext
-ReadMe still in progress.
-For now goto: https://www.ag-software.net/matrix-vnext/
+MatriX vNext was renamed to XmppDotNet. This repo will e archived soon.
+Please goto: https://github.com/agnauck/XmppDotNet
